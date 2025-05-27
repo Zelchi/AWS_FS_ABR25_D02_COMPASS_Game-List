@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "install" : "cd client && npm install && cd .. && cd server && npm install && cd ..",
+    "install": "cd client && npm install && cd .. && cd server && npm install && cd ..",
     "build": "cd server && npm run build && cd .. && cd client && npm run build && cd ..",
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
@@ -12,5 +12,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
 }
