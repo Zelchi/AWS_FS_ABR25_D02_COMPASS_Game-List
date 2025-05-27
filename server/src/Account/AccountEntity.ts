@@ -8,13 +8,13 @@ export interface AccountEntity {
   deletedAt?: boolean;
 }
 
-export interface AccountLoginDto {
+export interface AccountRegister {
+  name: string;
   email: string;
   password: string;
 }
 
-export interface AccountRegisterDto {
-  name: string;
+export interface AccountLogin {
   email: string;
   password: string;
 }

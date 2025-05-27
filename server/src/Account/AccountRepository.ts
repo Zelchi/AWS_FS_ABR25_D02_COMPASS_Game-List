@@ -1,8 +1,8 @@
 import { prisma } from '../db';
-import { AccountEntity, AccountRegisterDto } from './AccountEntity';
+import { AccountEntity } from './AccountEntity';
 
 export class AccountRepository {
-    
+
     async findByEmail(email: string) {
         return prisma.user.findUnique({
             where: { email }
@@ -15,7 +15,7 @@ export class AccountRepository {
         });
     }
 
-    async create(data: AccountRegisterDto): Promise<AccountEntity> {
+    async create(data: AccountEntity): Promise<AccountEntity> {
         return prisma.user.create({
             data
         });
