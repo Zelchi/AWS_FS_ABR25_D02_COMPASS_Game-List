@@ -11,7 +11,8 @@ export class AccountDto {
     }
 
     static validateName(name: string): boolean {
-        return name.trim().length >= 2;
+        if (!name) return false;
+        return name.trim().length >= 3;
     }
 }
 
