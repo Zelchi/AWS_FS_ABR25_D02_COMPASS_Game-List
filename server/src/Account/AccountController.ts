@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { accountService } from "./AccountService";
+import { AccountLoginDto, AccountRegisterDto } from "./AccountDto";
 
 export class AccountController {
 
@@ -30,12 +31,16 @@ export class AccountController {
         try {
             const { name, email, password } = req.body;
 
-            if (!name || !email || !password) {
-                res.status(400).json({ error: 'Name, email and password are required' });
+            const registerDto = new AccountRegisterDto(name, email, password);
+            const validationResult = registerDto.isValid();
+
+            if (!validationResult.valid) {
+                res.status(400).json({ errors: validationResult.errors });
                 return;
             }
 
             const result = await accountService.register({ name, email, password });
+
             res.status(201).json(result);
         } catch (error) {
             if (error instanceof Error) {
@@ -50,8 +55,11 @@ export class AccountController {
         try {
             const { email, password } = req.body;
 
-            if (!email || !password) {
-                res.status(400).json({ error: 'Email and password are required' });
+            const loginDto = new AccountLoginDto(email, password);
+            const validationResult = loginDto.isValid();
+
+            if (!validationResult.valid) {
+                res.status(400).json({ errors: validationResult.errors });
                 return;
             }
 
@@ -65,7 +73,7 @@ export class AccountController {
             }
         }
     }
-    
+
     async getUserProfile(req: Request, res: Response): Promise<void> {
         try {
             const userId = req.params.id;
@@ -87,7 +95,7 @@ export class AccountController {
             res.status(500).json({ error: 'Internal server error' });
         }
     }
-    
+
 }
 
 export const accountController = new AccountController();

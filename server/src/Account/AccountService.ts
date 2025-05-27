@@ -1,13 +1,15 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { AccountEntity, AccountLoginDto, AccountRegisterDto } from './AccountEntity';
+import { AccountEntity } from './AccountEntity';
 import { accountRepository } from './AccountRepository';
+import { AccountRegister, AccountLogin } from './AccountEntity';
 
 const SECRET_KEY = process.env.JWT_SECRET || 'default-secret-key-change-in-production';
 
 export class AccountService {
 
-    async register(data: AccountRegisterDto): Promise<void> {
+    async register(data: AccountRegister): Promise<void> {
+
         const existingUser = await accountRepository.findByEmail(data.email);
         if (existingUser) {
             throw new Error('User with this email already exists');
@@ -15,13 +17,13 @@ export class AccountService {
 
         const hashedPassword = await bcrypt.hash(data.password, 10);
 
-        const user = await accountRepository.create({
+        await accountRepository.create({
             ...data,
             password: hashedPassword
         });
     }
 
-    async login(data: AccountLoginDto): Promise<{ user: AccountEntity; token: string }> {
+    async login(data: AccountLogin): Promise<{ user: AccountEntity; token: string }> {
 
         const user = await accountRepository.findByEmail(data.email);
         if (!user) {
