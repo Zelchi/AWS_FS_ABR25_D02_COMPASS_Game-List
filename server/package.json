@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server.ts",
-    "build": "npx esbuild server.ts --bundle --platform=node --outfile=dist/server.js --minify --external:sqlite3",
+    "dev": "npm run db && nodemon server.ts",
+    "db": "prisma db push",
+    "build": "npx esbuild server.ts --bundle --platform=node --outfile=dist/server.js --minify --external:sqlite3 --external:mock-aws-s3 --external:aws-sdk --external:nock",
     "start": "node dist/server.js"
   },
   "dependencies": {
@@ -27,6 +28,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "nodemon": "^3.1.7",
     "prettier": "^3.4.1",
+    "prisma": "^6.8.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },

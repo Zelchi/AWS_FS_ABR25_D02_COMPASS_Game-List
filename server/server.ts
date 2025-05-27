@@ -1,4 +1,3 @@
-import app from "./src/app";
-import dotenv from "dotenv"; dotenv.config();
+import App from './src/app'; 
 
-console.log(app);
+App;
