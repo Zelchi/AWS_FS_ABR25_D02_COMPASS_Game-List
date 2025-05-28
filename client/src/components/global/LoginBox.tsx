@@ -1,6 +1,5 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import { Logo } from "@/components/global/Logo";
-import { LoginForm } from "@/components/login/LoginForm";
 
 type LoginType = {
   children: ReactNode;
@@ -10,7 +9,7 @@ type LoginType = {
 
 export function LoginBox({ children, isRegistered, onRegister }: LoginType): React.JSX.Element {
   return (
-    <div className="login-box">
+    <div>
       <Logo />
       <h1>{isRegistered ? "Login" : "Sign Up"}</h1>
       <p>
