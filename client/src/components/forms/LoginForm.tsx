@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { FormInputField } from "@/components/forms/FormInputField";
+import Button from "@/components/global/Button";
 
 type LoginFormType = {
   isRegistered: boolean;
@@ -7,43 +10,95 @@ type LoginFormType = {
   onLogin: () => void;
 };
 
+const Form = styled.form`
+  width: 41.5rem;
+  margin-bottom: 2.8rem;
+  display: grid;
+  row-gap: 1.5rem;
+`;
+
+const Invalid = styled.p`
+  font-family: var(--font-primary);
+  text-align: right;
+  font-size: 1.4rem;
+  color: var(--color-red);
+`;
+
+const ButtonContainer = styled.div`
+  width: 100%;
+  margin-top: 2.4rem;
+`;
+
 export function LoginForm({ isRegistered, onRegister, onLogin }: LoginFormType): React.JSX.Element {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const navigate = useNavigate();
 
   const handleLogin: () => void = (): void => {
     onLogin();
-    alert("Successfuly Logged In!");
+    alert("Successfully Logged In!");
     navigate("/");
   };
 
   const handleRegister: () => void = (): void => {
-    alert("Successfuly Registered!");
+    alert("Successfully Registered!");
     onRegister();
   };
 
   return (
-    <form onSubmit={isRegistered ? handleLogin : handleRegister}>
+    <Form onSubmit={isRegistered ? handleLogin : handleRegister}>
       {!isRegistered && (
-        <>
-          <label htmlFor="name">Full Name</label>
-          <input id="name" type="text" placeholder="Juan Gustavo" />
-        </>
+        <FormInputField
+          type="text"
+          name="name"
+          value={name}
+          onChange={setName}
+          placeholder="Juan Gustavo"
+        >
+          Full Name
+        </FormInputField>
       )}
-      <label htmlFor="email">Email</label>
-      <input
-        id="email"
+
+      <FormInputField
         type="email"
+        name="email"
+        value={email}
+        onChange={setEmail}
         placeholder={isRegistered ? "Enter your email" : "email@email.com"}
-      />
-      <label htmlFor="password">Password</label>
-      <input id="password" type="password" placeholder="Enter your password" />
+      >
+        Email
+      </FormInputField>
+      <FormInputField
+        type="password"
+        name="password"
+        value={password}
+        onChange={setPassword}
+        placeholder="Enter your password"
+      >
+        Password
+      </FormInputField>
+
       {!isRegistered && (
         <>
-          <label htmlFor="password-confirmation">Confirm Password</label>
-          <input id="password-confirmation" type="password" placeholder="Enter your password" />
+          <FormInputField
+            type="password"
+            name="password-confirmation"
+            value={passwordConfirmation}
+            onChange={setPasswordConfirmation}
+            placeholder="Enter your password"
+          >
+            Confirm Password
+          </FormInputField>
+          {passwordConfirmation && passwordConfirmation !== password && (
+            <Invalid>Passwords do not match!</Invalid>
+          )}
         </>
       )}
-      <button type="submit">{isRegistered ? "Login" : "Sign Up"}</button>
-    </form>
+      <ButtonContainer>
+        <Button type="submit">{isRegistered ? "Login" : "Sign Up"}</Button>
+      </ButtonContainer>
+    </Form>
   );
 }
