@@ -2,6 +2,8 @@ import express, { Application, Router, Request, Response, NextFunction } from 'e
 import cors from 'cors';
 
 import account from './Account/AccountRouter';
+// import category from './Category/CategoryRouter';
+import game from './Game/GameRouter';
 
 class App {
     private app: Application;
@@ -47,6 +49,8 @@ class App {
         const router = Router();
 
         router.use('/v1/account', account);
+        // router.use('/v1/account', category);
+        router.use('/v1/game', game);
 
         this.app.use('/api', router);
     }

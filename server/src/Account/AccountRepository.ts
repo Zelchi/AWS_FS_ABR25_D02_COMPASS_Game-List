@@ -9,9 +9,9 @@ export class AccountRepository {
         });
     }
 
-    async findById(id: string) {
-        return prisma.user.findUnique({
-            where: { id }
+    async findAll(): Promise<AccountEntity[]> {
+        return prisma.user.findMany({
+            where: { deletedAt: false },
         });
     }
 

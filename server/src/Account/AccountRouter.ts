@@ -26,7 +26,7 @@ class AccountRouter {
             accountController.userlogin(req, res)
         );
         
-        this.router.get("/:id", (req: Request, res: Response) => 
+        this.router.get("/", (req: Request, res: Response) => 
             accountController.getUserProfile(req, res)
         );
     }

@@ -15,4 +15,29 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt Boolean  @default(false)
+  games     Game[]  @relation("UserGame")
+}
+
+model Game {
+  id          String     @id @default(uuid())
+  name        String
+  genre       String
+  description String
+  imageUrl    String
+  userId      String     
+  releaseDate DateTime
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   Boolean    @default(false)
+  user        User       @relation("UserGame", fields: [userId], references: [id])
+  categories  Category[] @relation("CategoryGame")
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt Boolean  @default(false)
+  games     Game[]  @relation("CategoryGame")
 }
