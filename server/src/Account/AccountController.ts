@@ -7,21 +7,29 @@ export class AccountController {
     async middleware(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const authHeader = req.headers.authorization;
+            const {userId} = req.body;
 
-            if (!authHeader || req.path === '/reg' || req.path === '/log') {
-                next();
-                return;
+            if (userId) throw new Error('User ID should not be in the request body for this middleware');
+
+            if (!authHeader) {
+                return next();
             }
 
+            const type = authHeader.split(' ')[0];
             const token = authHeader.split(' ')[1];
-            if (!token) {
-                res.status(401).json({ error: 'No token provided' });
-                return;
-            }
 
-            const decoded = await accountService.verifyToken(token);
-            req.body.userId = decoded.id;
-            next();
+            console.log('Type:', type);
+            console.log('Token:', token);
+
+            
+            if (type !== 'Bearer' || !token) throw new Error('Invalid authorization format');
+
+            if (token) {
+                const decoded = await accountService.verifyToken(token);
+                req.body.userId = decoded.id;
+            }
+            
+            return next();
         } catch (error) {
             res.status(401).json({ error: 'Invalid token' });
         }
@@ -76,14 +84,14 @@ export class AccountController {
 
     async getUserProfile(req: Request, res: Response): Promise<void> {
         try {
-            const userId = req.params.id;
+            const { userId } = req.body;
 
             if (!userId) {
                 res.status(400).json({ error: 'User ID is required' });
                 return;
             }
 
-            const user = await accountService.getUserById(userId);
+            const user = await accountService.getAll();
 
             if (!user) {
                 res.status(404).json({ error: 'User not found' });
