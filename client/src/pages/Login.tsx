@@ -1,6 +1,6 @@
-import { LoginBox } from "@/components/login/LoginBox";
+import { LoginBox } from "@/components/global/LoginBox";
 import React, { useState } from "react";
-import { LoginForm } from "@/components/login/LoginForm";
+import { LoginForm } from "@/components/forms/LoginForm";
 
 export default function Login({ onLogin }: { onLogin: () => void }): React.JSX.Element {
   const [isRegistered, setIsRegistered] = useState(true);
