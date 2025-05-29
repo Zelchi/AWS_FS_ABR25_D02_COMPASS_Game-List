@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FormInputField } from "@/components/forms/FormInputField";
 import Button from "@/components/global/Button";
+import API from "@/utils/API";
 
 type LoginFormType = {
   isRegistered: boolean;
@@ -40,24 +41,50 @@ export function LoginForm({ isRegistered, onRegister, onLogin }: LoginFormType):
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin: () => void = (): void => {
-    onLogin();
-    navigate("/");
+  const handleLogin: (e: React.FormEvent<HTMLFormElement>) => Promise<void> = async (e) => {
+    e.preventDefault();
+
+    try {
+      const { status, data } = await API.POST("/account/log", {
+        email,
+        password,
+      });
+
+      if (status === 200) {
+        localStorage.setItem("token", data.token);
+        onLogin();
+        navigate("/");
+      }
+    } catch {
+      alert("Login failed!");
+    }
   };
 
-  const handleRegister: () => void = (e): void => {
+  const handleRegister: (e: React.FormEvent<HTMLFormElement>) => Promise<void> = async (e) => {
     e.preventDefault();
 
     if (password !== passwordConfirmation) return;
 
-    alert("Successfully Registered!");
+    try {
+      const { status } = await API.POST("/account/reg", {
+        name,
+        email,
+        password,
+      });
 
-    setName("");
-    setEmail("");
-    setPassword("");
-    setPasswordConfirmation("");
+      if (status === 201) {
+        alert("Successfully Registered!");
 
-    onRegister();
+        setName("");
+        setEmail("");
+        setPassword("");
+        setPasswordConfirmation("");
+
+        onRegister();
+      }
+    } catch {
+      alert("Register failed!");
+    }
   };
 
   return (
