@@ -3,6 +3,12 @@ import { AccountEntity } from './AccountEntity';
 
 export class AccountRepository {
 
+    async findById(id: string): Promise<AccountEntity | null> {
+        return prisma.user.findUnique({
+            where: { id, deletedAt: false }
+        });
+    }
+
     async findByEmail(email: string) {
         return prisma.user.findUnique({
             where: { email }

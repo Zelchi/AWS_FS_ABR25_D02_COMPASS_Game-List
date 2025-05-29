@@ -87,7 +87,7 @@ export class AccountController {
                 return;
             }
 
-            const user = await accountService.getAll();
+            const user = await accountService.getUser(userId);
 
             if (!user) {
                 res.status(404).json({ error: 'User not found' });

@@ -60,15 +60,13 @@ export class AccountService {
         }
     }
 
-    async getAll(): Promise<AccountEntity[]> {
-        const users = await accountRepository.findAll();
+    async getUser(userId: string): Promise<AccountEntity> {
 
-        if (!users) throw new Error('No users found');
+        const user = await accountRepository.findById(userId);
 
-        return users.map((user: AccountEntity) => {
-            const { password, ...userWithoutPassword } = user;
-            return userWithoutPassword as AccountEntity;
-        });
+        if (!user) throw new Error('User not found');
+
+        return user;
     }
 }
 
