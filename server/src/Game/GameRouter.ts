@@ -18,7 +18,7 @@ class GameRouter {
 
     private setupRoutes(): void {
 
-        this.router.get("/all", (req: Request, res: Response) => 
+        this.router.get("/", (req: Request, res: Response) => 
             gameController.gameGetAll(req, res)
         );
         
