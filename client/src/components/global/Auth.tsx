@@ -1,10 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
+import API from "../../utils/API";
 
-export function Auth({ onLogin }: { onLogin: () => void }): React.JSX.Element {
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
+interface AuthProps {
+    onAuth: () => void;
+    onLogin: boolean;
+}
+
+export function Auth({ onAuth, onLogin }: AuthProps): React.JSX.Element {
+
+    useEffect(() => {
+        const checkAuth = async () => {
+
+            await API.Auth({ setAuth: onAuth });
+
+        };
+
+        checkAuth();
+    }, [onLogin]);
+
+    return (
+        <div>
+            <Outlet />
+        </div>
+    );
 }
