@@ -94,8 +94,6 @@ class GameRepository {
                 select: { id: true }
             });
 
-            console.log('Existing categories:', existingCategories);
-
             if (existingCategories.length !== categoryIds.length) {
                 const existingIds = existingCategories.map(cat => cat.id);
                 const missingIds = categoryIds.filter(id => !existingIds.includes(id));

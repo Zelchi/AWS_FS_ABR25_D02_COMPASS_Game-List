@@ -39,8 +39,6 @@ export class CategoryController {
         try {
             const { name, description, userId } = req.body;
 
-            console.log('Received category data:', { name, description, userId });
-
             const categoryDto = new CategoryRegisterDto(name, description, userId);
             const validationResult = categoryDto.isValid();
 

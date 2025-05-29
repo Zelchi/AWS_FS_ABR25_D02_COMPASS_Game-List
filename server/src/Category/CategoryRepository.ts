@@ -68,7 +68,6 @@ class CategoryRepository {
                     deletedAt: false
                 }
             });
-            console.log('Found categories:', category); 
             return category;
         } catch (error) {
             throw new Error('Failed to find category by id');
