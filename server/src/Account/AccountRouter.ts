@@ -27,7 +27,7 @@ class AccountRouter {
         );
         
         this.router.get("/", (req: Request, res: Response) => 
-            accountController.getUserProfile(req, res)
+            accountController.authUser(req, res)
         );
     }
 

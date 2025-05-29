@@ -78,7 +78,7 @@ export class AccountController {
         }
     }
 
-    async getUserProfile(req: Request, res: Response): Promise<void> {
+    async authUser(req: Request, res: Response): Promise<void> {
         try {
             const { userId } = req.body;
 

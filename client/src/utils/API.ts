@@ -12,9 +12,8 @@ class API {
     const token = localStorage.getItem("token");
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
       try {
-        const { status } = await axios.post(`${this.address}/account`, Headers);
+        const { status } = await axios.get(`${this.address}/account`);
 
         if (status === 200) {
           localStorage.setItem("token", token);
@@ -24,7 +23,7 @@ class API {
       } catch (error) {
         console.error("Error on verifying token:", error);
         setAuth(false);
-        // localStorage.removeItem("token");
+        localStorage.removeItem("token");
       }
     }
   };

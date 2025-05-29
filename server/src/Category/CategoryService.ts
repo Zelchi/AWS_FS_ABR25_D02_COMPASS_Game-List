@@ -61,7 +61,6 @@ class CategoryService {
 
     async getCategoriesByUserId(userId: string): Promise<ICategoryEntity[]> {
         try {
-            console.log(userId);
             return await categoryRepository.findByUserId(userId);
         } catch (error) {
             if (error instanceof Error) {
