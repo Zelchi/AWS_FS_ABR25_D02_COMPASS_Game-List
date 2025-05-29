@@ -42,12 +42,21 @@ export function LoginForm({ isRegistered, onRegister, onLogin }: LoginFormType):
 
   const handleLogin: () => void = (): void => {
     onLogin();
-    alert("Successfully Logged In!");
     navigate("/");
   };
 
-  const handleRegister: () => void = (): void => {
+  const handleRegister: () => void = (e): void => {
+    e.preventDefault();
+
+    if (password !== passwordConfirmation) return;
+
     alert("Successfully Registered!");
+
+    setName("");
+    setEmail("");
+    setPassword("");
+    setPasswordConfirmation("");
+
     onRegister();
   };
 
