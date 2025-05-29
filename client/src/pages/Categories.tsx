@@ -11,8 +11,8 @@ type Category = {
 export default function Categories() {
   const [categories, setCategories] = useState<Category[]>([
     { id: 1, name: "RPG" },
-    { id: 2, name: "Ação" },
-    { id: 3, name: "Aventura" },
+    { id: 2, name: "Action" },
+    { id: 3, name: "Adventure" },
   ]);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -21,7 +21,7 @@ export default function Categories() {
 
   const handleAddCategory = (name: string) => {
     const newCategory = {
-      id: Date.now(), // Em um app real, o backend retorna o ID
+      id: Date.now(), // In a real app, the backend would return the ID
       name,
     };
     setCategories([...categories, newCategory]);
@@ -41,8 +41,8 @@ export default function Categories() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">Categorias</h2>
-        <Button onClick={() => setIsAddModalOpen(true)}>+ Nova Categoria</Button>
+        <h2 className="text-xl font-bold">Categories</h2>
+        <Button onClick={() => setIsAddModalOpen(true)}>+ New Category</Button>
       </div>
 
       <ul className="space-y-2">
@@ -61,21 +61,21 @@ export default function Categories() {
                   setIsEditModalOpen(true);
                 }}
               >
-                Editar
+                Edit
               </Button>
               <Button
                 variant="destructive"
                 size="sm"
                 onClick={() => handleDeleteCategory(category.id)}
               >
-                Excluir
+                Delete
               </Button>
             </div>
           </li>
         ))}
       </ul>
 
-      {/* Modais */}
+      {/* Modals */}
       <AddCategoryModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
