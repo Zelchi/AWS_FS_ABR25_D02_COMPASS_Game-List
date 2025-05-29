@@ -76,19 +76,45 @@ class GameRepository {
     async create(data: IGameRegister) {
         const { categories, ...gameData } = data;
 
+        const userExists = await prisma.user.findUnique({
+            where: { id: gameData.userId },
+            select: { id: true }
+        });
+
+        if (!userExists) {
+            throw new Error(`User with ID ${gameData.userId} does not exist`);
+        }
+
+        if (categories && categories.length > 0) {
+            const categoryIds = categories.map(cat => cat.id);
+            const existingCategories = await prisma.category.findMany({
+                where: {
+                    id: { in: categoryIds }
+                },
+                select: { id: true }
+            });
+
+            console.log('Existing categories:', existingCategories);
+
+            if (existingCategories.length !== categoryIds.length) {
+                const existingIds = existingCategories.map(cat => cat.id);
+                const missingIds = categoryIds.filter(id => !existingIds.includes(id));
+                throw new Error(`Categories with IDs ${missingIds.join(', ')} do not exist`);
+            }
+        }
+
         return prisma.game.create({
             data: {
                 ...gameData,
-                ...(categories && {
-                    categories: {
-                        connect: categories.map(cat => ({ id: cat.id }))
-                    }
-                })
+                categories: {
+                    connect: categories?.map(cat => ({ id: cat.id })) || []
+                }
             },
             include: {
                 categories: true
             }
         });
+
     }
 
     async delete(id: string) {
