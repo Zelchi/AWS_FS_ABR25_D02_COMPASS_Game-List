@@ -1,10 +1,17 @@
-import { gameRepository } from './GameRepository';
 import { IGameEntity, IGameRegister } from './GameEntity';
+import { gameRepository } from './GameRepository';
 
 class GameService {
 
-    async register(data: IGameRegister): Promise<void> {
-        await gameRepository.create(data);
+    async create(data: IGameRegister): Promise<void> {
+        try {
+            await gameRepository.create(data);
+        } catch (error) {
+            if (error instanceof Error) {
+                throw error;
+            }
+            throw new Error('Failed to create game');
+        }
     }
 
     async getAll(): Promise<IGameEntity[]> {

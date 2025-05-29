@@ -59,7 +59,6 @@ export class GameRegisterDto implements IGameEntity {
         this.releaseDate = typeof releaseDate === 'string' ? new Date(releaseDate) : releaseDate;
         this.imageUrl = imageUrl;
         this.categories = categories;
-        console.log(categories);
     }
 
     public isValid(): { valid: boolean; errors: string[] } {
@@ -116,7 +115,6 @@ export class GameUpdateDto implements Partial<IGameEntity> {
     name?: string;
     genre?: string;
     description?: string;
-    userId?: string;
     releaseDate?: Date;
     imageUrl?: string;
     categories?: { id: string }[];
@@ -125,7 +123,6 @@ export class GameUpdateDto implements Partial<IGameEntity> {
         name?: string,
         genre?: string,
         description?: string,
-        userId?: string,
         releaseDate?: Date | string,
         imageUrl?: string,
         categories?: { id: string }[]
@@ -133,7 +130,6 @@ export class GameUpdateDto implements Partial<IGameEntity> {
         if (name !== undefined) this.name = name;
         if (genre !== undefined) this.genre = genre;
         if (description !== undefined) this.description = description;
-        if (userId !== undefined) this.userId = userId;
         if (releaseDate !== undefined) {
             this.releaseDate = typeof releaseDate === 'string' ? new Date(releaseDate) : releaseDate;
         }
@@ -154,10 +150,6 @@ export class GameUpdateDto implements Partial<IGameEntity> {
 
         if (this.description !== undefined && !GameDto.validateDescription(this.description)) {
             errors.push('Invalid game description');
-        }
-
-        if (this.userId !== undefined && !GameDto.validateUserId(this.userId)) {
-            errors.push('Invalid user ID');
         }
 
         if (this.releaseDate !== undefined && !GameDto.validateReleaseDate(this.releaseDate)) {
@@ -184,7 +176,6 @@ export class GameUpdateDto implements Partial<IGameEntity> {
         if (this.name !== undefined) result.name = this.name;
         if (this.genre !== undefined) result.genre = this.genre;
         if (this.description !== undefined) result.description = this.description;
-        if (this.userId !== undefined) result.userId = this.userId;
         if (this.releaseDate !== undefined) result.releaseDate = this.releaseDate;
         if (this.imageUrl !== undefined) result.imageUrl = this.imageUrl;
         if (this.categories !== undefined) result.categories = this.categories;

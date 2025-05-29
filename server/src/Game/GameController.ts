@@ -58,7 +58,7 @@ export class GameController {
 
             const gameData = gameDto.data();
 
-            const result = await gameService.register(gameData);
+            const result = await gameService.create(gameData);
             res.status(201).json(result);
         } catch (error) {
             if (error instanceof Error) {
@@ -101,7 +101,7 @@ export class GameController {
     async gameUpdate(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            const { name, genre, description, releaseDate, imageUrl, categories, userId } = req.body;
+            const { name, genre, description, releaseDate, imageUrl, categories } = req.body;
 
             if (!id) {
                 res.status(400).json({ error: 'Game ID is required' });
@@ -112,7 +112,6 @@ export class GameController {
                 name,
                 genre,
                 description,
-                userId,
                 releaseDate,
                 imageUrl,
                 categories

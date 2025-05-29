@@ -18,10 +18,6 @@ export class AccountController {
             const type = authHeader.split(' ')[0];
             const token = authHeader.split(' ')[1];
 
-            console.log('Type:', type);
-            console.log('Token:', token);
-
-            
             if (type !== 'Bearer' || !token) throw new Error('Invalid authorization format');
 
             if (token) {

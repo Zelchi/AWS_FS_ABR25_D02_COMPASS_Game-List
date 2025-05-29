@@ -8,14 +8,15 @@ generator client {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt Boolean  @default(false)
-  games     Game[]  @relation("UserGame")
+  id         String     @id @default(uuid())
+  name       String
+  email      String     @unique
+  password   String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  deletedAt  Boolean    @default(false)
+  categories Category[] @relation("UserCategory")
+  games      Game[]     @relation("UserGame")
 }
 
 model Game {
@@ -24,7 +25,7 @@ model Game {
   genre       String
   description String
   imageUrl    String
-  userId      String     
+  userId      String
   releaseDate DateTime
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -34,10 +35,13 @@ model Game {
 }
 
 model Category {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt Boolean  @default(false)
-  games     Game[]  @relation("CategoryGame")
+  id          String   @id @default(uuid())
+  userId      String
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   Boolean  @default(false)
+  games       Game[]   @relation("CategoryGame")
+  user        User     @relation("UserCategory", fields: [userId], references: [id])
 }
