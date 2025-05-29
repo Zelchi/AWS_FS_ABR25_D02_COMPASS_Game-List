@@ -26,7 +26,7 @@ const Container = styled.div`
   z-index: 1;
 `;
 
-const BackgroundBlurL = styled.div`
+const BackgroundBlurL = styled.span`
   width: 191.57%;
   height: 100vh;
   content: "";
@@ -41,7 +41,7 @@ const BackgroundBlurL = styled.div`
   z-index: 0;
 `;
 
-const BackgroundBlurS = styled.div`
+const BackgroundBlurS = styled.span`
   width: 117.25%;
   height: 100%;
   content: "";

@@ -5,7 +5,7 @@ import styled from "styled-components";
 // @ts-ignore
 import background from "../assets/background.webp";
 
-const Container = styled.div`
+const Container = styled.main`
   width: 100%;
   padding: 5rem;
   min-height: 100vh;
