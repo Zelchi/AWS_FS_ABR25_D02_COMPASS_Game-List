@@ -7,7 +7,8 @@ import background from "../assets/background.webp";
 
 const Container = styled.div`
   width: 100%;
-  height: 100vh;
+  padding: 5rem;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,6 +17,11 @@ const Container = styled.div`
     url(${background});
   background-position: center;
   background-size: cover;
+  overflow-x: hidden;
+
+  @media (max-width: 26.56em) {
+    padding: 2rem;
+  }
 `;
 
 export default function Login({ onLogin }: { onLogin: () => void }): React.JSX.Element {

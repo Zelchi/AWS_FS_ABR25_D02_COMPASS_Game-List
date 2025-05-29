@@ -15,6 +15,10 @@ const Form = styled.form`
   margin-bottom: 2.8rem;
   display: grid;
   row-gap: 1.5rem;
+
+  @media (max-width: 48em) {
+    width: 100%;
+  }
 `;
 
 const Invalid = styled.p`

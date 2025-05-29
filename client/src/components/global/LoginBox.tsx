@@ -21,12 +21,14 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   background-color: var(--color-grey-dark-01-89);
-  z-index: 1;
   border-radius: 2rem;
   border: 0.2rem solid var(--color-aqua);
+  z-index: 1;
 `;
 
 const BackgroundBlurL = styled.div`
+  width: 191.57%;
+  height: 100vh;
   content: "";
   position: absolute;
   top: 50%;
@@ -35,13 +37,13 @@ const BackgroundBlurL = styled.div`
   filter: blur(13.75rem);
   border-radius: 100%;
   background-color: var(--color-aqua);
-  width: 191.57%;
-  height: 100vh;
-  z-index: 0;
   opacity: 0.13;
+  z-index: 0;
 `;
 
 const BackgroundBlurS = styled.div`
+  width: 117.25%;
+  height: 100%;
   content: "";
   position: absolute;
   top: 50%;
@@ -50,10 +52,8 @@ const BackgroundBlurS = styled.div`
   filter: blur(15.16rem);
   border-radius: 100%;
   background-color: var(--color-aqua);
-  width: 117.25%;
-  height: 100%;
-  z-index: 0;
   opacity: 0.54;
+  z-index: 0;
 `;
 
 const LogoContainer = styled.div`
