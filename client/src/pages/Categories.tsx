@@ -1,69 +1,96 @@
-// src/pages/CategoryList.tsx
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { AddCategoryModal } from "./AddCategoryModal";
+import { EditCategoryModal } from "./EditCategoryModal";
 
 type Category = {
   id: number;
   name: string;
 };
 
-export function CategoryList() {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function Categories() {
+  const [categories, setCategories] = useState<Category[]>([
+    { id: 1, name: "RPG" },
+    { id: 2, name: "Ação" },
+    { id: 3, name: "Aventura" },
+  ]);
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    axios.get('http://localhost:3000/categories', {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    .then(res => {
-      setCategories(res.data);
-      setLoading(false);
-    })
-    .catch(() => setLoading(false));
-  }, []);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
-  const handleDelete = async (id: number) => {
-    const token = localStorage.getItem('token');
-    if (confirm('Are you sure you want to delete this category?')) {
-      await axios.delete(`http://localhost:3000/categories/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setCategories(categories.filter(cat => cat.id !== id));
-    }
+  const handleAddCategory = (name: string) => {
+    const newCategory = {
+      id: Date.now(), // Em um app real, o backend retorna o ID
+      name,
+    };
+    setCategories([...categories, newCategory]);
+  };
+
+  const handleEditCategory = (name: string) => {
+    if (!selectedCategory) return;
+    setCategories((prev) =>
+      prev.map((cat) => (cat.id === selectedCategory.id ? { ...cat, name } : cat))
+    );
+  };
+
+  const handleDeleteCategory = (id: number) => {
+    setCategories((prev) => prev.filter((cat) => cat.id !== id));
   };
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold text-white">Categories</h1>
-        <button className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600">
-          + Add Category
-        </button>
+        <h2 className="text-xl font-bold">Categorias</h2>
+        <Button onClick={() => setIsAddModalOpen(true)}>+ Nova Categoria</Button>
       </div>
 
-      {loading ? (
-        <p className="text-gray-300">Loading...</p>
-      ) : (
-        <table className="w-full table-auto text-white border border-gray-600">
-          <thead>
-            <tr className="bg-gray-800">
-              <th className="p-3 text-left">Name</th>
-              <th className="p-3 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {categories.map(cat => (
-              <tr key={cat.id} className="border-t border-gray-700 hover:bg-gray-800">
-                <td className="p-3">{cat.name}</td>
-                <td className="p-3 space-x-2">
-                  <button className="text-yellow-400 hover:underline">Edit</button>
-                  <button className="text-red-500 hover:underline" onClick={() => handleDelete(cat.id)}>Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <ul className="space-y-2">
+        {categories.map((category) => (
+          <li
+            key={category.id}
+            className="flex justify-between items-center bg-gray-100 rounded-lg px-4 py-2"
+          >
+            <span>{category.name}</span>
+            <div className="space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setSelectedCategory(category);
+                  setIsEditModalOpen(true);
+                }}
+              >
+                Editar
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => handleDeleteCategory(category.id)}
+              >
+                Excluir
+              </Button>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      {/* Modais */}
+      <AddCategoryModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSubmit={handleAddCategory}
+      />
+      {selectedCategory && (
+        <EditCategoryModal
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setSelectedCategory(null);
+            setIsEditModalOpen(false);
+          }}
+          onSubmit={handleEditCategory}
+          defaultName={selectedCategory.name}
+        />
       )}
     </div>
   );
