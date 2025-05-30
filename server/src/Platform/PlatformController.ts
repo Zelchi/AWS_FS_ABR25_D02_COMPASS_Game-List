@@ -1,0 +1,216 @@
+import { Request, Response, NextFunction } from 'express';
+import { accountService } from '../Account/AccountService';
+import { platformService } from './PlatformService';
+import { PlatformRegisterDto, PlatformUpdateDto } from './PlatformDto';
+
+export class PlatformController {
+    async middleware(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const authHeader = req.headers.authorization;
+
+            if (!authHeader) {
+                res.status(401).json({ error: 'No authorization header provided' });
+                return;
+            }
+
+            const [bearer, token] = authHeader.split(' ');
+
+            if (!bearer || !token || bearer !== 'Bearer') {
+                res.status(401).json({ error: 'Invalid authorization format' });
+                return;
+            }
+
+            const decoded = await accountService.verifyToken(token);
+
+            if (!decoded || !decoded.id) {
+                res.status(401).json({ error: 'Invalid token' });
+                return;
+            }
+
+            req.body.userId = decoded.id;
+            next();
+
+        } catch (error) {
+            res.status(401).json({ error: 'Authentication failed' });
+        }
+    }
+
+    async platformGetById(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+            const { userId } = req.body;
+
+            if (!id) {
+                res.status(400).json({ error: 'Platform ID is required' });
+                return;
+            }
+
+            const platform = await platformService.getPlatformById(id, userId);
+            res.status(200).json(platform);
+        } catch (error) {
+            if (error instanceof Error && error.message === 'Platform not found') {
+                res.status(404).json({ error: error.message });
+            } else {
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        }
+    }
+
+    async platformPost(req: Request, res: Response): Promise<void> {
+        try {
+            const { userId, name, company, acquisDate, imageUrl } = req.body;
+
+            const platformDto = new PlatformRegisterDto(
+                userId,
+                name,
+                company,
+                acquisDate,
+                imageUrl
+            );
+
+            const validationResult = platformDto.isValid();
+
+            if (!validationResult.valid) {
+                res.status(400).json({ errors: validationResult.errors });
+                return;
+            }
+
+            const platformData = platformDto.data();
+
+            const result = await platformService.create(platformData);
+            res.status(201).json(result);
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(400).json({ error: error.message });
+            } else {
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        }
+    }
+
+    async platformUpdate(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+            const { userId, name, company, acquisDate, imageUrl } = req.body;
+
+            if (!id) {
+                res.status(400).json({ error: 'Platform ID is required' });
+                return;
+            }
+
+            const platformDto = new PlatformUpdateDto(
+                name,
+                company,
+                acquisDate,
+                imageUrl
+            );
+
+            const validationResult = platformDto.isValid();
+
+            if (!validationResult.valid) {
+                res.status(400).json({ errors: validationResult.errors });
+                return;
+            }
+
+            const platformData = platformDto.data();
+
+            const result = await platformService.update(id, userId, platformData);
+            res.status(200).json(result);
+        } catch (error) {
+            if (error instanceof Error && error.message === 'Platform not found') {
+                res.status(404).json({ error: error.message });
+            } else if (error instanceof Error) {
+                res.status(400).json({ error: error.message });
+            } else {
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        }
+    }
+
+    async platformDelete(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+            const { userId } = req.body;
+
+            if (!id) {
+                res.status(400).json({ error: 'Platform ID is required' });
+                return;
+            }
+
+            const success = await platformService.delete(id, userId);
+            
+            if (!success) {
+                res.status(404).json({ error: 'Platform not found' });
+                return;
+            }
+            
+            res.status(204).send();
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(400).json({ error: error.message });
+            } else {
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        }
+    }
+
+    async platformGetPaginated(req: Request, res: Response): Promise<void> {
+        try {
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+            const sortBy = (req.query.sortBy as string) || 'createdAt';
+            const sortOrder = (req.query.sortOrder as 'asc' | 'desc') || 'desc';
+            const { userId } = req.body;
+
+            if (page < 1 || limit < 1 || limit > 100) {
+                res.status(400).json({
+                    error: 'Invalid pagination parameters. Use "page" >= 1 and "limit" between 1 and 100.'
+                });
+                return;
+            }
+
+            const validSortFields = ['name', 'company', 'acquisDate', 'createdAt'];
+            if (!validSortFields.includes(sortBy)) {
+                res.status(400).json({
+                    error: `Invalid sort field. Allowed values: ${validSortFields.join(', ')}`
+                });
+                return;
+            }
+
+            if (sortOrder !== 'asc' && sortOrder !== 'desc') {
+                res.status(400).json({
+                    error: 'Invalid sort order. Use "asc" or "desc".'
+                });
+                return;
+            }
+
+            const paginatedResult = await platformService.getPaginated(page, limit, sortBy, sortOrder, userId);
+            res.status(200).json(paginatedResult);
+        } catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+
+    async platformSearchByName(req: Request, res: Response): Promise<void> {
+        try {
+            const name = req.query.name as string;
+            const { userId } = req.body;
+
+            if (!name || name.trim() === '') {
+                res.status(400).json({ error: 'Name parameter is required' });
+                return;
+            }
+
+            const platforms = await platformService.getPlatformsByName(name, userId);
+            res.status(200).json(platforms);
+        } catch (error) {
+            if (error instanceof Error && error.message === 'No platforms found with this name') {
+                res.status(404).json({ error: error.message });
+            } else {
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        }
+    }
+}
+
+export const platformController = new PlatformController();
