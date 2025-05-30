@@ -56,6 +56,10 @@ const Header = styled.div`
 
 const SearchContainer = styled.div`
   margin-left: auto;
+
+  @media (max-width: 30em) {
+    width: 100%;
+  }
 `;
 
 export default function MainContent({
