@@ -38,17 +38,6 @@ class CategoryRepository {
         }
     };
 
-    async findByTitle(title: string): Promise<ICategoryEntity | null> {
-        try {
-            const category = await prisma.category.findFirst({
-                where: { title, deletedAt: false }
-            });
-            return category;
-        } catch (error) {
-            throw new Error('Failed to find category by id');
-        }
-    };
-
     async findById(id: string, userId: string): Promise<ICategoryEntity | null> {
         try {
             const category = await prisma.category.findFirst({

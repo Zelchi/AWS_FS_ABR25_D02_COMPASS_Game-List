@@ -39,14 +39,6 @@ class GameService {
         return game;
     }
 
-    async getByReleaseDate(releaseDate: Date): Promise<IGameEntity[] | null> {
-        const games = await gameRepository.findByReleaseDate(releaseDate);
-        if (games.length === 0) {
-            throw new Error('No games found for this release date');
-        }
-        return games;
-    }
-
     async getPaginated(
         page: number,
         limit: number,
