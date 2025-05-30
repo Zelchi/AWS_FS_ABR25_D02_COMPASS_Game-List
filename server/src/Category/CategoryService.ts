@@ -3,9 +3,9 @@ import { categoryRepository } from './CategoryRepository';
 
 class CategoryService {
 
-    async create(categoryData: ICategoryRegister): Promise<void> {
+    async create(categoryData: ICategoryRegister): Promise<ICategoryEntity> {
         try {
-            await categoryRepository.create(categoryData);
+            return await categoryRepository.create(categoryData);
         } catch (error) {
             if (error instanceof Error) {
                 throw error;
@@ -14,9 +14,9 @@ class CategoryService {
         }
     }
 
-    async update(id: string, data: Partial<ICategoryRegister>): Promise<ICategoryEntity> {
+    async update(id: string, userId: string, data: Partial<ICategoryRegister>): Promise<ICategoryEntity> {
         try {
-            const existingCategory = await categoryRepository.findById(id);
+            const existingCategory = await categoryRepository.findById(id, userId);
             if (!existingCategory) {
                 throw new Error('Category not found');
             }
@@ -31,9 +31,9 @@ class CategoryService {
         }
     }
 
-    async delete(id: string): Promise<boolean> {
+    async delete(id: string, userId: string): Promise<boolean> {
         try {
-            const category = await categoryRepository.findById(id);
+            const category = await categoryRepository.findById(id, userId);
             if (!category) {
                 return false;
             }
@@ -48,9 +48,9 @@ class CategoryService {
         }
     }
 
-    async getCategoryById(id: string): Promise<ICategoryEntity | null> {
+    async getCategoryById(id: string, userId: string): Promise<ICategoryEntity | null> {
         try {
-            return await categoryRepository.findById(id);
+            return await categoryRepository.findById(id, userId);
         } catch (error) {
             if (error instanceof Error) {
                 throw error;
@@ -59,14 +59,48 @@ class CategoryService {
         }
     }
 
-    async getCategoriesByUserId(userId: string): Promise<ICategoryEntity[]> {
+    async getPaginated(
+        page: number,
+        limit: number,
+        sortBy: string = 'createdAt',
+        sortOrder: 'asc' | 'desc' = 'desc',
+        userId: string
+    ): Promise<{
+        categories: ICategoryEntity[],
+        total: number,
+        currentPage: number,
+        totalPages: number,
+    }> {
         try {
-            return await categoryRepository.findByUserId(userId);
+            const { categories, total } = await categoryRepository.findPaginated(page, limit, sortBy, sortOrder, userId);
+            const totalPages = Math.ceil(total / limit);
+
+            return {
+                categories,
+                total,
+                currentPage: page,
+                totalPages
+            };
         } catch (error) {
             if (error instanceof Error) {
                 throw error;
             }
-            throw new Error('Failed to get categories by user ID');
+            throw new Error('Failed to get paginated categories');
+        }
+    }
+
+    async getCategoriesByName(name: string, userId: string): Promise<ICategoryEntity[]> {
+        try {
+            const categories = await categoryRepository.findByName(name, userId);
+            if (!categories || categories.length === 0) {
+                throw new Error('No categories found with this name');
+            }
+            return categories;
+        } catch (error) {
+            if (error instanceof Error) {
+                throw error;
+            }
+            throw new Error('Failed to get categories by name');
         }
     }
 }
