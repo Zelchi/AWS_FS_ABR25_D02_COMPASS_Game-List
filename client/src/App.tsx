@@ -18,7 +18,7 @@ export default function App(): React.JSX.Element {
 
   const handleAuth: () => void = (): void => {
     setIsAtuh((is) => !is);
-  }
+  };
 
   return (
     <Routes>
