@@ -2,6 +2,7 @@ import React, { ReactNode, useState } from "react";
 import styled from "styled-components";
 import SideBar from "@/components/navigation/SideBar";
 import MainContent from "@/components/global/MainContent";
+import Pagination from "@/components/global/Pagination";
 
 const Container = styled.div<{ $isOpen: boolean }>`
   display: grid;
@@ -37,6 +38,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <SideBar />
       <MainContent isOpen={isOpen} onOpen={handleOpen}>
         {children}
+        {/*<Pagination />*/}
       </MainContent>
     </Container>
   );
