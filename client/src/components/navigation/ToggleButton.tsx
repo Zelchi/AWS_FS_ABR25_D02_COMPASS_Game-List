@@ -20,6 +20,14 @@ const Button = styled.button<{ $isOpen: boolean }>`
       fill: var(--color-aqua);
     }
   }
+
+  @media (max-width: 48em) {
+    transform: ${({ $isOpen }) => ($isOpen ? "rotate(90deg)" : "rotate(-90deg)")};
+  }
+
+  @media (max-width: 30em) {
+    display: none;
+  }
 `;
 
 export default function ToggleButton({ isOpen, onOpen }: { isOpen: boolean; onOpen: () => void }) {

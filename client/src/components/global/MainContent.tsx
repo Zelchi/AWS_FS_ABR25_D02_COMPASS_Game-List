@@ -30,6 +30,10 @@ const routes = [
 const Main = styled.main`
   min-height: 100vh;
   background-color: var(--color-grey-dark-02);
+
+  @media (max-width: 30em) {
+    padding-top: 7.58rem;
+  }
 `;
 
 const Title = styled.h1`
