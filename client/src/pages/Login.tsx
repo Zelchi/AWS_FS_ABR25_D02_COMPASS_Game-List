@@ -1,13 +1,15 @@
 import { LoginBox } from "@/components/global/LoginBox";
-import React, { useState } from "react";
+import React, { ComponentType, useState } from "react";
 import { LoginForm } from "@/components/forms/LoginForm";
 import styled from "styled-components";
 // @ts-ignore
 import background from "../assets/background.webp";
+import BackgroundIcons from "@/components/global/BgIcons";
 
 const Container = styled.main`
   width: 100%;
   padding: 5rem;
+  position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -33,6 +35,7 @@ export default function Login({ onLogin }: { onLogin: () => void }): React.JSX.E
 
   return (
     <Container>
+      <BackgroundIcons />
       <LoginBox isRegistered={isRegistered} onRegister={handleIsRegistered}>
         <LoginForm isRegistered={isRegistered} onRegister={handleIsRegistered} onLogin={onLogin} />
       </LoginBox>
