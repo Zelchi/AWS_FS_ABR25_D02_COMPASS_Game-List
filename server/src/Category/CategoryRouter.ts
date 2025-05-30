@@ -18,21 +18,29 @@ class CategoryRouter {
 
     private setupRoutes(): void {
         
-        this.router.get("/", (req: Request, res: Response) => 
-            categoryController.categoryGetByUserId(req, res)
-        );
+        this.router.get("/:id", (req: Request, res: Response) => {
+            categoryController.categoryGetById(req, res);
+        });
 
-        this.router.post("/", (req: Request, res: Response) => 
-            categoryController.categoryPost(req, res)
-        );
+        this.router.get("/page", (req: Request, res: Response) => {
+            categoryController.categoryGetPaginated(req, res);
+        });
+        
+        this.router.get("/search", (req: Request, res: Response) => {
+            categoryController.categorySearchByName(req, res);
+        });
 
-        this.router.put("/:id", (req: Request, res: Response) => 
-            categoryController.categoryUpdate(req, res)
-        );
+        this.router.post("/", (req: Request, res: Response) => {
+            categoryController.categoryPost(req, res);
+        });
 
-        this.router.delete("/:id", (req: Request, res: Response) => 
-            categoryController.categoryDelete(req, res)
-        );
+        this.router.put("/:id", (req: Request, res: Response) => {
+            categoryController.categoryUpdate(req, res);
+        });
+
+        this.router.delete("/:id", (req: Request, res: Response) => {
+            categoryController.categoryDelete(req, res);
+        });
     }
 
     public getRouter(): Router {

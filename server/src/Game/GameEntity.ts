@@ -1,7 +1,6 @@
 export interface IGameEntity {
     id?: string;
     name: string;
-    genre: string;
     releaseDate: Date;
     description: string; 
     userId: string;
@@ -14,7 +13,6 @@ export interface IGameEntity {
 
 export interface IGameRegister {
     name: string;
-    genre: string;
     releaseDate: Date;
     userId: string;
     description: string;

@@ -4,7 +4,7 @@ import { AccountEntity } from './AccountEntity';
 import { accountRepository } from './AccountRepository';
 import { AccountRegister, AccountLogin } from './AccountEntity';
 
-const SECRET_KEY = process.env.JWT_SECRET || 'default-secret-key-change-in-production';
+const SECRET_KEY = process.env.JWT_SECRET || 'default-secret-key';
 
 export class AccountService {
 

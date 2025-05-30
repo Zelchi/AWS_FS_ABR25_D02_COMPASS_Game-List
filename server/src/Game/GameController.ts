@@ -35,13 +35,32 @@ export class GameController {
         }
     }
 
+    async gameGetById(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+
+            if (!id) {
+                res.status(400).json({ error: 'Game ID is required' });
+                return;
+            }
+
+            const game = await gameService.getById(id);
+            res.status(200).json(game);
+        } catch (error) {
+            if (error instanceof Error && error.message === 'Game not found') {
+                res.status(404).json({ error: error.message });
+            } else {
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        }
+    }
+
     async gamePost(req: Request, res: Response): Promise<void> {
         try {
-            const { name, genre, userId, description, releaseDate, imageUrl, categories } = req.body;
+            const { name, userId, description, releaseDate, imageUrl, categories } = req.body;
 
             const gameDto = new GameRegisterDto(
                 name,
-                genre,
                 description,
                 userId,
                 releaseDate,
@@ -69,39 +88,10 @@ export class GameController {
         }
     }
 
-    async gameGetAll(req: Request, res: Response): Promise<void> {
-        try {
-            const games = await gameService.getAll();
-            res.status(200).json(games);
-        } catch (error) {
-            res.status(500).json({ error: 'Internal server error' });
-        }
-    }
-
-    async gameGetById(req: Request, res: Response): Promise<void> {
-        try {
-            const { id } = req.params;
-
-            if (!id) {
-                res.status(400).json({ error: 'Game ID is required' });
-                return;
-            }
-
-            const game = await gameService.getById(id);
-            res.status(200).json(game);
-        } catch (error) {
-            if (error instanceof Error && error.message === 'Game not found') {
-                res.status(404).json({ error: error.message });
-            } else {
-                res.status(500).json({ error: 'Internal server error' });
-            }
-        }
-    }
-
     async gameUpdate(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            const { name, genre, description, releaseDate, imageUrl, categories } = req.body;
+            const { name, description, releaseDate, imageUrl, categories } = req.body;
 
             if (!id) {
                 res.status(400).json({ error: 'Game ID is required' });
@@ -110,7 +100,6 @@ export class GameController {
 
             const gameDto = new GameUpdateDto(
                 name,
-                genre,
                 description,
                 releaseDate,
                 imageUrl,
@@ -152,6 +141,64 @@ export class GameController {
             res.status(204).send();
         } catch (error) {
             if (error instanceof Error && error.message === 'Game not found') {
+                res.status(404).json({ error: error.message });
+            } else {
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        }
+    }
+
+    async gameGetPaginated(req: Request, res: Response): Promise<void> {
+        try {
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+            const sortBy = (req.query.sortBy as string) || 'createdAt';
+            const sortOrder = (req.query.sortOrder as 'asc' | 'desc') || 'desc';
+            const { userId } = req.body;
+
+            if (page < 1 || limit < 1 || limit > 100) {
+                res.status(400).json({
+                    error: 'Invalid pagination parameters. Use "page" >= 1 and "limit" between 1 and 100.'
+                });
+                return;
+            }
+
+            const validSortFields = ['name', 'createdAt', 'releaseDate', 'genre'];
+            if (!validSortFields.includes(sortBy)) {
+                res.status(400).json({
+                    error: `Invalid sort field. Allowed values: ${validSortFields.join(', ')}`
+                });
+                return;
+            }
+
+            if (sortOrder !== 'asc' && sortOrder !== 'desc') {
+                res.status(400).json({
+                    error: 'Invalid sort order. Use "asc" or "desc".'
+                });
+                return;
+            }
+
+            const paginatedResult = await gameService.getPaginated(page, limit, sortBy, sortOrder, userId);
+            res.status(200).json(paginatedResult);
+        } catch (error) {
+            res.status(500).json({ error: 'Erro interno do servidor' });
+        }
+    }
+
+    async gameSearchByName(req: Request, res: Response): Promise<void> {
+        try {
+            const name = req.query.name as string;
+            const { userId } = req.body;
+
+            if (!name || name.trim() === '') {
+                res.status(400).json({ error: 'Name parameter is required' });
+                return;
+            }
+
+            const games = await gameService.getByName(name, userId);
+            res.status(200).json(games);
+        } catch (error) {
+            if (error instanceof Error && error.message === 'No games found with this name') {
                 res.status(404).json({ error: error.message });
             } else {
                 res.status(500).json({ error: 'Internal server error' });

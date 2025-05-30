@@ -5,9 +5,9 @@ const prisma = new PrismaClient();
 
 class CategoryRepository {
 
-    async create(categoryData: ICategoryRegister): Promise<void> {
+    async create(categoryData: ICategoryRegister): Promise<ICategoryEntity> {
         try {
-            await prisma.category.create({
+            return await prisma.category.create({
                 data: categoryData
             });
         } catch (error) {
@@ -49,10 +49,10 @@ class CategoryRepository {
         }
     };
 
-    async findById(id: string): Promise<ICategoryEntity | null> {
+    async findById(id: string, userId: string): Promise<ICategoryEntity | null> {
         try {
-            const category = await prisma.category.findUnique({
-                where: { id, deletedAt: false }
+            const category = await prisma.category.findFirst({
+                where: { id, userId, deletedAt: false }
             });
             return category;
         } catch (error) {
@@ -60,19 +60,53 @@ class CategoryRepository {
         }
     }
 
-    async findByUserId(userId: string): Promise<ICategoryEntity[]> {
+    async findPaginated(
+        page: number,
+        limit: number,
+        sortBy: string = 'createdAt',
+        sortOrder: 'asc' | 'desc' = 'desc',
+        userId: string
+    ): Promise<{ categories: ICategoryEntity[], total: number }> {
         try {
-            const category = await prisma.category.findMany({
+            const skip = (page - 1) * limit;
+
+            const orderBy: any = {};
+            orderBy[sortBy] = sortOrder;
+
+            const where = { deletedAt: false, userId };
+
+            const [categories, total] = await Promise.all([
+                prisma.category.findMany({
+                    where,
+                    skip,
+                    take: limit,
+                    orderBy
+                }),
+                prisma.category.count({
+                    where
+                })
+            ]);
+
+            return { categories, total };
+        } catch (error) {
+            throw new Error('Failed to fetch paginated categories');
+        }
+    }
+
+    async findByName(searchTerm: string, userId: string): Promise<ICategoryEntity[]> {
+        try {
+            const categories = await prisma.category.findMany({
                 where: {
+                    title: { contains: searchTerm },
                     userId,
                     deletedAt: false
                 }
             });
-            return category;
+            return categories;
         } catch (error) {
-            throw new Error('Failed to find category by id');
+            throw new Error('Failed to find categories by name');
         }
-    };
+    }
 }
 
 export const categoryRepository = new CategoryRepository();
