@@ -131,9 +131,7 @@ logs/
 *.jpg
 *.jpeg
 *.gif
-*.svg
 *.ico
-*.webp
 
 # Archives
 *.zip
