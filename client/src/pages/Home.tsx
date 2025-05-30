@@ -1,3 +1,9 @@
+import SiteLayout from "@/components/global/SiteLayout";
+
 export default function Home() {
-  return <div>Home</div>;
+  return (
+    <SiteLayout>
+      <p style={{ color: "#fff" }}>Home</p>
+    </SiteLayout>
+  );
 }
