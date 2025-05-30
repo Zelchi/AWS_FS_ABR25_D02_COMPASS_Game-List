@@ -17,17 +17,17 @@ class CategoryRouter {
     }
 
     private setupRoutes(): void {
-        
-        this.router.get("/:id", (req: Request, res: Response) => {
-            categoryController.categoryGetById(req, res);
-        });
 
         this.router.get("/page", (req: Request, res: Response) => {
             categoryController.categoryGetPaginated(req, res);
         });
-        
+
         this.router.get("/search", (req: Request, res: Response) => {
             categoryController.categorySearchByName(req, res);
+        });
+
+        this.router.get("/:id", (req: Request, res: Response) => {
+            categoryController.categoryGetById(req, res);
         });
 
         this.router.post("/", (req: Request, res: Response) => {
