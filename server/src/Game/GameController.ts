@@ -35,37 +35,21 @@ export class GameController {
         }
     }
 
-    async gameGetById(req: Request, res: Response): Promise<void> {
-        try {
-            const { id } = req.params;
-
-            if (!id) {
-                res.status(400).json({ error: 'Game ID is required' });
-                return;
-            }
-
-            const game = await gameService.getById(id);
-            res.status(200).json(game);
-        } catch (error) {
-            if (error instanceof Error && error.message === 'Game not found') {
-                res.status(404).json({ error: error.message });
-            } else {
-                res.status(500).json({ error: 'Internal server error' });
-            }
-        }
-    }
-
     async gamePost(req: Request, res: Response): Promise<void> {
         try {
-            const { name, userId, description, releaseDate, imageUrl, categories } = req.body;
+            const { userId, name, description, imageUrl, status, favorite, acquisDate, finishDate, categories, platforms } = req.body;
 
             const gameDto = new GameRegisterDto(
+                userId,
                 name,
                 description,
-                userId,
-                releaseDate,
                 imageUrl,
-                categories
+                acquisDate,
+                categories,
+                platforms,
+                status,
+                favorite,
+                finishDate
             );
 
             const validationResult = gameDto.isValid();
@@ -91,7 +75,7 @@ export class GameController {
     async gameUpdate(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            const { name, description, releaseDate, imageUrl, categories } = req.body;
+            const { name, description, imageUrl, status, favorite, acquisDate, finishDate, categories, platforms } = req.body;
 
             if (!id) {
                 res.status(400).json({ error: 'Game ID is required' });
@@ -101,9 +85,13 @@ export class GameController {
             const gameDto = new GameUpdateDto(
                 name,
                 description,
-                releaseDate,
                 imageUrl,
-                categories
+                status,
+                favorite,
+                acquisDate,
+                finishDate,
+                categories,
+                platforms
             );
 
             const validationResult = gameDto.isValid();
@@ -148,6 +136,26 @@ export class GameController {
         }
     }
 
+    async gameGetById(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+
+            if (!id) {
+                res.status(400).json({ error: 'Game ID is required' });
+                return;
+            }
+
+            const game = await gameService.getById(id);
+            res.status(200).json(game);
+        } catch (error) {
+            if (error instanceof Error && error.message === 'Game not found') {
+                res.status(404).json({ error: error.message });
+            } else {
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        }
+    }
+
     async gameGetPaginated(req: Request, res: Response): Promise<void> {
         try {
             const page = parseInt(req.query.page as string) || 1;
@@ -163,7 +171,7 @@ export class GameController {
                 return;
             }
 
-            const validSortFields = ['name', 'createdAt', 'releaseDate', 'genre'];
+            const validSortFields = ['name', 'createdAt', 'acquisDate', 'status'];
             if (!validSortFields.includes(sortBy)) {
                 res.status(400).json({
                     error: `Invalid sort field. Allowed values: ${validSortFields.join(', ')}`
@@ -181,7 +189,7 @@ export class GameController {
             const paginatedResult = await gameService.getPaginated(page, limit, sortBy, sortOrder, userId);
             res.status(200).json(paginatedResult);
         } catch (error) {
-            res.status(500).json({ error: 'Erro interno do servidor' });
+            res.status(500).json({ error: 'Internal server error' });
         }
     }
 

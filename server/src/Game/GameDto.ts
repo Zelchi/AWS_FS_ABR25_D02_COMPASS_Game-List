@@ -17,45 +17,85 @@ class GameDto {
         return typeof userId === 'string' && userId.trim() !== '';
     }
 
-    static validateReleaseDate(releaseDate: Date | string): boolean {
-        if (typeof releaseDate === 'string') {
-            releaseDate = new Date(releaseDate);
+    static validateStatus(status: string): boolean {
+        return typeof status === 'string' && ['none', 'playing', 'completed', 'abandoned'].includes(status);
+    }
+
+    static validateFavorite(favorite: boolean): boolean {
+        return typeof favorite === 'boolean';
+    }
+
+    static validateAcquisDate(acquisDate: Date | string): boolean {
+        if (typeof acquisDate === 'string') {
+            acquisDate = new Date(acquisDate);
         }
-        return releaseDate instanceof Date && !isNaN(releaseDate.getTime());
+        return acquisDate instanceof Date && !isNaN(acquisDate.getTime());
+    }
+
+    static validateFinishDate(finishDate: Date | string | null | undefined): boolean {
+        if (!finishDate) return true;
+        if (typeof finishDate === 'string') {
+            finishDate = new Date(finishDate);
+        }
+        return finishDate instanceof Date && !isNaN(finishDate.getTime());
     }
 
     static validateCategories(categories: { id: string }[]): boolean {
         if (!categories || !Array.isArray(categories) || categories.length === 0) return false;
         return categories.every(category => typeof category.id === 'string' && category.id.trim() !== '');
     }
+
+    static validatePlatforms(platforms?: { id: string }[] | null): boolean {
+        if (!platforms || platforms.length === 0) return true;
+        
+        return platforms.every(platform => typeof platform.id === 'string' && platform.id.trim() !== '');
+    }
 }
 
 export class GameRegisterDto implements IGameEntity {
+    userId: string;
     name: string;
     description: string;
-    userId: string;
-    releaseDate: Date;
     imageUrl: string;
+    status: string;
+    favorite: boolean;
+    acquisDate: Date;
+    finishDate?: Date;
     categories: { id: string }[];
+    platforms: { id: string }[] = []; 
 
     constructor(
+        userId: string,
         name: string,
         description: string,
-        userId: string,
-        releaseDate: Date | string,
         imageUrl: string,
-        categories: { id: string }[]
+        acquisDate: Date | string,
+        categories: { id: string }[],
+        platforms?: { id: string }[], 
+        status: string = 'none',
+        favorite: boolean = false,
+        finishDate?: Date | string
     ) {
+        this.userId = userId;
         this.name = name;
         this.description = description;
-        this.userId = userId;
-        this.releaseDate = typeof releaseDate === 'string' ? new Date(releaseDate) : releaseDate;
         this.imageUrl = imageUrl;
+        this.status = status;
+        this.favorite = favorite;
+        this.acquisDate = typeof acquisDate === 'string' ? new Date(acquisDate) : acquisDate;
+        if (finishDate) {
+            this.finishDate = typeof finishDate === 'string' ? new Date(finishDate) : finishDate;
+        }
         this.categories = categories;
+        this.platforms = platforms || []; 
     }
 
     public isValid(): { valid: boolean; errors: string[] } {
         const errors: string[] = [];
+
+        if (!GameDto.validateUserId(this.userId)) {
+            errors.push('Invalid user ID');
+        }
 
         if (!GameDto.validateName(this.name)) {
             errors.push('Invalid game name');
@@ -65,20 +105,32 @@ export class GameRegisterDto implements IGameEntity {
             errors.push('Invalid game description');
         }
 
-        if (!GameDto.validateUserId(this.userId)) {
-            errors.push('Invalid user ID');
-        }
-
-        if (!GameDto.validateReleaseDate(this.releaseDate)) {
-            errors.push('Invalid release date');
-        }
-
         if (!GameDto.validateImageUrl(this.imageUrl)) {
             errors.push('Invalid image URL format');
         }
 
-        if (this.categories && !GameDto.validateCategories(this.categories)) {
+        if (!GameDto.validateStatus(this.status)) {
+            errors.push('Invalid game status');
+        }
+
+        if (!GameDto.validateFavorite(this.favorite)) {
+            errors.push('Invalid favorite value');
+        }
+
+        if (!GameDto.validateAcquisDate(this.acquisDate)) {
+            errors.push('Invalid acquisition date');
+        }
+
+        if (!GameDto.validateFinishDate(this.finishDate)) {
+            errors.push('Invalid finish date');
+        }
+
+        if (!GameDto.validateCategories(this.categories)) {
             errors.push('Invalid categories');
+        }
+
+        if (!GameDto.validatePlatforms(this.platforms)) {
+            errors.push('Invalid platforms');
         }
 
         return {
@@ -89,12 +141,16 @@ export class GameRegisterDto implements IGameEntity {
 
     public data() {
         return {
+            userId: this.userId,
             name: this.name,
             description: this.description,
-            userId: this.userId,
-            releaseDate: this.releaseDate,
             imageUrl: this.imageUrl,
-            categories: this.categories
+            status: this.status,
+            favorite: this.favorite,
+            acquisDate: this.acquisDate,
+            finishDate: this.finishDate,
+            categories: this.categories,
+            platforms: this.platforms
         };
     }
 }
@@ -102,24 +158,39 @@ export class GameRegisterDto implements IGameEntity {
 export class GameUpdateDto implements Partial<IGameEntity> {
     name?: string;
     description?: string;
-    releaseDate?: Date;
     imageUrl?: string;
+    status?: string;
+    favorite?: boolean;
+    acquisDate?: Date;
+    finishDate?: Date | null;
     categories?: { id: string }[];
+    platforms?: { id: string }[];
 
     constructor(
         name?: string,
         description?: string,
-        releaseDate?: Date | string,
         imageUrl?: string,
-        categories?: { id: string }[]
+        status?: string,
+        favorite?: boolean,
+        acquisDate?: Date | string,
+        finishDate?: Date | string | null,
+        categories?: { id: string }[],
+        platforms?: { id: string }[]
     ) {
         if (name !== undefined) this.name = name;
         if (description !== undefined) this.description = description;
-        if (releaseDate !== undefined) {
-            this.releaseDate = typeof releaseDate === 'string' ? new Date(releaseDate) : releaseDate;
-        }
         if (imageUrl !== undefined) this.imageUrl = imageUrl;
+        if (status !== undefined) this.status = status;
+        if (favorite !== undefined) this.favorite = favorite;
+        if (acquisDate !== undefined) {
+            this.acquisDate = typeof acquisDate === 'string' ? new Date(acquisDate) : acquisDate;
+        }
+        if (finishDate !== undefined) {
+            this.finishDate = finishDate === null ? null : 
+                typeof finishDate === 'string' ? new Date(finishDate) : finishDate;
+        }
         if (categories !== undefined) this.categories = categories;
+        if (platforms !== undefined) this.platforms = platforms;
     }
 
     public isValid(): { valid: boolean; errors: string[] } {
@@ -133,16 +204,32 @@ export class GameUpdateDto implements Partial<IGameEntity> {
             errors.push('Invalid game description');
         }
 
-        if (this.releaseDate !== undefined && !GameDto.validateReleaseDate(this.releaseDate)) {
-            errors.push('Invalid release date');
-        }
-
         if (this.imageUrl !== undefined && !GameDto.validateImageUrl(this.imageUrl)) {
             errors.push('Invalid image URL format');
         }
 
+        if (this.status !== undefined && !GameDto.validateStatus(this.status)) {
+            errors.push('Invalid game status');
+        }
+
+        if (this.favorite !== undefined && !GameDto.validateFavorite(this.favorite)) {
+            errors.push('Invalid favorite value');
+        }
+
+        if (this.acquisDate !== undefined && !GameDto.validateAcquisDate(this.acquisDate)) {
+            errors.push('Invalid acquisition date');
+        }
+
+        if (this.finishDate !== undefined && !GameDto.validateFinishDate(this.finishDate)) {
+            errors.push('Invalid finish date');
+        }
+
         if (this.categories !== undefined && !GameDto.validateCategories(this.categories)) {
             errors.push('Invalid categories');
+        }
+
+        if (this.platforms !== undefined && !GameDto.validatePlatforms(this.platforms)) {
+            errors.push('Invalid platforms');
         }
 
         return {
@@ -156,9 +243,13 @@ export class GameUpdateDto implements Partial<IGameEntity> {
         
         if (this.name !== undefined) result.name = this.name;
         if (this.description !== undefined) result.description = this.description;
-        if (this.releaseDate !== undefined) result.releaseDate = this.releaseDate;
         if (this.imageUrl !== undefined) result.imageUrl = this.imageUrl;
+        if (this.status !== undefined) result.status = this.status;
+        if (this.favorite !== undefined) result.favorite = this.favorite;
+        if (this.acquisDate !== undefined) result.acquisDate = this.acquisDate;
+        if (this.finishDate !== undefined) result.finishDate = this.finishDate;
         if (this.categories !== undefined) result.categories = this.categories;
+        if (this.platforms !== undefined) result.platforms = this.platforms;
         
         return result;
     }

@@ -3,9 +3,9 @@ import { gameRepository } from './GameRepository';
 
 class GameService {
 
-    async create(data: IGameRegister): Promise<void> {
+    async create(data: IGameRegister): Promise<IGameEntity> {
         try {
-            await gameRepository.create(data);
+            return await gameRepository.create(data);
         } catch (error) {
             if (error instanceof Error) {
                 throw error;

@@ -18,16 +18,16 @@ class GameRouter {
 
     private setupRoutes(): void {
 
-        this.router.get("/:id", (req: Request, res: Response) => 
-            gameController.gameGetById(req, res)
-        );
-
         this.router.get("/page", (req: Request, res: Response) => 
             gameController.gameGetPaginated(req, res)
         );
         
         this.router.get("/search", (req: Request, res: Response) => 
             gameController.gameSearchByName(req, res)
+        );
+
+        this.router.get("/:id", (req: Request, res: Response) => 
+            gameController.gameGetById(req, res)
         );
 
         this.router.post("/", (req: Request, res: Response) => 
