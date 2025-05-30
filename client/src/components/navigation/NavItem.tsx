@@ -28,9 +28,10 @@ const NavItemEl = styled.li<{ $active: boolean }>`
 const NavLink = styled.a<{ $filled: boolean; $active: boolean }>`
   width: 100%;
   padding: 1.2rem;
+    padding-left: 4rem;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 1.5rem;
   border-radius: 0.4rem;
   font-weight: 500;
@@ -41,6 +42,7 @@ const NavLink = styled.a<{ $filled: boolean; $active: boolean }>`
   transition: var(--transition);
   
   span {
+      flex-shrink: 0;
     display: inline-block;
     stroke: ${({ $filled, $active }) =>
       $filled ? "none" : $active ? "var(--color-black)" : "var(--color-white)"};
@@ -80,12 +82,20 @@ const NavLink = styled.a<{ $filled: boolean; $active: boolean }>`
     }
   }
 
-  @media (max-width: 48em) {  
+  @media (max-width: 64em) {
+      
+      padding: 1.2rem;
+      padding-left: 1.5rem;
+  }
+    
+    @media (max-width: 48em) {  
     width: fit-content;
     padding: .8rem;
   }
 
     @media (max-width: 30em) {  
+        justify-content: center;
+        width: 100%;
       padding: 1.2rem;
     }
 }
