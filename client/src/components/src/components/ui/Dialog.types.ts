@@ -1,4 +1,3 @@
-
 // src/components/ui/Dialog/Dialog.types.ts
 
 import { ReactNode } from "react";

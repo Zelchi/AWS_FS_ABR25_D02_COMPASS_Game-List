@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/src/components/ui/Dialog";
+import { DialogContent } from "@/components/src/components/ui/DialogContent";
+import { DialogHeader } from "@/components/src/components/ui/DialogHeader";
+import { DialogTitle } from "@/components/src/components/ui/DialogTitle";
+import Button from "@/components/src/components/ui/Button";
+import { Input } from "@/components/src/components/ui/Input";
 
 type AddCategoryModalProps = {
   isOpen: boolean;
@@ -20,7 +23,7 @@ export function AddCategoryModal({ isOpen, onClose, onSubmit }: AddCategoryModal
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog isOpen={isOpen} onClose={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add New Category</DialogTitle>
@@ -42,4 +45,3 @@ export function AddCategoryModal({ isOpen, onClose, onSubmit }: AddCategoryModal
     </Dialog>
   );
 }
-

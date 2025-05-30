@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { cn } from "@/lib/utils";
 
 interface DialogProps {
   isOpen: boolean;
@@ -29,4 +28,3 @@ export function Dialog({ isOpen, onClose, title, children }: DialogProps) {
     </div>
   );
 }
-

@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { AddCategoryModal } from "./AddCategoryModal";
 import { EditCategoryModal } from "./EditCategoryModal";
+import Button from "../components/src/components/ui/Button";
+import SiteLayout from "@/components/global/SiteLayout";
 
 type Category = {
   id: number;
@@ -30,7 +31,7 @@ export default function Categories() {
   const handleEditCategory = (name: string) => {
     if (!selectedCategory) return;
     setCategories((prev) =>
-      prev.map((cat) => (cat.id === selectedCategory.id ? { ...cat, name } : cat))
+      prev.map((cat) => (cat.id === selectedCategory.id ? { ...cat, name } : cat)),
     );
   };
 
@@ -39,59 +40,61 @@ export default function Categories() {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">Categories</h2>
-        <Button onClick={() => setIsAddModalOpen(true)}>+ New Category</Button>
-      </div>
+    <SiteLayout>
+      <div className="p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Categories</h2>
+          {/*<Button onClick={() => setIsAddModalOpen(true)}>+ New Category</Button>*/}
+        </div>
 
-      <ul className="space-y-2">
-        {categories.map((category) => (
-          <li
-            key={category.id}
-            className="flex justify-between items-center bg-gray-100 rounded-lg px-4 py-2"
-          >
-            <span>{category.name}</span>
-            <div className="space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setSelectedCategory(category);
-                  setIsEditModalOpen(true);
-                }}
-              >
-                Edit
-              </Button>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => handleDeleteCategory(category.id)}
-              >
-                Delete
-              </Button>
-            </div>
-          </li>
-        ))}
-      </ul>
+        <ul className="space-y-2">
+          {categories.map((category) => (
+            <li
+              key={category.id}
+              className="flex justify-between items-center bg-gray-100 rounded-lg px-4 py-2"
+            >
+              <span>{category.name}</span>
+              <div className="space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setIsEditModalOpen(true);
+                  }}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => handleDeleteCategory(category.id)}
+                >
+                  Delete
+                </Button>
+              </div>
+            </li>
+          ))}
+        </ul>
 
-      {/* Modals */}
-      <AddCategoryModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSubmit={handleAddCategory}
-      />
-      {selectedCategory && (
-        <EditCategoryModal
-          isOpen={isEditModalOpen}
-          onClose={() => {
-            setSelectedCategory(null);
-            setIsEditModalOpen(false);
-          }}
-          onSubmit={handleEditCategory}
-          defaultName={selectedCategory.name}
+        {/* Modals */}
+        <AddCategoryModal
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
+          onSubmit={handleAddCategory}
         />
-      )}
-    </div>
+        {selectedCategory && (
+          <EditCategoryModal
+            isOpen={isEditModalOpen}
+            onClose={() => {
+              setSelectedCategory(null);
+              setIsEditModalOpen(false);
+            }}
+            onSubmit={handleEditCategory}
+            defaultName={selectedCategory.name}
+          />
+        )}
+      </div>
+    </SiteLayout>
   );
 }

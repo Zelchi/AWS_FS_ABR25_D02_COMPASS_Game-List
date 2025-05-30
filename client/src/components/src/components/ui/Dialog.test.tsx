@@ -6,7 +6,7 @@ describe("Dialog", () => {
     render(
       <Dialog isOpen={false} onClose={() => {}} title="Test Title">
         <p>Dialog content</p>
-      </Dialog>
+      </Dialog>,
     );
 
     expect(screen.queryByText("Test Title")).not.toBeInTheDocument();
@@ -16,7 +16,7 @@ describe("Dialog", () => {
     render(
       <Dialog isOpen={true} onClose={() => {}} title="Test Title">
         <p>Dialog content</p>
-      </Dialog>
+      </Dialog>,
     );
 
     expect(screen.getByText("Test Title")).toBeInTheDocument();
@@ -29,7 +29,7 @@ describe("Dialog", () => {
     render(
       <Dialog isOpen={true} onClose={onCloseMock} title="Test">
         <p>Content</p>
-      </Dialog>
+      </Dialog>,
     );
 
     const closeButton = screen.getByRole("button", { name: /close/i });
@@ -38,4 +38,3 @@ describe("Dialog", () => {
     expect(onCloseMock).toHaveBeenCalledTimes(1);
   });
 });
-
