@@ -12,6 +12,7 @@ const SideBarEl = styled.aside<{ $isOpen: boolean }>`
   background-color: var(--color-grey-dark-01);
   border-right: 0.2rem solid var(--color-grey-light-03);
   overflow: hidden;
+  z-index: 9999;
 
   @media (max-width: 48em) {
     border-right: none;
