@@ -14,7 +14,8 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "typeRoots": ["./node_modules/@types", "./declarations.d.ts"]
+    "typeRoots": ["./node_modules/@types", "./declarations.d.ts"],
+    "types": ["vite-plugin-svgr/client"]
   },
   "include": ["src", "vite.config.ts", "declarations.d.ts"]
 }

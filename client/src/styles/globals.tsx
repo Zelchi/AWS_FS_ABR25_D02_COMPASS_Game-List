@@ -23,7 +23,8 @@ const GlobalStyle = createGlobalStyle`
         --color-grey-dark-02-95: rgba(12, 10, 9, .95);
         --color-pink: #FD4760;
         --color-red: #FF0000;
-        --color-aqua: #2cb3a4;
+        --color-aqua: #42D9C8;
+        --color-aqua-light: #6cf6e7;
         --color-aqua-dark: #1c9589;
         --font-primary: "Montserrat", sans-serif;
         --font-secodary: "Inter", sans-serif;
