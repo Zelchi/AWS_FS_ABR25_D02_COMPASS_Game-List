@@ -14,18 +14,6 @@ class GameService {
         }
     }
 
-    async getAll(): Promise<IGameEntity[]> {
-        return await gameRepository.findAll();
-    }
-
-    async getById(id: string): Promise<IGameEntity | null> {
-        const game = await gameRepository.findById(id);
-        if (!game) {
-            throw new Error('Game not found');
-        }
-        return game;
-    }
-
     async update(id: string, data: Partial<IGameEntity>): Promise<IGameEntity | null> {
         const existingGame = await gameRepository.findById(id);
         if (!existingGame) {
@@ -43,26 +31,41 @@ class GameService {
         await gameRepository.delete(id);
     }
 
-    async getByGenre(genre: string): Promise<IGameEntity[] | null> {
-        const games = await gameRepository.findByGenre(genre);
-        if (games.length === 0) {
-            throw new Error('No games found for this genre');
+    async getById(id: string): Promise<IGameEntity | null> {
+        const game = await gameRepository.findById(id);
+        if (!game) {
+            throw new Error('Game not found');
         }
-        return games;
+        return game;
     }
 
-    async getByName(name: string): Promise<IGameEntity[] | null> {
-        const games = await gameRepository.findByName(name);
+    async getPaginated(
+        page: number,
+        limit: number,
+        sortBy: string = 'createdAt',
+        sortOrder: 'asc' | 'desc' = 'desc',
+        userId: string
+    ): Promise<{
+        games: IGameEntity[],
+        total: number,
+        currentPage: number,
+        totalPages: number,
+    }> {
+        const { games, total } = await gameRepository.findPaginated(page, limit, sortBy, sortOrder, userId);
+        const totalPages = Math.ceil(total / limit);
+
+        return {
+            games,
+            total,
+            currentPage: page,
+            totalPages
+        };
+    }
+
+    async getByName(name: string, userId: string): Promise<IGameEntity[] | null> {
+        const games = await gameRepository.findByName(name, userId);
         if (games.length === 0) {
             throw new Error('No games found with this name');
-        }
-        return games;
-    }
-
-    async getByReleaseDate(releaseDate: Date): Promise<IGameEntity[] | null> {
-        const games = await gameRepository.findByReleaseDate(releaseDate);
-        if (games.length === 0) {
-            throw new Error('No games found for this release date');
         }
         return games;
     }

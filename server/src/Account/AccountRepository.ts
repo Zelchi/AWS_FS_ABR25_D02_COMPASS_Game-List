@@ -15,12 +15,6 @@ export class AccountRepository {
         });
     }
 
-    async findAll(): Promise<AccountEntity[]> {
-        return prisma.user.findMany({
-            where: { deletedAt: false },
-        });
-    }
-
     async create(data: AccountEntity): Promise<AccountEntity> {
         return prisma.user.create({
             data
