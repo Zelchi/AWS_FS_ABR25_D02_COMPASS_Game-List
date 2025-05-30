@@ -5,13 +5,13 @@ export class AccountRepository {
 
     async findById(id: string): Promise<AccountEntity | null> {
         return prisma.user.findUnique({
-            where: { id, deletedAt: false }
+            where: { id, deletedAt: null }
         });
     }
 
     async findByEmail(email: string) {
         return prisma.user.findUnique({
-            where: { email }
+            where: { email, deletedAt: null }
         });
     }
 
@@ -29,8 +29,9 @@ export class AccountRepository {
     }
 
     async delete(id: string): Promise<void> {
-        await prisma.user.delete({
-            where: { id }
+        await prisma.user.update({
+            where: { id },
+            data: { deletedAt: new Date() }
         });
     }
 }
