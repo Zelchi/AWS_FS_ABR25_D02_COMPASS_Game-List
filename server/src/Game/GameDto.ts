@@ -50,6 +50,11 @@ class GameDto {
         
         return platforms.every(platform => typeof platform.id === 'string' && platform.id.trim() !== '');
     }
+
+    static validateRating(rating?: number): boolean {
+        if (rating === undefined) return true;
+        return typeof rating === 'number' && Number.isInteger(rating) && rating >= 0 && rating <= 5;
+    }
 }
 
 export class GameRegisterDto implements IGameEntity {
@@ -59,6 +64,7 @@ export class GameRegisterDto implements IGameEntity {
     imageUrl: string;
     status: string;
     favorite: boolean;
+    rating: number;
     acquisDate: Date;
     finishDate?: Date;
     categories: { id: string }[];
@@ -74,6 +80,7 @@ export class GameRegisterDto implements IGameEntity {
         platforms?: { id: string }[], 
         status: string = 'none',
         favorite: boolean = false,
+        rating: number = 0,
         finishDate?: Date | string
     ) {
         this.userId = userId;
@@ -82,6 +89,7 @@ export class GameRegisterDto implements IGameEntity {
         this.imageUrl = imageUrl;
         this.status = status;
         this.favorite = favorite;
+        this.rating = rating;
         this.acquisDate = typeof acquisDate === 'string' ? new Date(acquisDate) : acquisDate;
         if (finishDate) {
             this.finishDate = typeof finishDate === 'string' ? new Date(finishDate) : finishDate;
@@ -133,6 +141,10 @@ export class GameRegisterDto implements IGameEntity {
             errors.push('Invalid platforms');
         }
 
+        if (!GameDto.validateRating(this.rating)) {
+            errors.push('Rating must be an integer between 0 and 5');
+        }
+
         return {
             valid: errors.length === 0,
             errors
@@ -147,6 +159,7 @@ export class GameRegisterDto implements IGameEntity {
             imageUrl: this.imageUrl,
             status: this.status,
             favorite: this.favorite,
+            rating: this.rating,
             acquisDate: this.acquisDate,
             finishDate: this.finishDate,
             categories: this.categories,
@@ -161,6 +174,7 @@ export class GameUpdateDto implements Partial<IGameEntity> {
     imageUrl?: string;
     status?: string;
     favorite?: boolean;
+    rating?: number;
     acquisDate?: Date;
     finishDate?: Date | null;
     categories?: { id: string }[];
@@ -175,13 +189,15 @@ export class GameUpdateDto implements Partial<IGameEntity> {
         acquisDate?: Date | string,
         finishDate?: Date | string | null,
         categories?: { id: string }[],
-        platforms?: { id: string }[]
+        platforms?: { id: string }[],
+        rating?: number
     ) {
         if (name !== undefined) this.name = name;
         if (description !== undefined) this.description = description;
         if (imageUrl !== undefined) this.imageUrl = imageUrl;
         if (status !== undefined) this.status = status;
         if (favorite !== undefined) this.favorite = favorite;
+        if (rating !== undefined) this.rating = rating;
         if (acquisDate !== undefined) {
             this.acquisDate = typeof acquisDate === 'string' ? new Date(acquisDate) : acquisDate;
         }
@@ -232,6 +248,10 @@ export class GameUpdateDto implements Partial<IGameEntity> {
             errors.push('Invalid platforms');
         }
 
+        if (this.rating !== undefined && !GameDto.validateRating(this.rating)) {
+            errors.push('Rating must be an integer between 0 and 5');
+        }
+
         return {
             valid: errors.length === 0,
             errors
@@ -246,6 +266,7 @@ export class GameUpdateDto implements Partial<IGameEntity> {
         if (this.imageUrl !== undefined) result.imageUrl = this.imageUrl;
         if (this.status !== undefined) result.status = this.status;
         if (this.favorite !== undefined) result.favorite = this.favorite;
+        if (this.rating !== undefined) result.rating = this.rating;
         if (this.acquisDate !== undefined) result.acquisDate = this.acquisDate;
         if (this.finishDate !== undefined) result.finishDate = this.finishDate;
         if (this.categories !== undefined) result.categories = this.categories;

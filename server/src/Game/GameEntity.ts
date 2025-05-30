@@ -6,6 +6,7 @@ export interface IGameEntity {
     imageUrl: string;
     status?: string;
     favorite?: boolean;
+    rating?: number;
     acquisDate: Date;
     finishDate?: Date | null;
     createdAt?: Date;
@@ -22,6 +23,7 @@ export interface IGameRegister {
     imageUrl: string;
     status?: string;
     favorite?: boolean;
+    rating?: number;
     acquisDate: Date;
     finishDate?: Date | null; 
     categories: { id: string }[];

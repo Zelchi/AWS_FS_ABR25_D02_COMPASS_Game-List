@@ -37,7 +37,7 @@ export class GameController {
 
     async gamePost(req: Request, res: Response): Promise<void> {
         try {
-            const { userId, name, description, imageUrl, status, favorite, acquisDate, finishDate, categories, platforms } = req.body;
+            const { userId, name, description, imageUrl, status, favorite, rating, acquisDate, finishDate, categories, platforms } = req.body;
 
             const gameDto = new GameRegisterDto(
                 userId,
@@ -49,6 +49,7 @@ export class GameController {
                 platforms,
                 status,
                 favorite,
+                rating,
                 finishDate
             );
 
@@ -171,7 +172,7 @@ export class GameController {
                 return;
             }
 
-            const validSortFields = ['name', 'createdAt', 'acquisDate', 'status'];
+            const validSortFields = ['name', 'createdAt', 'acquisDate', 'status', 'rating'];
             if (!validSortFields.includes(sortBy)) {
                 res.status(400).json({
                     error: `Invalid sort field. Allowed values: ${validSortFields.join(', ')}`
