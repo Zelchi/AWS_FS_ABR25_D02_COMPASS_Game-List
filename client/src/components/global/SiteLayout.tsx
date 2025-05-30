@@ -6,7 +6,8 @@ import MainContent from "@/components/global/MainContent";
 const Container = styled.div<{ $isOpen: boolean }>`
   display: grid;
   grid-template-columns: ${({ $isOpen }) => ($isOpen ? "27rem calc(100% - 27rem)" : "0% 100%")};
-  transition: grid-template-columns 0.3s ease-in-out;
+  transition: grid-template-columns 0.4s cubic-bezier(0.61, -0.53, 0.44, 1.55);
+  overflow-x: hidden;
 
   @media (max-width: 64em) {
     grid-template-columns: 25% 75%;
