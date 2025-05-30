@@ -1,7 +1,7 @@
 import express, { Router, Request, Response, NextFunction } from "express";
-import { gameController } from "./GameController";
+import { platformController } from "./PlatformController";
 
-class GameRouter {
+class PlatformRouter {
     private router: Router;
 
     constructor() {
@@ -12,36 +12,35 @@ class GameRouter {
 
     private setupMiddlewares(): void {
         this.router.use((req: Request, res: Response, next: NextFunction) => {
-            gameController.middleware(req, res, next);
+            platformController.middleware(req, res, next);
         });
     }
 
     private setupRoutes(): void {
 
         this.router.get("/page", (req: Request, res: Response) => 
-            gameController.gameGetPaginated(req, res)
+            platformController.platformGetPaginated(req, res)
         );
         
         this.router.get("/search", (req: Request, res: Response) => 
-            gameController.gameSearchByName(req, res)
+            platformController.platformSearchByName(req, res)
         );
 
         this.router.get("/:id", (req: Request, res: Response) => 
-            gameController.gameGetById(req, res)
+            platformController.platformGetById(req, res)
         );
-
+        
         this.router.post("/", (req: Request, res: Response) => 
-            gameController.gamePost(req, res)
+            platformController.platformPost(req, res)
         );
 
         this.router.put("/:id", (req: Request, res: Response) => 
-            gameController.gameUpdate(req, res)
+            platformController.platformUpdate(req, res)
         );
 
         this.router.delete("/:id", (req: Request, res: Response) => 
-            gameController.gameDelete(req, res)
+            platformController.platformDelete(req, res)
         );
-
     }
 
     public getRouter(): Router {
@@ -49,4 +48,4 @@ class GameRouter {
     }
 }
 
-export default new GameRouter().getRouter();
+export default new PlatformRouter().getRouter();

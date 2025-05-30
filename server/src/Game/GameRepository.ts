@@ -4,7 +4,7 @@ import { IGameEntity, IGameRegister } from './GameEntity';
 class GameRepository {
 
     async create(data: IGameRegister) {
-        const { categories, ...gameData } = data;
+        const { categories, platforms, ...gameData } = data;
 
         const userExists = await prisma.user.findUnique({
             where: { id: gameData.userId },
@@ -31,22 +31,41 @@ class GameRepository {
             }
         }
 
+        if (platforms && platforms.length > 0) {
+            const platformIds = platforms.map(plat => plat.id);
+            const existingPlatforms = await prisma.platform.findMany({
+                where: {
+                    id: { in: platformIds }
+                },
+                select: { id: true }
+            });
+
+            if (existingPlatforms.length !== platformIds.length) {
+                const existingIds = existingPlatforms.map(plat => plat.id);
+                const missingIds = platformIds.filter(id => !existingIds.includes(id));
+                throw new Error(`Platforms with IDs ${missingIds.join(', ')} do not exist`);
+            }
+        }
+
         return prisma.game.create({
             data: {
                 ...gameData,
                 categories: {
                     connect: categories?.map(cat => ({ id: cat.id })) || []
+                },
+                platforms: {
+                    connect: platforms?.map(plat => ({ id: plat.id })) || []
                 }
             },
             include: {
-                categories: true
+                categories: true,
+                platforms: true
             }
         });
-
     }
 
     async update(id: string, data: Partial<IGameEntity>) {
-        const { categories, ...gameData } = data;
+        const { categories, platforms, ...gameData } = data;
 
         return prisma.game.update({
             where: { id },
@@ -56,10 +75,16 @@ class GameRepository {
                     categories: {
                         set: categories.map(cat => ({ id: cat.id }))
                     }
+                }),
+                ...(platforms && {
+                    platforms: {
+                        set: platforms.map(plat => ({ id: plat.id }))
+                    }
                 })
             },
             include: {
-                categories: true
+                categories: true,
+                platforms: true
             }
         });
     }
@@ -67,15 +92,19 @@ class GameRepository {
     async delete(id: string) {
         return prisma.game.update({
             where: { id },
-            data: { deletedAt: true }
+            data: { deletedAt: new Date() }
         });
     }
 
     async findById(id: string): Promise<IGameEntity | null> {
         return prisma.game.findUnique({
-            where: { id, deletedAt: false },
+            where: { 
+                id,
+                deletedAt: null
+            },
             include: {
-                categories: true
+                categories: true,
+                platforms: true
             }
         });
     }
@@ -92,13 +121,14 @@ class GameRepository {
         const orderBy: any = {};
         orderBy[sortBy] = sortOrder;
 
-        const where = { deletedAt: false, userId };
+        const where = { deletedAt: null, userId };
 
         const [games, total] = await Promise.all([
             prisma.game.findMany({
                 where,
                 include: {
-                    categories: true
+                    categories: true,
+                    platforms: true
                 },
                 skip,
                 take: limit,
@@ -118,10 +148,11 @@ class GameRepository {
                 where: {
                     name: { contains: name },
                     userId,
-                    deletedAt: false
+                    deletedAt: null
                 },
                 include: {
-                    categories: true
+                    categories: true,
+                    platforms: true
                 }
             });
             return games;

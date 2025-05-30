@@ -1,8 +1,8 @@
 import { ICategoryEntity } from './CategoryEntity';
 
 class CategoryDto {
-    static validateTitle(title: string): boolean {
-        return typeof title === 'string' && title.trim() !== '';
+    static validateName(name: string): boolean {
+        return typeof name === 'string' && name.trim() !== '';
     }
 
     static validateDescription(description: string): boolean {
@@ -15,12 +15,12 @@ class CategoryDto {
 }
 
 export class CategoryRegisterDto implements ICategoryEntity {
-    title: string;
+    name: string;
     description: string;
     userId: string;
 
-    constructor(title: string, description: string, userId: string) {
-        this.title = title;
+    constructor(name: string, description: string, userId: string) {
+        this.name = name;
         this.description = description;
         this.userId = userId;
     }
@@ -32,11 +32,11 @@ export class CategoryRegisterDto implements ICategoryEntity {
             errors.push('Invalid user ID');
         }
 
-        if (!CategoryDto.validateTitle(this.title)) {
-            errors.push('Invalid category title');
+        if (!CategoryDto.validateName(this.name)) {
+            errors.push('Invalid category name');
         }
 
-        if (!CategoryDto.validateDescription(this.userId)) {
+        if (!CategoryDto.validateDescription(this.description)) {
             errors.push('Invalid description');
         }
 
@@ -48,7 +48,7 @@ export class CategoryRegisterDto implements ICategoryEntity {
 
     public data() {
         return {
-            title: this.title,
+            name: this.name,
             userId: this.userId,
             description: this.description
         };
@@ -56,19 +56,19 @@ export class CategoryRegisterDto implements ICategoryEntity {
 }
 
 export class CategoryUpdateDto implements Partial<ICategoryEntity> {
-    title?: string;
+    name?: string;
     description?: string;
 
-    constructor(title?: string, description?: string) {
-        if (title !== undefined) this.title = title;
+    constructor(name?: string, description?: string) {
+        if (name !== undefined) this.name = name;
         if (description !== undefined) this.description = description;
     }
 
     public isValid(): { valid: boolean; errors: string[] } {
         const errors: string[] = [];
 
-        if (this.title !== undefined && !CategoryDto.validateTitle(this.title)) {
-            errors.push('Invalid category title');
+        if (this.name !== undefined && !CategoryDto.validateName(this.name)) {
+            errors.push('Invalid category name');
         }
 
         if (this.description !== undefined && !CategoryDto.validateDescription(this.description)) {
@@ -84,7 +84,7 @@ export class CategoryUpdateDto implements Partial<ICategoryEntity> {
     public data() {
         const result: Partial<ICategoryEntity> = {};
 
-        if (this.title !== undefined) result.title = this.title;
+        if (this.name !== undefined) result.name = this.name;
         if (this.description !== undefined) result.description = this.description;
 
         return result;

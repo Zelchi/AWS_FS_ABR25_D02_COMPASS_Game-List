@@ -5,7 +5,7 @@ export interface AccountEntity {
   password: string;
   createdAt?: Date;
   updatedAt?: Date;
-  deletedAt?: boolean;
+  deletedAt?: Date | null;
 }
 
 export interface AccountRegister {

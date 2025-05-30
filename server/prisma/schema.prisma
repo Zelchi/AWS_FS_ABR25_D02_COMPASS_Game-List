@@ -14,33 +14,53 @@ model User {
   password   String
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  deletedAt  Boolean    @default(false)
+  deletedAt  DateTime?
   categories Category[] @relation("UserCategory")
   games      Game[]     @relation("UserGame")
+  platforms  Platform[] @relation("UserPlatform")
 }
 
 model Game {
   id          String     @id @default(uuid())
+  userId      String
   name        String
   description String
   imageUrl    String
-  userId      String
-  releaseDate DateTime
+  rating      Int        @default(0)
+  status      String     @default("none")
+  favorite    Boolean    @default(false)
+  acquisDate  DateTime
+  finishDate  DateTime?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
-  deletedAt   Boolean    @default(false)
+  deletedAt   DateTime?
   user        User       @relation("UserGame", fields: [userId], references: [id])
   categories  Category[] @relation("CategoryGame")
+  platforms   Platform[] @relation("PlatformGame")
 }
 
 model Category {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   userId      String
-  title       String
+  name        String
   description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  deletedAt   Boolean  @default(false)
-  games       Game[]   @relation("CategoryGame")
-  user        User     @relation("UserCategory", fields: [userId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  user        User      @relation("UserCategory", fields: [userId], references: [id])
+  games       Game[]    @relation("CategoryGame")
+}
+
+model Platform {
+  id         String    @id @default(uuid())
+  userId     String
+  name       String
+  company    String
+  acquisDate DateTime
+  imageUrl   String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+  user       User      @relation("UserPlatform", fields: [userId], references: [id])
+  games      Game[]    @relation("PlatformGame")
 }

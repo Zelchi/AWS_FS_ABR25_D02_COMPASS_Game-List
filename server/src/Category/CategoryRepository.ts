@@ -1,14 +1,15 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../db';
 import { ICategoryEntity, ICategoryRegister } from './CategoryEntity';
-
-const prisma = new PrismaClient();
 
 class CategoryRepository {
 
     async create(categoryData: ICategoryRegister): Promise<ICategoryEntity> {
         try {
             return await prisma.category.create({
-                data: categoryData
+                data: categoryData,
+                include: {
+                    games: true
+                }
             });
         } catch (error) {
             throw new Error('Failed to create category in database');
@@ -19,7 +20,10 @@ class CategoryRepository {
         try {
             const category = await prisma.category.update({
                 where: { id },
-                data
+                data,
+                include: {
+                    games: true
+                }
             });
             return category;
         } catch (error) {
@@ -31,7 +35,7 @@ class CategoryRepository {
         try {
             await prisma.category.update({
                 where: { id },
-                data: { deletedAt: true }
+                data: { deletedAt: new Date() }
             });
         } catch (error) {
             throw new Error('Failed to delete category');
@@ -41,7 +45,14 @@ class CategoryRepository {
     async findById(id: string, userId: string): Promise<ICategoryEntity | null> {
         try {
             const category = await prisma.category.findFirst({
-                where: { id, userId, deletedAt: false }
+                where: { 
+                    id, 
+                    userId, 
+                    deletedAt: null 
+                },
+                include: {
+                    games: true
+                }
             });
             return category;
         } catch (error) {
@@ -62,14 +73,17 @@ class CategoryRepository {
             const orderBy: any = {};
             orderBy[sortBy] = sortOrder;
 
-            const where = { deletedAt: false, userId };
+            const where = { deletedAt: null, userId };
 
             const [categories, total] = await Promise.all([
                 prisma.category.findMany({
                     where,
                     skip,
                     take: limit,
-                    orderBy
+                    orderBy,
+                    include: {
+                        games: true
+                    }
                 }),
                 prisma.category.count({
                     where
@@ -86,9 +100,12 @@ class CategoryRepository {
         try {
             const categories = await prisma.category.findMany({
                 where: {
-                    title: { contains: searchTerm },
+                    name: { contains: searchTerm },
                     userId,
-                    deletedAt: false
+                    deletedAt: null
+                },
+                include: {
+                    games: true
                 }
             });
             return categories;
