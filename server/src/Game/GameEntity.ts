@@ -1,21 +1,31 @@
 export interface IGameEntity {
     id?: string;
-    name: string;
-    releaseDate: Date;
-    description: string; 
     userId: string;
-    imageUrl: string;    
-    categories: { id: string; }[];
+    name: string;
+    description: string;
+    imageUrl: string;
+    status?: string;
+    favorite?: boolean;
+    rating?: number;
+    acquisDate: Date;
+    finishDate?: Date | null;
     createdAt?: Date;
     updatedAt?: Date;
-    deletedAt?: boolean;
+    deletedAt?: Date | null;
+    categories: { id: string; }[];
+    platforms?: { id: string; }[];
 }
 
 export interface IGameRegister {
-    name: string;
-    releaseDate: Date;
     userId: string;
+    name: string;
     description: string;
     imageUrl: string;
+    status?: string;
+    favorite?: boolean;
+    rating?: number;
+    acquisDate: Date;
+    finishDate?: Date | null; 
     categories: { id: string }[];
+    platforms: { id: string }[];
 }

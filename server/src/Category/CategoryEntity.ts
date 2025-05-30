@@ -1,16 +1,16 @@
 export interface ICategoryEntity {
     id?: string;
-    title: string;
+    name: string;
     userId: string;
     description: string;
     createdAt?: Date;
     updatedAt?: Date;
-    deletedAt?: boolean;
+    deletedAt?: Date | null;
     games?: { id: string }[];
 }
 
 export interface ICategoryRegister {
-    title: string;
+    name: string;
     userId: string;
     description: string;
 };

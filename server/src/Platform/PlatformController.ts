@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { accountService } from '../Account/AccountService';
-import { gameService } from './GameService';
-import { GameRegisterDto, GameUpdateDto } from './GameDto';
+import { platformService } from './PlatformService';
+import { PlatformRegisterDto, PlatformUpdateDto } from './PlatformDto';
 
-export class GameController {
+export class PlatformController {
     async middleware(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const authHeader = req.headers.authorization;
@@ -35,34 +35,49 @@ export class GameController {
         }
     }
 
-    async gamePost(req: Request, res: Response): Promise<void> {
+    async platformGetById(req: Request, res: Response): Promise<void> {
         try {
-            const { userId, name, description, imageUrl, status, favorite, rating, acquisDate, finishDate, categories, platforms } = req.body;
+            const { id } = req.params;
+            const { userId } = req.body;
 
-            const gameDto = new GameRegisterDto(
+            if (!id) {
+                res.status(400).json({ error: 'Platform ID is required' });
+                return;
+            }
+
+            const platform = await platformService.getPlatformById(id, userId);
+            res.status(200).json(platform);
+        } catch (error) {
+            if (error instanceof Error && error.message === 'Platform not found') {
+                res.status(404).json({ error: error.message });
+            } else {
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        }
+    }
+
+    async platformPost(req: Request, res: Response): Promise<void> {
+        try {
+            const { userId, name, company, acquisDate, imageUrl } = req.body;
+
+            const platformDto = new PlatformRegisterDto(
                 userId,
                 name,
-                description,
-                imageUrl,
+                company,
                 acquisDate,
-                categories,
-                platforms,
-                status,
-                favorite,
-                rating,
-                finishDate
+                imageUrl
             );
 
-            const validationResult = gameDto.isValid();
+            const validationResult = platformDto.isValid();
 
             if (!validationResult.valid) {
                 res.status(400).json({ errors: validationResult.errors });
                 return;
             }
 
-            const gameData = gameDto.data();
+            const platformData = platformDto.data();
 
-            const result = await gameService.create(gameData);
+            const result = await platformService.create(platformData);
             res.status(201).json(result);
         } catch (error) {
             if (error instanceof Error) {
@@ -73,41 +88,36 @@ export class GameController {
         }
     }
 
-    async gameUpdate(req: Request, res: Response): Promise<void> {
+    async platformUpdate(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            const { name, description, imageUrl, status, favorite, acquisDate, finishDate, categories, platforms } = req.body;
+            const { userId, name, company, acquisDate, imageUrl } = req.body;
 
             if (!id) {
-                res.status(400).json({ error: 'Game ID is required' });
+                res.status(400).json({ error: 'Platform ID is required' });
                 return;
             }
 
-            const gameDto = new GameUpdateDto(
+            const platformDto = new PlatformUpdateDto(
                 name,
-                description,
-                imageUrl,
-                status,
-                favorite,
+                company,
                 acquisDate,
-                finishDate,
-                categories,
-                platforms
+                imageUrl
             );
 
-            const validationResult = gameDto.isValid();
+            const validationResult = platformDto.isValid();
 
             if (!validationResult.valid) {
                 res.status(400).json({ errors: validationResult.errors });
                 return;
             }
 
-            const gameData = gameDto.data();
+            const platformData = platformDto.data();
 
-            const result = await gameService.update(id, gameData);
+            const result = await platformService.update(id, userId, platformData);
             res.status(200).json(result);
         } catch (error) {
-            if (error instanceof Error && error.message === 'Game not found') {
+            if (error instanceof Error && error.message === 'Platform not found') {
                 res.status(404).json({ error: error.message });
             } else if (error instanceof Error) {
                 res.status(400).json({ error: error.message });
@@ -117,47 +127,34 @@ export class GameController {
         }
     }
 
-    async gameDelete(req: Request, res: Response): Promise<void> {
+    async platformDelete(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
+            const { userId } = req.body;
 
             if (!id) {
-                res.status(400).json({ error: 'Game ID is required' });
+                res.status(400).json({ error: 'Platform ID is required' });
                 return;
             }
 
-            await gameService.delete(id);
+            const success = await platformService.delete(id, userId);
+            
+            if (!success) {
+                res.status(404).json({ error: 'Platform not found' });
+                return;
+            }
+            
             res.status(204).send();
         } catch (error) {
-            if (error instanceof Error && error.message === 'Game not found') {
-                res.status(404).json({ error: error.message });
+            if (error instanceof Error) {
+                res.status(400).json({ error: error.message });
             } else {
                 res.status(500).json({ error: 'Internal server error' });
             }
         }
     }
 
-    async gameGetById(req: Request, res: Response): Promise<void> {
-        try {
-            const { id } = req.params;
-
-            if (!id) {
-                res.status(400).json({ error: 'Game ID is required' });
-                return;
-            }
-
-            const game = await gameService.getById(id);
-            res.status(200).json(game);
-        } catch (error) {
-            if (error instanceof Error && error.message === 'Game not found') {
-                res.status(404).json({ error: error.message });
-            } else {
-                res.status(500).json({ error: 'Internal server error' });
-            }
-        }
-    }
-
-    async gameGetPaginated(req: Request, res: Response): Promise<void> {
+    async platformGetPaginated(req: Request, res: Response): Promise<void> {
         try {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;
@@ -172,7 +169,7 @@ export class GameController {
                 return;
             }
 
-            const validSortFields = ['name', 'createdAt', 'acquisDate', 'status', 'rating'];
+            const validSortFields = ['name', 'company', 'acquisDate', 'createdAt'];
             if (!validSortFields.includes(sortBy)) {
                 res.status(400).json({
                     error: `Invalid sort field. Allowed values: ${validSortFields.join(', ')}`
@@ -187,14 +184,14 @@ export class GameController {
                 return;
             }
 
-            const paginatedResult = await gameService.getPaginated(page, limit, sortBy, sortOrder, userId);
+            const paginatedResult = await platformService.getPaginated(page, limit, sortBy, sortOrder, userId);
             res.status(200).json(paginatedResult);
         } catch (error) {
             res.status(500).json({ error: 'Internal server error' });
         }
     }
 
-    async gameSearchByName(req: Request, res: Response): Promise<void> {
+    async platformSearchByName(req: Request, res: Response): Promise<void> {
         try {
             const name = req.query.name as string;
             const { userId } = req.body;
@@ -204,10 +201,10 @@ export class GameController {
                 return;
             }
 
-            const games = await gameService.getByName(name, userId);
-            res.status(200).json(games);
+            const platforms = await platformService.getPlatformsByName(name, userId);
+            res.status(200).json(platforms);
         } catch (error) {
-            if (error instanceof Error && error.message === 'No games found with this name') {
+            if (error instanceof Error && error.message === 'No platforms found with this name') {
                 res.status(404).json({ error: error.message });
             } else {
                 res.status(500).json({ error: 'Internal server error' });
@@ -216,4 +213,4 @@ export class GameController {
     }
 }
 
-export const gameController = new GameController();
+export const platformController = new PlatformController();
