@@ -1,52 +1,50 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+// CategoryForm.tsx
+import { useState } from "react";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
+import styled from "styled-components";
 
-interface CategoryFormProps {
+type Props = {
   onSubmit: (name: string) => void;
   onClose: () => void;
   defaultName?: string;
-}
+};
 
-export function CategoryForm({ onSubmit, onClose, defaultName = "" }: CategoryFormProps) {
+export function CategoryForm({ onSubmit, onClose, defaultName = "" }: Props) {
   const [name, setName] = useState(defaultName);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    setName(defaultName);
-  }, [defaultName]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim() === "") {
-      setError("Category name is required.");
-      return;
-    }
+    if (!name.trim()) return;
     onSubmit(name.trim());
-    setName("");
-    setError("");
     onClose();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-      <div className="space-y-2">
-        <Label htmlFor="category-name">Name</Label>
-        <Input
-          id="category-name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter category name"
-        />
-        {error && <p className="text-sm text-red-500">{error}</p>}
-      </div>
-      <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline" onClick={onClose}>
+    <Form onSubmit={handleSubmit}>
+      <Input
+        placeholder="Category Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <ButtonGroup>
+        <Button type="submit">Save</Button>
+        <Button type="button" onClick={onClose} variant="outline">
           Cancel
         </Button>
-        <Button type="submit">Save</Button>
-      </div>
-    </form>
+      </ButtonGroup>
+    </Form>
   );
 }
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+`;
