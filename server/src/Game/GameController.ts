@@ -184,7 +184,7 @@ export class GameController {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;
             const search = (req.query.search as string) || '';
-            const sortBy = (req.query.sortBy as string) || 'createdAt';
+            const sortBy = (req.query.sortBy as string) || 'updatedAt';
             const categoryBy = (req.query.categoryBy as string) || 'all';
             const platformBy = (req.query.platformBy as string) || 'all';
             const statusBy = (req.query.statusBy as string);
@@ -200,7 +200,7 @@ export class GameController {
             }
 
             const validStatusFields = ["playing", "done", "abandoned"]
-            const validSortFields = ['name', 'createdAt', 'acquisDate', 'status', 'rating', 'price', 'finishDate'];
+            const validSortFields = ['name', 'updatedAt', 'acquisDate', 'status', 'rating', 'price', 'finishDate'];
             if (!validSortFields.includes(sortBy)) {
                 res.status(400).json({
                     error: `Invalid sort field. Allowed values: ${validSortFields.join(', ')}`
