@@ -1,55 +1,51 @@
-// import React, { useState } from "react";
-// import SiteLayout from "@/components/global/SiteLayout";
-// import Table from "@/components/global/Table";
-// import Filter from "@/components/global/Filter";
-//
-// const initialGames = [
-//   {
-//     id: 1,
-//     image: "",
-//     title: "Mario Kart",
-//     description: "Mario B que ganhei de aniversário",
-//     category: "Racing",
-//     date: "08/12/2021 10:20",
-//     updatedAt: "",
-//     favorite: true,
-//   },
-//   {
-//     id: 2,
-//     image: "",
-//     title: "Valorant",
-//     description: "Valorant que jogo com amigos",
-//     category: "FPS",
-//     date: "08/12/2021 13:45",
-//     updatedAt: "08/12/2021 10:33",
-//     favorite: false,
-//   },
-// ];
-//
-// export default function Games() {
-//   const [games, setGames] = useState(initialGames);
-//
-//   const handleGameUpdate = (updatedGame) => {
-//     setGames(games.map((game) => (game.id === updatedGame.id ? updatedGame : game)));
-//   };
-//
-//   return (
-//     <SiteLayout>
-//       <Table games={games} onGameUpdate={handleGameUpdate} />
-//     </SiteLayout>
-//   );
-// }
+const initialGames: IGameEntity[] = [
+  {
+    id: "1",
+    userId: "1",
+    imageUrl: "",
+    name: "Mario Kart",
+    description: "Mario B que ganhei de aniversário",
+    categories: [{ id: "1" }],
+    favorite: true,
+    acquisDate: new Date(Date.now()),
+    finishDate: null,
+    status: "Playing",
+    updatedAt: new Date(Date.now()),
+  },
+];
+
+const labels = {
+  name: "Title",
+  description: "Description",
+  imageUrl: "Image",
+  status: "Status",
+  favorite: "Favorite",
+  rating: "Rating",
+  acquisDate: "Acquisition Date",
+  finishDate: "Finished Date",
+  price: "Price",
+  categories: "Categories",
+  platforms: "Platforms",
+  updatedAt: "Last Update",
+};
 
 import SiteLayout from "@/components/global/SiteLayout";
 import React, { useState } from "react";
+import { getAllItems, getItem } from "@/utils/crudHandlers";
+import { IGameEntity } from "@/../../server/src/Game/GameEntity";
 import FilterAndSearchBar from "@/components/global/FilterAndSearchBar";
 import Table from "@/components/global/Table";
 
 export default function Games() {
+  const [page, setPage] = useState<number>(1);
+  const [games, setGames] = useState<IGameEntity[]>(initialGames);
   const [filter, setFilter] = useState<string>("");
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
-  const [sort, setSort] = useState<string>("Newest");
+  const [sortBy, setSortBy] = useState<string>("updatedAt");
+  const [sortOrder, setSortOrder] = useState<string>("asc");
+
+  const pathAPI = `/api/v1/game/page?page=${page}&limit={5}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
 
   const handleFilter = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setFilter(e.target.value);
@@ -63,15 +59,28 @@ export default function Games() {
     setSearch(e.target.value);
   };
 
-  const handleRequest = () => {
-    console.log(`Request ${search}`);
+  const handleSortByAndOrder = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    if (e.currentTarget.value === sortBy) {
+      setSortOrder((order) => (order === "asc" ? "desc" : "asc"));
+      return;
+    }
+    setSortOrder("asc");
+    setSortBy(e.currentTarget.value);
   };
 
   const handleClear = () => {
     setFilter("");
     setIsFavorite(false);
     setSearch("");
-    setSort("Newest");
+    setSortBy("updatedAt");
+  };
+
+  const handleRequest = async () => {
+    if (!search.trim()) return;
+    const data = await getAllItems<IGameEntity>(`${pathAPI}&search=${search}`);
+    if (data) {
+      setGames(data);
+    }
   };
 
   return (
@@ -86,7 +95,17 @@ export default function Games() {
         onRequest={handleRequest}
         onClear={handleClear}
       />
-      {/*Table*/}
+      <Table<IGameEntity>
+        data={games}
+        header={["name", "rating", "price", "acquisDate", "finishDate", "updatedAt"]}
+        labels={labels}
+        sortBy={sortBy}
+        sortOrder={sortOrder}
+        onSortByAndOrder={handleSortByAndOrder}
+        path={pathAPI}
+        onItemsChange={setGames}
+        onClear={handleClear}
+      />
       {/*Pagination*/}
     </SiteLayout>
   );

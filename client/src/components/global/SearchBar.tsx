@@ -41,13 +41,13 @@ export default function SearchBar({
 }: {
   search: string;
   onSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onRequest: () => void;
+  onRequest?: () => Promise<void>;
 }) {
   return (
     <SearchContainer
       onSubmit={(e) => {
         e.preventDefault();
-        onRequest();
+        onRequest?.();
       }}
     >
       <Input value={search} onChange={onSearch} placeholder="Search game"></Input>

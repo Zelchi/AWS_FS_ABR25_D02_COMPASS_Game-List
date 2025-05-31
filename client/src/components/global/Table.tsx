@@ -1,150 +1,101 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import styled from "styled-components";
-import Star from "../../assets/star.svg?react";
-import StarOutline from "../../assets/star-outline.svg?react";
-import EyeOutline from "../../assets/eye-outline.svg?react";
-import PenOutline from "../../assets/pen-outline.svg?react";
-import TrashOutline from "../../assets/trash-outline.svg?react";
-import TableHeader from "@/components/global/TableHeader";
+import TableItem from "@/components/global/TableItem";
+import SortIcon from "@/assets/sort.svg?react";
+import SortIconFilled from "@/assets/sort-filled.svg?react";
+import { EntityWithId } from "@/types/types";
 
-const TableWrapper = styled.div`
-  width: 100%;
-  background: rgba(24, 24, 27, 1);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(66, 217, 200, 0.1);
-  padding: 8px;
-  margin-top: 16px;
-`;
-
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  background: #fff;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  box-shadow: 0 1px 2px rgba(66, 217, 200, 0.08);
-  padding: 8px 16px;
-  min-height: 60px;
-`;
-
-const Cell = styled.div<{ flex?: number; center?: boolean }>`
-  flex: ${({ flex }) => flex || 1};
-  display: flex;
-  align-items: center;
-  justify-content: ${({ center }) => (center ? "center" : "flex-start")};
-  min-width: 0;
-  font-size: 0.95rem;
-  color: #181a20;
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`;
-
-const GameImg = styled.img`
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  object-fit: cover;
-  margin-right: 8px;
-`;
-
-const IconButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  margin: 0 4px;
-  display: flex;
-  align-items: center;
-  padding: 4px;
-  transition: background 0.2s;
-  border-radius: 4px;
-  &:hover {
-    background: #e0f7fa;
-  }
-`;
-
-const IconImg = styled.img`
-  width: 20px;
-  height: 20px;
-`;
-
-export type Game = {
-  id: number;
-  image: string;
-  title: string;
-  description: string;
-  category: string;
-  date: string;
-  updatedAt: string;
-  favorite: boolean;
+type TableProps<T extends EntityWithId> = {
+  data: T[];
+  header: string[];
+  labels: { [key: string]: string };
+  sortBy: string;
+  sortOrder: string;
+  onSortByAndOrder: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  path: string;
+  onItemsChange: Dispatch<React.SetStateAction<T[]>>;
+  onClear?: () => void;
 };
 
-interface GamesTableProps {
-  games: Game[];
-  onGameUpdate: (game: Game) => void;
-}
+const TableRow = styled.tr``;
 
-export default function Table({ games, onGameUpdate }: GamesTableProps) {
-  const handleFavoriteClick = (game: Game) => {
-    onGameUpdate({
-      ...game,
-      favorite: !game.favorite,
-    });
-  };
+const SortIconWrapper = styled.span<{ $asc?: boolean }>`
+  width: 1.2rem;
+  display: inline-block;
+  fill: var(--color-aqua);
+  transform: ${({ $asc }) => ($asc ? "" : "rotate(180deg)")};
+`;
 
-  const handleViewClick = (game: Game) => {
-    // Implement view functionality
-    console.log("View game:", game);
-  };
+export default function Table<T extends EntityWithId>({
+  data,
+  header,
+  labels,
+  sortBy,
+  sortOrder,
+  onSortByAndOrder,
+  path,
+  onItemsChange,
+  onClear,
+}: TableProps<T>) {
+  const sorted = [...data].sort((a, b) => {
+    const aValue = (a as any)[sortBy];
+    const bValue = (b as any)[sortBy];
 
-  const handleEditClick = (game: Game) => {
-    // Implement edit functionality
-    console.log("Edit game:", game);
-  };
+    if (aValue === null) return 1;
+    if (bValue === null) return -1;
 
-  const handleDeleteClick = (game: Game) => {
-    // Implement delete functionality
-    console.log("Delete game:", game);
-  };
+    if (aValue instanceof Date && bValue instanceof Date) {
+      return sortOrder === "asc"
+        ? aValue.getTime() - bValue.getTime()
+        : bValue.getTime() - aValue.getTime();
+    }
+
+    if (typeof aValue === "string" && typeof bValue === "string") {
+      return sortOrder === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+    }
+
+    if (typeof aValue === "number" && typeof bValue === "number") {
+      return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
+    }
+
+    return 0;
+  });
 
   return (
-    <>
-      <TableHeader />
-      <TableWrapper>
-        {games.map((game) => (
-          <Row key={game.id}>
-            <Cell flex={1}>
-              <GameImg src={game.image} alt={game.title} />
-            </Cell>
-            <Cell flex={2}>{game.title}</Cell>
-            <Cell flex={3}>{game.description}</Cell>
-            <Cell flex={1}>{game.category}</Cell>
-            <Cell flex={2}>{game.date}</Cell>
-            <Cell flex={2}>{game.updatedAt}</Cell>
-            <Cell flex={1} center>
-              <IconButton onClick={() => handleFavoriteClick(game)}>
-                {game.id === 2 ? <StarOutline /> : <Star />}
-              </IconButton>
-            </Cell>
-            <Cell flex={1} center>
-              <IconButton onClick={() => handleViewClick(game)}>
-                <EyeOutline />
-              </IconButton>
-            </Cell>
-            <Cell flex={1} center>
-              <IconButton onClick={() => handleEditClick(game)}>
-                <PenOutline />
-              </IconButton>
-            </Cell>
-            <Cell flex={1} center>
-              <IconButton onClick={() => handleDeleteClick(game)}>
-                <TrashOutline />
-              </IconButton>
-            </Cell>
-          </Row>
+    <table>
+      <thead>
+        <TableRow>
+          {header.map((head) => (
+            <th key={head}>
+              <button value={head} onClick={onSortByAndOrder}>
+                {labels[head]}{" "}
+                {sortBy === head ? (
+                  <SortIconWrapper $asc={sortOrder === "asc"}>
+                    <SortIconFilled />
+                  </SortIconWrapper>
+                ) : (
+                  <SortIconWrapper>
+                    <SortIcon />
+                  </SortIconWrapper>
+                )}
+              </button>
+            </th>
+          ))}
+        </TableRow>
+      </thead>
+      <tbody>
+        {sorted.map((item) => (
+          <TableRow key={item.id}>
+            {header.map((head) => (
+              <TableItem<T> key={head} path={path} onItemsChange={onItemsChange} onClear={onClear}>
+                {(item as any)[head] instanceof Date
+                  ? (item as any)[head].toLocaleDateString()
+                  : String((item as any)[head] ?? "")}
+              </TableItem>
+            ))}
+          </TableRow>
         ))}
-      </TableWrapper>
-    </>
+      </tbody>
+    </table>
   );
 }
