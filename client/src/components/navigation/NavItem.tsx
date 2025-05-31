@@ -115,7 +115,6 @@ export function NavItem({ path, label, icon }: NavItemProps) {
     const removeToken = () => {
         axios.defaults.headers.common["Authorization"] = "";
         localStorage.removeItem("token");
-        navigate("/login");
     }
 
     return (
