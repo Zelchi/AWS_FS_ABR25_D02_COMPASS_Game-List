@@ -162,6 +162,9 @@ export class GameController {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;
             const sortBy = (req.query.sortBy as string) || 'createdAt';
+            const categoryBy = (req.query.categoryBy as string) || 'all';
+            const platformBy = (req.query.platformBy as string) || 'all';
+            const isFavorite = req.query.isFavorite === 'true' ? true : false;
             const sortOrder = (req.query.sortOrder as 'asc' | 'desc') || 'desc';
             const { userId } = req.body;
 
@@ -187,7 +190,7 @@ export class GameController {
                 return;
             }
 
-            const paginatedResult = await gameService.getPaginated(page, limit, sortBy, sortOrder, userId);
+            const paginatedResult = await gameService.getPaginated(page, limit, sortBy, categoryBy, platformBy, isFavorite, sortOrder, userId);
             res.status(200).json(paginatedResult);
         } catch (error) {
             res.status(500).json({ error: 'Internal server error' });

@@ -35,6 +35,28 @@ export class CategoryController {
         }
     }
 
+    async categoryGetNameAll(req: Request, res: Response): Promise<void> {
+        try {
+            const { userId } = req.body;
+
+            if (!userId) {
+                res.status(400).json({ error: 'User ID is required' });
+                return;
+            }
+
+            const categories = await categoryService.getAllCategories(userId);
+
+            if (categories.length === 0) {
+                res.status(404).json({ error: 'No categories found for this user' });
+                return;
+            }
+
+            res.status(200).json(categories);
+        } catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+
     async categoryGetById(req: Request, res: Response): Promise<void> {
         try {
             const { userId } = req.body;
@@ -64,6 +86,13 @@ export class CategoryController {
 
             const categoryDto = new CategoryRegisterDto(name, description, userId);
             const validationResult = categoryDto.isValid();
+
+            const searchByName = await categoryService.getCategoriesByName(name, userId);
+
+            if (searchByName.length > 0) {
+                res.status(400).json({ error: 'Category with this name already exists' });
+                return;
+            }
 
             if (!validationResult.valid) {
                 res.status(400).json({ errors: validationResult.errors });

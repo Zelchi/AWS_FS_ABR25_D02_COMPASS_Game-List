@@ -3,6 +3,26 @@ import { ICategoryEntity, ICategoryRegister } from './CategoryEntity';
 
 class CategoryRepository {
 
+    async findAllNames(userId: string): Promise<string[]> {
+        try {
+            const categories = await prisma.category.findMany({
+                where: {
+                    userId,
+                    deletedAt: null
+                },
+                select: {
+                    name: true
+                },
+                orderBy: {
+                    name: 'asc'
+                }
+            });
+            return categories.map(category => category.name);
+        } catch (error) {
+            throw new Error('Failed to fetch category names');
+        }
+    }
+
     async create(categoryData: ICategoryRegister): Promise<ICategoryEntity> {
         try {
             return await prisma.category.create({

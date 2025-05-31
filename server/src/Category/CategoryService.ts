@@ -3,6 +3,17 @@ import { categoryRepository } from './CategoryRepository';
 
 class CategoryService {
 
+    async getAllCategories(userId: string): Promise<string[]> {
+        try {
+            return await categoryRepository.findAllNames(userId);
+        } catch (error) {
+            if (error instanceof Error) {
+                throw error;
+            }
+            throw new Error('Failed to get all categories');
+        }
+    }
+
     async create(categoryData: ICategoryRegister): Promise<ICategoryEntity> {
         try {
             return await categoryRepository.create(categoryData);

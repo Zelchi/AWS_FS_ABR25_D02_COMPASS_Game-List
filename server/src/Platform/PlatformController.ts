@@ -35,6 +35,22 @@ export class PlatformController {
         }
     }
 
+    async platformGetNameAll(req: Request, res: Response): Promise<void> {
+        try {
+            const { userId } = req.body;
+
+            if (!userId) {
+                res.status(400).json({ error: 'User ID is required' });
+                return;
+            }
+
+            const platforms = await platformService.getAllPlatforms(userId);
+            res.status(200).json(platforms);
+        } catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+
     async platformGetById(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
@@ -68,8 +84,13 @@ export class PlatformController {
                 imageUrl
             );
 
-            const validationResult = platformDto.isValid();
+            const searchByName = await platformService.getPlatformsByName(name, userId);
+            if (searchByName.length > 0) {
+                res.status(400).json({ error: 'Platform with this name already exists for this user' });
+                return;
+            }
 
+            const validationResult = platformDto.isValid();
             if (!validationResult.valid) {
                 res.status(400).json({ errors: validationResult.errors });
                 return;
@@ -138,12 +159,12 @@ export class PlatformController {
             }
 
             const success = await platformService.delete(id, userId);
-            
+
             if (!success) {
                 res.status(404).json({ error: 'Platform not found' });
                 return;
             }
-            
+
             res.status(204).send();
         } catch (error) {
             if (error instanceof Error) {

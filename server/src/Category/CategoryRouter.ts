@@ -18,6 +18,10 @@ class CategoryRouter {
 
     private setupRoutes(): void {
 
+        this.router.get("/", (req: Request, res: Response) => {
+            categoryController.categoryGetNameAll(req, res);
+        });
+
         this.router.get("/page", (req: Request, res: Response) => {
             categoryController.categoryGetPaginated(req, res);
         });

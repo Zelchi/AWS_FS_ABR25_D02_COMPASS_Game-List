@@ -98,7 +98,7 @@ class GameRepository {
 
     async findById(id: string): Promise<IGameEntity | null> {
         return prisma.game.findUnique({
-            where: { 
+            where: {
                 id,
                 deletedAt: null
             },
@@ -109,39 +109,6 @@ class GameRepository {
         });
     }
 
-    async findPaginated(
-        page: number,
-        limit: number,
-        sortBy: string = 'createdAt',
-        sortOrder: 'asc' | 'desc' = 'desc',
-        userId: string
-    ): Promise<{ games: IGameEntity[], total: number }> {
-        const skip = (page - 1) * limit;
-
-        const orderBy: any = {};
-        orderBy[sortBy] = sortOrder;
-
-        const where = { deletedAt: null, userId };
-
-        const [games, total] = await Promise.all([
-            prisma.game.findMany({
-                where,
-                include: {
-                    categories: true,
-                    platforms: true
-                },
-                skip,
-                take: limit,
-                orderBy
-            }),
-            prisma.game.count({
-                where
-            })
-        ]);
-
-        return { games, total };
-    }
-    
     async findByName(name: string, userId: string): Promise<IGameEntity[]> {
         try {
             const games = await prisma.game.findMany({
@@ -158,6 +125,71 @@ class GameRepository {
             return games;
         } catch (error) {
             throw new Error('Failed to find games by name');
+        }
+    }
+
+
+    async findPaginated(
+        page: number,
+        limit: number,
+        sortBy: string,
+        categoryBy: string,
+        platformBy: string,
+        isFavorite: boolean,
+        sortOrder: 'asc' | 'desc',
+        userId: string
+    ): Promise<{ games: IGameEntity[], total: number }> {
+        try {
+            const skip = (page - 1) * limit;
+
+            const orderBy: any = {};
+            orderBy[sortBy] = sortOrder;
+
+            const where: any = {
+                deletedAt: null,
+                userId
+            };
+
+            if (isFavorite) {
+                where.favorite = true;
+            }
+
+            if (categoryBy && categoryBy !== 'all') {
+                where.categories = {
+                    some: {
+                        name: { contains: categoryBy }
+                    }
+                };
+            }
+
+            if (platformBy && platformBy !== 'all') {
+                where.platforms = {
+                    some: {
+                        name: { contains: platformBy }
+                    }
+                };
+            }
+
+            const [games, total] = await Promise.all([
+                prisma.game.findMany({
+                    where,
+                    include: {
+                        categories: true,
+                        platforms: true
+                    },
+                    skip,
+                    take: limit,
+                    orderBy
+                }),
+                prisma.game.count({
+                    where
+                })
+            ]);
+
+            return { games, total };
+        } catch (error) {
+            console.error('Error fetching paginated games:', error);
+            throw new Error('Failed to fetch paginated games');
         }
     }
 }

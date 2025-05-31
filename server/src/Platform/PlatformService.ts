@@ -3,6 +3,21 @@ import { platformRepository } from './PlatformRepository';
 
 class PlatformService {
 
+    async getAllPlatforms(userId: string): Promise<string[]> {
+        try {
+            const platforms = await platformRepository.findAllNames(userId);
+            if (!platforms || platforms.length === 0) {
+                throw new Error('No platforms found');
+            }
+            return platforms;
+        } catch (error) {
+            if (error instanceof Error) {
+                throw error;
+            }
+            throw new Error('Failed to get all platforms');
+        }
+    }
+
     async create(platformData: IPlatformRegister): Promise<IPlatformEntity> {
         try {
             return await platformRepository.create(platformData);

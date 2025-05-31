@@ -18,6 +18,10 @@ class PlatformRouter {
 
     private setupRoutes(): void {
 
+        this.router.get("/", (req: Request, res: Response) => 
+            platformController.platformGetNameAll(req, res)
+        );
+
         this.router.get("/page", (req: Request, res: Response) => 
             platformController.platformGetPaginated(req, res)
         );
