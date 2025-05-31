@@ -15,6 +15,7 @@ const ButtonEl = styled.button<{ $size?: string; $variant: string }>`
   padding: ${({ $size }) => ($size === "large" ? "1.4rem" : ".8rem 1.2rem")};
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
   line-height: 1;
   font-family: var(--font-primary);
