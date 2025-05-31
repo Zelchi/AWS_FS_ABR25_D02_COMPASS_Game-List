@@ -1,5 +1,6 @@
 import { useEffect, useCallback, JSX } from "react";
 import { Outlet } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import API from "../../utils/API";
 import { useNavigate } from "react-router-dom";
 
@@ -10,20 +11,23 @@ interface AuthProps {
 export function Auth({ onLogin }: AuthProps): JSX.Element {
     const navigate = useNavigate();
 
-    const checkAuth = useCallback(async () => {
-        const isAuthenticated = await API.Auth();
-        const isAuth = Boolean(isAuthenticated);
-
-        onLogin(isAuth);
-
-        if (!isAuth) return navigate("/login");
-    }, []);
+    const { data: isAuthenticated, isLoading } = useQuery({
+        queryKey: ['auth'],
+        queryFn: API.Auth,
+        staleTime: 5 * 60 * 1000,
+        retry: false
+    });
 
     useEffect(() => {
+        if (!isLoading) {
+            const isAuth = Boolean(isAuthenticated);
+            onLogin(isAuth);
 
-        checkAuth();
-
-    }, []);
+            if (!isAuth) {
+                navigate("/login");
+            }
+        }
+    }, [isAuthenticated, navigate, onLogin]);
 
     return (
         <div>
