@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import React from "react";
 
@@ -109,10 +109,10 @@ type NavItemProps = {
 
 export function NavItem({ path, label, icon }: NavItemProps) {
     const location = useLocation();
+    const navigate = useNavigate();
     const isActive = location.pathname === path;
 
     const removeToken = () => {
-        if (!localStorage.getItem("token")) return;
         axios.defaults.headers.common["Authorization"] = "";
         localStorage.removeItem("token");
     }
