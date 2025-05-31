@@ -4,11 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import API from "../../utils/API";
 import { useNavigate } from "react-router-dom";
 
-interface AuthProps {
-    onLogin: (isAuthenticated: boolean) => void;
-}
-
-export function Auth({ onLogin }: AuthProps): JSX.Element {
+export function Auth(): JSX.Element {
     const navigate = useNavigate();
 
     const { data: isAuthenticated, isLoading } = useQuery({
@@ -17,17 +13,21 @@ export function Auth({ onLogin }: AuthProps): JSX.Element {
         staleTime: 5 * 60 * 1000,
         retry: false
     });
-
+    
     useEffect(() => {
         if (!isLoading) {
+
             const isAuth = Boolean(isAuthenticated);
-            onLogin(isAuth);
 
             if (!isAuth) {
                 navigate("/login");
             }
+            if (isAuth && window.location.pathname === "/login") {
+                navigate("/");
+            }
         }
-    }, [isAuthenticated, navigate, onLogin]);
+
+    }, [isAuthenticated]);
 
     return (
         <div>

@@ -5,12 +5,6 @@ import { FormInputField } from "@/components/forms/FormInputField";
 import Button from "@/components/global/Button";
 import API from "@/utils/API";
 
-type LoginFormType = {
-  isRegistered: boolean;
-  onRegister: () => void;
-  onLogin: () => void;
-};
-
 const Form = styled.form`
   width: 41.5rem;
   margin-bottom: 2.8rem;
@@ -34,7 +28,12 @@ const ButtonContainer = styled.div`
   margin-top: 2.4rem;
 `;
 
-export function LoginForm({ isRegistered, onRegister, onLogin }: LoginFormType): React.JSX.Element {
+type LoginFormType = {
+  isRegistered: boolean;
+  onRegister: () => void;
+};
+
+export function LoginForm({ isRegistered, onRegister }: LoginFormType): React.JSX.Element {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,7 +51,6 @@ export function LoginForm({ isRegistered, onRegister, onLogin }: LoginFormType):
 
       if (status === 200) {
         localStorage.setItem("token", data.token);
-        onLogin();
         navigate("/");
       }
     } catch {
