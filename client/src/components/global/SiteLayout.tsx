@@ -1,8 +1,7 @@
 import React, { ReactNode, useState } from "react";
 import styled from "styled-components";
 import SideBar from "@/components/navigation/SideBar";
-import MainContent from "@/components/global/MainContent";
-import Pagination from "@/components/global/Pagination";
+import SiteHeader from "@/components/global/SiteHeader";
 
 const Container = styled.div<{ $isOpen: boolean }>`
   display: grid;
@@ -26,6 +25,16 @@ const Container = styled.div<{ $isOpen: boolean }>`
   }
 `;
 
+const MainContent = styled.main`
+  min-height: 100vh;
+  background-color: var(--color-grey-dark-02);
+  padding: 2.1rem 3rem 3rem;
+
+  @media (max-width: 30em) {
+    padding-top: 10.58rem;
+  }
+`;
+
 export default function SiteLayout({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -36,9 +45,9 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <Container $isOpen={isOpen}>
       <SideBar />
-      <MainContent isOpen={isOpen} onOpen={handleOpen}>
-        {children}
-        {/*<Pagination />*/}
+      <MainContent>
+        <SiteHeader isOpen={isOpen} onOpen={handleOpen} />
+        <section>{children}</section>
       </MainContent>
     </Container>
   );

@@ -137,7 +137,9 @@ export function LoginForm({ isRegistered, onRegister, onLogin }: LoginFormType):
         </>
       )}
       <ButtonContainer>
-        <Button type="submit">{isRegistered ? "Login" : "Sign Up"}</Button>
+        <Button type="submit" size="large">
+          {isRegistered ? "Login" : "Sign Up"}
+        </Button>
       </ButtonContainer>
     </Form>
   );
