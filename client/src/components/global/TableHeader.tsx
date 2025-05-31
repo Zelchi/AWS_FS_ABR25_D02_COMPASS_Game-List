@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import SortIconImg from "../../assets/sort.svg?react";
-import Filter from "./Filter";
+import Filter from "./FilterAndSearchBar";
 
 const HeaderWrapper = styled.div`
   width: 100%;
