@@ -10,21 +10,16 @@ import { Auth } from "@/components/global/Auth";
 
 export default function App(): React.JSX.Element {
   const [isLogged, setIsLogged] = useState(false);
-  const [isAuth, setIsAtuh] = useState(false);
 
   const handleLogin: () => void = (): void => {
     setIsLogged((is) => !is);
-  };
-
-  const handleAuth: () => void = (): void => {
-    setIsAtuh((is) => !is);
   };
 
   return (
     <Routes>
       {!isLogged && <Route path="/login" element={<Login onLogin={handleLogin} />} />}
 
-      <Route element={<Auth Login={isLogged} Auth={isAuth} onAuth={handleAuth} onLogin={handleLogin} />}>
+      <Route element={<Auth onLogin={setIsLogged} />}>
         <Route path="/" element={<Home />} />
         <Route path="/games" element={<Games />} />
         <Route path="/categories" element={<Categories />} />

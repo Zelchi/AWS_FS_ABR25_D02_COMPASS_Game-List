@@ -4,24 +4,19 @@ import API from "../../utils/API";
 import { useNavigate } from "react-router-dom";
 
 interface AuthProps {
-    onAuth: () => void;
-    onLogin: () => void;
-    Auth: boolean;
-    Login: boolean;
+    onLogin: (isAuthenticated: boolean) => void;
 }
 
-export function Auth({ onAuth, onLogin, Auth, Login }: AuthProps): JSX.Element {
-
+export function Auth({ onLogin }: AuthProps): JSX.Element {
     const navigate = useNavigate();
 
     const checkAuth = useCallback(async () => {
         const isAuthenticated = await API.Auth();
-        if (isAuthenticated) {
-            onAuth();
-            onLogin();
-        } else {
-            navigate('/login');
-        }
+        const isAuth = Boolean(isAuthenticated);
+
+        onLogin(isAuth);
+
+        if (!isAuth) return navigate("/login");
     }, []);
 
     useEffect(() => {
