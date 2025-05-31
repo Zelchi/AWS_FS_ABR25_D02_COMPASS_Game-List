@@ -88,7 +88,6 @@ export class CategoryController {
             const validationResult = categoryDto.isValid();
 
             const searchByName = await categoryService.getCategoriesByName(name, userId);
-
             if (searchByName.length > 0) {
                 res.status(400).json({ error: 'Category with this name already exists' });
                 return;
@@ -216,11 +215,7 @@ export class CategoryController {
             const categories = await categoryService.getCategoriesByName(name, userId);
             res.status(200).json(categories);
         } catch (error) {
-            if (error instanceof Error && error.message === 'No categories found with this name') {
-                res.status(404).json({ error: error.message });
-            } else {
-                res.status(500).json({ error: 'Internal server error' });
-            }
+            res.status(500).json({ error: 'Internal server error' });
         }
     }
 }
