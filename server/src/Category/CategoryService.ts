@@ -73,6 +73,7 @@ class CategoryService {
     async getPaginated(
         page: number,
         limit: number,
+        search: string,
         sortBy: string = 'createdAt',
         sortOrder: 'asc' | 'desc' = 'desc',
         userId: string
@@ -83,7 +84,7 @@ class CategoryService {
         totalPages: number,
     }> {
         try {
-            const { categories, total } = await categoryRepository.findPaginated(page, limit, sortBy, sortOrder, userId);
+            const { categories, total } = await categoryRepository.findPaginated(page, limit, search, sortBy, sortOrder, userId);
             const totalPages = Math.ceil(total / limit);
 
             return {

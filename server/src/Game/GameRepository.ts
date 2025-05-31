@@ -158,7 +158,7 @@ class GameRepository {
                 where.name = { contains: search };
             }
 
-            if (categoryBy && categoryBy !== 'all') {
+            if (categoryBy) {
                 where.categories = {
                     some: {
                         name: { contains: categoryBy }
@@ -166,7 +166,7 @@ class GameRepository {
                 };
             }
 
-            if (platformBy && platformBy !== 'all') {
+            if (platformBy) {
                 where.platforms = {
                     some: {
                         name: { contains: platformBy }

@@ -179,6 +179,7 @@ export class PlatformController {
         try {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;
+            const search = (req.query.search as string) || '';
             const sortBy = (req.query.sortBy as string) || 'createdAt';
             const sortOrder = (req.query.sortOrder as 'asc' | 'desc') || 'desc';
             const { userId } = req.body;
@@ -205,7 +206,14 @@ export class PlatformController {
                 return;
             }
 
-            const paginatedResult = await platformService.getPaginated(page, limit, sortBy, sortOrder, userId);
+            const paginatedResult = await platformService.getPaginated(
+                page,
+                limit,
+                search,
+                sortBy,
+                sortOrder,
+                userId
+            );
             res.status(200).json(paginatedResult);
         } catch (error) {
             res.status(500).json({ error: 'Internal server error' });

@@ -159,7 +159,7 @@ export class CategoryController {
                 return;
             }
 
-            res.status(200).json({ message: 'Category deleted successfully' });
+            res.status(204).json({ message: 'Category deleted successfully' });
         } catch (error) {
             res.status(500).json({ error: 'Internal server error' });
         }
@@ -169,6 +169,7 @@ export class CategoryController {
         try {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;
+            const search = (req.query.search as string) || '';
             const sortBy = (req.query.sortBy as string) || 'createdAt';
             const sortOrder = (req.query.sortOrder as 'asc' | 'desc') || 'desc';
             const { userId } = req.body;
@@ -195,7 +196,7 @@ export class CategoryController {
                 return;
             }
 
-            const paginatedResult = await categoryService.getPaginated(page, limit, sortBy, sortOrder, userId);
+            const paginatedResult = await categoryService.getPaginated(page, limit, search, sortBy, sortOrder, userId);
             res.status(200).json(paginatedResult);
         } catch (error) {
             res.status(500).json({ error: 'Internal server error' });
