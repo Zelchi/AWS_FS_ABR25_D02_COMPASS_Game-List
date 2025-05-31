@@ -26,7 +26,7 @@ const Container = styled.main`
   }
 `;
 
-export default function Login({ onLogin }: { onLogin: () => void }): React.JSX.Element {
+export default function Login(): React.JSX.Element {
   const [isRegistered, setIsRegistered] = useState(true);
 
   const handleIsRegistered: () => void = (): void => {
@@ -37,7 +37,7 @@ export default function Login({ onLogin }: { onLogin: () => void }): React.JSX.E
     <Container>
       <BackgroundIcons />
       <LoginBox isRegistered={isRegistered} onRegister={handleIsRegistered}>
-        <LoginForm isRegistered={isRegistered} onRegister={handleIsRegistered} onLogin={onLogin} />
+        <LoginForm isRegistered={isRegistered} onRegister={handleIsRegistered} />
       </LoginBox>
     </Container>
   );
