@@ -37,7 +37,7 @@ export class GameController {
 
     async gamePost(req: Request, res: Response): Promise<void> {
         try {
-            const { userId, name, description, imageUrl, status, favorite, rating, acquisDate, finishDate, categories, platforms } = req.body;
+            const { userId, name, description, imageUrl, status, favorite, rating, acquisDate, finishDate, price, categories, platforms } = req.body;
 
             const gameDto = new GameRegisterDto(
                 userId,
@@ -50,6 +50,7 @@ export class GameController {
                 status,
                 favorite,
                 rating,
+                price,
                 finishDate
             );
 
@@ -157,46 +158,6 @@ export class GameController {
         }
     }
 
-    async gameGetPaginated(req: Request, res: Response): Promise<void> {
-        try {
-            const page = parseInt(req.query.page as string) || 1;
-            const limit = parseInt(req.query.limit as string) || 10;
-            const sortBy = (req.query.sortBy as string) || 'createdAt';
-            const categoryBy = (req.query.categoryBy as string) || 'all';
-            const platformBy = (req.query.platformBy as string) || 'all';
-            const isFavorite = req.query.isFavorite === 'true' ? true : false;
-            const sortOrder = (req.query.sortOrder as 'asc' | 'desc') || 'desc';
-            const { userId } = req.body;
-
-            if (page < 1 || limit < 1 || limit > 100) {
-                res.status(400).json({
-                    error: 'Invalid pagination parameters. Use "page" >= 1 and "limit" between 1 and 100.'
-                });
-                return;
-            }
-
-            const validSortFields = ['name', 'createdAt', 'acquisDate', 'status', 'rating'];
-            if (!validSortFields.includes(sortBy)) {
-                res.status(400).json({
-                    error: `Invalid sort field. Allowed values: ${validSortFields.join(', ')}`
-                });
-                return;
-            }
-
-            if (sortOrder !== 'asc' && sortOrder !== 'desc') {
-                res.status(400).json({
-                    error: 'Invalid sort order. Use "asc" or "desc".'
-                });
-                return;
-            }
-
-            const paginatedResult = await gameService.getPaginated(page, limit, sortBy, categoryBy, platformBy, isFavorite, sortOrder, userId);
-            res.status(200).json(paginatedResult);
-        } catch (error) {
-            res.status(500).json({ error: 'Internal server error' });
-        }
-    }
-
     async gameSearchByName(req: Request, res: Response): Promise<void> {
         try {
             const name = req.query.name as string;
@@ -215,6 +176,67 @@ export class GameController {
             } else {
                 res.status(500).json({ error: 'Internal server error' });
             }
+        }
+    }
+
+    async gameGetPaginated(req: Request, res: Response): Promise<void> {
+        try {
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+            const search = (req.query.search as string) || '';
+            const sortBy = (req.query.sortBy as string) || 'createdAt';
+            const categoryBy = (req.query.categoryBy as string) || 'all';
+            const platformBy = (req.query.platformBy as string) || 'all';
+            const statusBy = (req.query.statusBy as string);
+            const isFavorite = req.query.isFavorite === 'true' ? true : false;
+            const sortOrder = (req.query.sortOrder as 'asc' | 'desc') || 'desc';
+            const { userId } = req.body;
+
+            if (page < 1 || limit < 1 || limit > 100) {
+                res.status(400).json({
+                    error: 'Invalid pagination parameters. Use "page" >= 1 and "limit" between 1 and 100.'
+                });
+                return;
+            }
+
+            const validStatusFields = ["playing", "done", "abandoned"]
+            const validSortFields = ['name', 'createdAt', 'acquisDate', 'status', 'rating', 'price', 'finishDate'];
+            if (!validSortFields.includes(sortBy)) {
+                res.status(400).json({
+                    error: `Invalid sort field. Allowed values: ${validSortFields.join(', ')}`
+                });
+                return;
+            }
+
+            if (statusBy && !validStatusFields.includes(statusBy)) {
+                res.status(400).json({
+                    error: `Invalid status field. Allowed values: ${validStatusFields.join(', ')}`
+                });
+                return;
+            }
+
+            if (sortOrder !== 'asc' && sortOrder !== 'desc') {
+                res.status(400).json({
+                    error: 'Invalid sort order. Use "asc" or "desc".'
+                });
+                return;
+            }
+
+            const paginatedResult = await gameService.getPaginated(
+                page,
+                limit,
+                search,
+                sortBy,
+                categoryBy,
+                platformBy,
+                isFavorite,
+                sortOrder,
+                userId
+            );
+            
+            res.status(200).json(paginatedResult);
+        } catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
         }
     }
 }

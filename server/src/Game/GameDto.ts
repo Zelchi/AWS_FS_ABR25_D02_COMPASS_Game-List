@@ -1,6 +1,7 @@
 import { IGameEntity } from "./GameEntity";
 
 class GameDto {
+    
     static validateName(name: string): boolean {
         return typeof name === 'string' && name.trim() !== '';
     }
@@ -40,20 +41,25 @@ class GameDto {
         return finishDate instanceof Date && !isNaN(finishDate.getTime());
     }
 
-    static validateCategories(categories: { id: string }[]): boolean {
-        if (!categories || !Array.isArray(categories) || categories.length === 0) return false;
+    static validateCategories(categories?: { id: string }[] | null): boolean {
+        if (!categories || !Array.isArray(categories)) return true;
         return categories.every(category => typeof category.id === 'string' && category.id.trim() !== '');
     }
 
     static validatePlatforms(platforms?: { id: string }[] | null): boolean {
         if (!platforms || platforms.length === 0) return true;
-        
+
         return platforms.every(platform => typeof platform.id === 'string' && platform.id.trim() !== '');
     }
 
     static validateRating(rating?: number): boolean {
         if (rating === undefined) return true;
         return typeof rating === 'number' && Number.isInteger(rating) && rating >= 0 && rating <= 5;
+    }
+
+    static validatePrice(price?: number): boolean {
+        if (price === undefined) return true;
+        return typeof price === 'number' && Number.isInteger(price) && price >= 0;
     }
 }
 
@@ -65,10 +71,11 @@ export class GameRegisterDto implements IGameEntity {
     status: string;
     favorite: boolean;
     rating: number;
+    price: number;
     acquisDate: Date;
     finishDate?: Date;
-    categories: { id: string }[];
-    platforms: { id: string }[] = []; 
+    categories: { id: string }[] = [];
+    platforms: { id: string }[] = [];
 
     constructor(
         userId: string,
@@ -76,11 +83,12 @@ export class GameRegisterDto implements IGameEntity {
         description: string,
         imageUrl: string,
         acquisDate: Date | string,
-        categories: { id: string }[],
-        platforms?: { id: string }[], 
+        categories?: { id: string }[],
+        platforms?: { id: string }[],
         status: string = 'none',
         favorite: boolean = false,
         rating: number = 0,
+        price: number = 0,
         finishDate?: Date | string
     ) {
         this.userId = userId;
@@ -90,12 +98,11 @@ export class GameRegisterDto implements IGameEntity {
         this.status = status;
         this.favorite = favorite;
         this.rating = rating;
+        this.price = price;
         this.acquisDate = typeof acquisDate === 'string' ? new Date(acquisDate) : acquisDate;
-        if (finishDate) {
-            this.finishDate = typeof finishDate === 'string' ? new Date(finishDate) : finishDate;
-        }
-        this.categories = categories;
-        this.platforms = platforms || []; 
+        this.finishDate = typeof finishDate === 'string' ? new Date(finishDate) : finishDate;
+        this.categories = categories || [];
+        this.platforms = platforms || [];
     }
 
     public isValid(): { valid: boolean; errors: string[] } {
@@ -141,6 +148,10 @@ export class GameRegisterDto implements IGameEntity {
             errors.push('Invalid platforms');
         }
 
+        if (!GameDto.validatePrice(this.price)) {
+            errors.push('Price must be a non-negative integer');
+        }
+
         if (!GameDto.validateRating(this.rating)) {
             errors.push('Rating must be an integer between 0 and 5');
         }
@@ -160,6 +171,7 @@ export class GameRegisterDto implements IGameEntity {
             status: this.status,
             favorite: this.favorite,
             rating: this.rating,
+            price: this.price,
             acquisDate: this.acquisDate,
             finishDate: this.finishDate,
             categories: this.categories,
@@ -175,6 +187,7 @@ export class GameUpdateDto implements Partial<IGameEntity> {
     status?: string;
     favorite?: boolean;
     rating?: number;
+    price?: number;
     acquisDate?: Date;
     finishDate?: Date | null;
     categories?: { id: string }[];
@@ -190,7 +203,8 @@ export class GameUpdateDto implements Partial<IGameEntity> {
         finishDate?: Date | string | null,
         categories?: { id: string }[],
         platforms?: { id: string }[],
-        rating?: number
+        rating?: number,
+        price?: number
     ) {
         if (name !== undefined) this.name = name;
         if (description !== undefined) this.description = description;
@@ -198,11 +212,12 @@ export class GameUpdateDto implements Partial<IGameEntity> {
         if (status !== undefined) this.status = status;
         if (favorite !== undefined) this.favorite = favorite;
         if (rating !== undefined) this.rating = rating;
+        if (price !== undefined) this.price = price;
         if (acquisDate !== undefined) {
             this.acquisDate = typeof acquisDate === 'string' ? new Date(acquisDate) : acquisDate;
         }
         if (finishDate !== undefined) {
-            this.finishDate = finishDate === null ? null : 
+            this.finishDate = finishDate === null ? null :
                 typeof finishDate === 'string' ? new Date(finishDate) : finishDate;
         }
         if (categories !== undefined) this.categories = categories;
@@ -248,6 +263,10 @@ export class GameUpdateDto implements Partial<IGameEntity> {
             errors.push('Invalid platforms');
         }
 
+        if (this.price !== undefined && !GameDto.validatePrice(this.price)) {
+            errors.push('Price must be a non-negative integer');
+        }
+
         if (this.rating !== undefined && !GameDto.validateRating(this.rating)) {
             errors.push('Rating must be an integer between 0 and 5');
         }
@@ -260,18 +279,19 @@ export class GameUpdateDto implements Partial<IGameEntity> {
 
     public data() {
         const result: Partial<IGameEntity> = {};
-        
+
         if (this.name !== undefined) result.name = this.name;
         if (this.description !== undefined) result.description = this.description;
         if (this.imageUrl !== undefined) result.imageUrl = this.imageUrl;
         if (this.status !== undefined) result.status = this.status;
         if (this.favorite !== undefined) result.favorite = this.favorite;
         if (this.rating !== undefined) result.rating = this.rating;
+        if (this.price !== undefined) result.price = this.price;
         if (this.acquisDate !== undefined) result.acquisDate = this.acquisDate;
         if (this.finishDate !== undefined) result.finishDate = this.finishDate;
         if (this.categories !== undefined) result.categories = this.categories;
         if (this.platforms !== undefined) result.platforms = this.platforms;
-        
+
         return result;
     }
 }

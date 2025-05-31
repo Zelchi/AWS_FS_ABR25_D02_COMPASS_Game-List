@@ -42,6 +42,7 @@ class GameService {
     async getPaginated(
         page: number, 
         limit: number, 
+        search: string,
         sortBy: string, 
         categoryBy: string, 
         platformBy: string, 
@@ -54,7 +55,7 @@ class GameService {
         currentPage: number,
         totalPages: number,
     }> {
-        const { games, total } = await gameRepository.findPaginated(page, limit, sortBy, categoryBy, platformBy, isFavorite ,sortOrder, userId);
+        const { games, total } = await gameRepository.findPaginated(page, limit, search, sortBy, categoryBy, platformBy, isFavorite ,sortOrder, userId);
         const totalPages = Math.ceil(total / limit);
 
         return {
@@ -66,11 +67,7 @@ class GameService {
     }
 
     async getByName(name: string, userId: string): Promise<IGameEntity[]> {
-        const games = await gameRepository.findByName(name, userId);
-        if (games.length === 0) {
-            throw new Error('No games found with this name');
-        }
-        return games;
+        return await gameRepository.findByName(name, userId);
     }
 }
 
