@@ -83,6 +83,7 @@ class CategoryRepository {
     async findPaginated(
         page: number,
         limit: number,
+        search: string,
         sortBy: string = 'createdAt',
         sortOrder: 'asc' | 'desc' = 'desc',
         userId: string
@@ -93,7 +94,14 @@ class CategoryRepository {
             const orderBy: any = {};
             orderBy[sortBy] = sortOrder;
 
-            const where = { deletedAt: null, userId };
+            const where: any = {
+                deletedAt: null,
+                userId
+            };
+
+            if (search) {
+                where.name = { contains: search };
+            }
 
             const [categories, total] = await Promise.all([
                 prisma.category.findMany({

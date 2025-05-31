@@ -185,8 +185,8 @@ export class GameController {
             const limit = parseInt(req.query.limit as string) || 10;
             const search = (req.query.search as string) || '';
             const sortBy = (req.query.sortBy as string) || 'updatedAt';
-            const categoryBy = (req.query.categoryBy as string) || 'all';
-            const platformBy = (req.query.platformBy as string) || 'all';
+            const categoryBy = (req.query.categoryBy as string) || '';
+            const platformBy = (req.query.platformBy as string) || '';
             const statusBy = (req.query.statusBy as string);
             const isFavorite = req.query.isFavorite === 'true' ? true : false;
             const sortOrder = (req.query.sortOrder as 'asc' | 'desc') || 'desc';

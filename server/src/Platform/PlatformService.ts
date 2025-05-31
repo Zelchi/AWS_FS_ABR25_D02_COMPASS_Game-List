@@ -81,6 +81,7 @@ class PlatformService {
     async getPaginated(
         page: number,
         limit: number,
+        search: string,
         sortBy: string = 'createdAt',
         sortOrder: 'asc' | 'desc' = 'desc',
         userId: string
@@ -91,7 +92,7 @@ class PlatformService {
         totalPages: number,
     }> {
         try {
-            const { platforms, total } = await platformRepository.findPaginated(page, limit, sortBy, sortOrder, userId);
+            const { platforms, total } = await platformRepository.findPaginated(page, limit, search, sortBy, sortOrder, userId);
             const totalPages = Math.ceil(total / limit);
 
             return {
