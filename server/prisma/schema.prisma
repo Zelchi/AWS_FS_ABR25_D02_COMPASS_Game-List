@@ -26,6 +26,7 @@ model Game {
   name        String
   description String
   imageUrl    String
+  price       Int        @default(0)
   rating      Int        @default(0)
   status      String     @default("none")
   favorite    Boolean    @default(false)

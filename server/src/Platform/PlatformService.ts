@@ -110,15 +110,8 @@ class PlatformService {
 
     async getPlatformsByName(name: string, userId: string): Promise<IPlatformEntity[]> {
         try {
-            const platforms = await platformRepository.findByName(name, userId);
-            if (!platforms || platforms.length === 0) {
-                throw new Error('No platforms found with this name');
-            }
-            return platforms;
+            return await platformRepository.findByName(name, userId);
         } catch (error) {
-            if (error instanceof Error) {
-                throw error;
-            }
             throw new Error('Failed to get platforms by name');
         }
     }

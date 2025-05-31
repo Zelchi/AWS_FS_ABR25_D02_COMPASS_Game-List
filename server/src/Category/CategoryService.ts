@@ -102,15 +102,8 @@ class CategoryService {
 
     async getCategoriesByName(name: string, userId: string): Promise<ICategoryEntity[]> {
         try {
-            const categories = await categoryRepository.findByName(name, userId);
-            if (!categories || categories.length === 0) {
-                throw new Error('No categories found with this name');
-            }
-            return categories;
+            return await categoryRepository.findByName(name, userId);
         } catch (error) {
-            if (error instanceof Error) {
-                throw error;
-            }
             throw new Error('Failed to get categories by name');
         }
     }

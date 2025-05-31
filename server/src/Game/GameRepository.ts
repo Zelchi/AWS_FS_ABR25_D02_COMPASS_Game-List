@@ -128,10 +128,10 @@ class GameRepository {
         }
     }
 
-
     async findPaginated(
         page: number,
         limit: number,
+        search: string,
         sortBy: string,
         categoryBy: string,
         platformBy: string,
@@ -152,6 +152,10 @@ class GameRepository {
 
             if (isFavorite) {
                 where.favorite = true;
+            }
+
+            if (search) {
+                where.name = { contains: search };
             }
 
             if (categoryBy && categoryBy !== 'all') {

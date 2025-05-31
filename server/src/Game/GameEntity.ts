@@ -4,6 +4,7 @@ export interface IGameEntity {
     name: string;
     description: string;
     imageUrl: string;
+    price?: number;
     status?: string;
     favorite?: boolean;
     rating?: number;
@@ -21,6 +22,7 @@ export interface IGameRegister {
     name: string;
     description: string;
     imageUrl: string;
+    price?: number;
     status?: string;
     favorite?: boolean;
     rating?: number;
