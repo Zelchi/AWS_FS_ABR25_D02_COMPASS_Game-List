@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 import React from "react";
 
 const NavItemEl = styled.li<{ $active: boolean }>`
@@ -45,9 +46,9 @@ const NavLink = styled.a<{ $filled: boolean; $active: boolean }>`
       flex-shrink: 0;
     display: inline-block;
     stroke: ${({ $filled, $active }) =>
-      $filled ? "none" : $active ? "var(--color-black)" : "var(--color-white)"};
+        $filled ? "none" : $active ? "var(--color-black)" : "var(--color-white)"};
     fill: ${({ $filled, $active }) =>
-      !$filled ? "none" : $active ? "var(--color-black)" : "var(--color-white)"};
+        !$filled ? "none" : $active ? "var(--color-black)" : "var(--color-white)"};
     width: 1.8rem;
     transition: var(--transition);
 
@@ -98,34 +99,39 @@ const NavLink = styled.a<{ $filled: boolean; $active: boolean }>`
         width: 100%;
       padding: 1.2rem;
     }
-}
 `;
 
 type NavItemProps = {
-  path: string;
-  label: string;
-  icon: React.JSX.Element;
+    path: string;
+    label: string;
+    icon: React.JSX.Element;
 };
 
 export function NavItem({ path, label, icon }: NavItemProps) {
-  const location = useLocation();
-  const isActive = location.pathname === path;
+    const location = useLocation();
+    const isActive = location.pathname === path;
 
-  return (
-    <NavItemEl $active={isActive}>
-      <NavLink href={path} $active={isActive} $filled={label === "Home" || label === "Logout"}>
-        {label === "Logout" ? (
-          <>
-            {label}
-            <span>{icon}</span>
-          </>
-        ) : (
-          <>
-            <span>{icon}</span>
-            {label}
-          </>
-        )}
-      </NavLink>
-    </NavItemEl>
-  );
+    const removeToken = () => {
+        if (!localStorage.getItem("token")) return;
+        axios.defaults.headers.common["Authorization"] = "";
+        localStorage.removeItem("token");
+    }
+
+    return (
+        <NavItemEl $active={isActive}>
+            <NavLink href={path} $active={isActive} $filled={label === "Home" || label === "Logout"}>
+                {label === "Logout" ? (
+                    <>
+                        <p onClick={removeToken} style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}>{label}</p>
+                        <span>{icon}</span>
+                    </>
+                ) : (
+                    <>
+                        <span>{icon}</span>
+                        {label}
+                    </>
+                )}
+            </NavLink>
+        </NavItemEl>
+    );
 }
