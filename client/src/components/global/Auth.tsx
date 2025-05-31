@@ -1,24 +1,38 @@
-import React, { useEffect } from "react";
+import { useEffect, useCallback, JSX } from "react";
 import { Outlet } from "react-router-dom";
 import API from "../../utils/API";
+import { useNavigate } from "react-router-dom";
 
 interface AuthProps {
-  onAuth: () => void;
-  onLogin: boolean;
+    onAuth: () => void;
+    onLogin: () => void;
+    Auth: boolean;
+    Login: boolean;
 }
 
-export function Auth({ onAuth, onLogin }: AuthProps): React.JSX.Element {
-  useEffect(() => {
-    const checkAuth = async () => {
-      await API.Auth({ setAuth: onAuth });
-    };
+export function Auth({ onAuth, onLogin, Auth, Login }: AuthProps): JSX.Element {
 
-    checkAuth();
-  }, [onLogin]);
+    const navigate = useNavigate();
 
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
+    const checkAuth = useCallback(async () => {
+        const isAuthenticated = await API.Auth();
+        if (isAuthenticated) {
+            onAuth();
+            onLogin();
+        } else {
+            navigate('/login');
+        }
+    }, []);
+
+    useEffect(() => {
+
+        checkAuth();
+
+    }, []);
+
+    return (
+        <div>
+            <Outlet />
+        </div>
+    );
 }

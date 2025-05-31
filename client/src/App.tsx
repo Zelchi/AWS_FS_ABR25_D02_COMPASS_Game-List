@@ -24,7 +24,7 @@ export default function App(): React.JSX.Element {
     <Routes>
       {!isLogged && <Route path="/login" element={<Login onLogin={handleLogin} />} />}
 
-      <Route element={<Auth onLogin={isLogged} onAuth={handleAuth} />}>
+      <Route element={<Auth Login={isLogged} Auth={isAuth} onAuth={handleAuth} onLogin={handleLogin} />}>
         <Route path="/" element={<Home />} />
         <Route path="/games" element={<Games />} />
         <Route path="/categories" element={<Categories />} />
