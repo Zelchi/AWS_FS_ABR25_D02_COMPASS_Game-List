@@ -46,21 +46,8 @@ const SelectInput = styled.select`
   }
 `;
 
-const filterDicionary = {
-    categoryBy: "category",
-    platformBy: "platform",
-    statusBy: "status",
-} as const;
-type FilterKey = keyof typeof filterDicionary;
-
-const statusDicionary = {
-    playing: "Playing",
-    done: "Done",
-    abandoned: "Abandoned",
-} as const;
-
 type FilterBarType = {
-    filter: FilterKey;
+    filter: string;
     onFilter: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     selected: string;
     onSelected: (e: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -68,14 +55,21 @@ type FilterBarType = {
     onFavorite: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const statusOptions = ["playing", "done", "abandoned"];
+const filterDictionary: Record<string, string> = {
+    categoryBy: "Category",
+    platformBy: "Platform",
+    statusBy: "Status"
+};
 
 export default function FilterBar({ filter, onFilter, selected, onSelected, isFavorite, onFavorite }: FilterBarType) {
     const [data, setData] = useState<string[]>([]);
 
     const handleRequest = async () => {
         try {
-            const response = await API.GET(`${filterDicionary[filter]}`);
+            if (!filter) return setData([]);
+
+            const endpoint = filterDictionary[filter] || filter;
+            const response = await API.GET(`${endpoint}`);
             if (response && response.data) {
                 setData(response.data);
             }
@@ -86,7 +80,11 @@ export default function FilterBar({ filter, onFilter, selected, onSelected, isFa
 
     useEffect(() => {
         if (filter !== 'statusBy') handleRequest();
-        if (filter === 'statusBy') setData(statusOptions);
+        if (filter === 'statusBy') setData(["Playing", "Done", "Abandoned"]);
+
+        onSelected({
+            target: { value: "" }
+        } as React.ChangeEvent<HTMLSelectElement>);
     }, [filter]);
 
     return (
@@ -96,9 +94,9 @@ export default function FilterBar({ filter, onFilter, selected, onSelected, isFa
                     <option value="" disabled>
                         Filter by
                     </option>
-                    <option value="categoryBy">Category</option>
-                    <option value="platformBy">Platform</option>
-                    <option value="statusBy">Status</option>
+                    {Object.entries(filterDictionary).map(([key, label]) => (
+                        <option key={key} value={key}>{label}</option>
+                    ))}
                 </SelectInput>
                 {filter && (
                     <SelectInput onChange={onSelected} value={selected}>
@@ -107,7 +105,7 @@ export default function FilterBar({ filter, onFilter, selected, onSelected, isFa
                         </option>
                         {data.map((item) => (
                             <option key={item} value={item}>
-                                {filter === 'statusBy' ? statusDicionary[item as keyof typeof statusDicionary] : item}
+                                {item}
                             </option>
                         ))}
                     </SelectInput>
