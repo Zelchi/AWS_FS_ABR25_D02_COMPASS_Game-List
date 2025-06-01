@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Checkbox from "@/components/global/Checkbox";
 import API from "../../utils/API";
-
+import Heart from "@/assets/heart.svg?react";
+import Checkbox from "@/components/global/Checkbox";
 
 const Container = styled.div`
   display: flex;
@@ -46,75 +46,96 @@ const SelectInput = styled.select`
   }
 `;
 
+const IconWrapper = styled.button<{ $isFavorite?: boolean }>`
+  cursor: pointer;
+  background: none;
+  border: none;
+  width: 3rem;
+  height: 3rem;
+  fill: ${({ $isFavorite }) => ($isFavorite ? "var(--color-aqua)" : "var(--color-grey-light-05)")};
+  transition: var(--transition);
+`;
+
 type FilterBarType = {
-    filter: string;
-    onFilter: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    selected: string;
-    onSelected: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    isFavorite: boolean;
-    onFavorite: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  filter: string;
+  onFilter: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  selected: string;
+  onSelected: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  isFavorite: boolean;
+  onFavorite: () => void;
 };
 
 const filterDictionary: Record<string, string> = {
-    categoryBy: "Category",
-    platformBy: "Platform",
-    statusBy: "Status"
+  categoryBy: "Category",
+  platformBy: "Platform",
+  statusBy: "Status",
 };
 
-export default function FilterBar({ filter, onFilter, selected, onSelected, isFavorite, onFavorite }: FilterBarType) {
-    const [data, setData] = useState<string[]>([]);
+export default function FilterBar({
+  filter,
+  onFilter,
+  selected,
+  onSelected,
+  isFavorite,
+  onFavorite,
+}: FilterBarType) {
+  const [data, setData] = useState<string[]>([]);
 
-    const handleRequest = async () => {
-        try {
-            if (!filter) return setData([]);
+  const handleRequest = async () => {
+    try {
+      if (!filter) return setData([]);
 
-            const endpoint = filterDictionary[filter] || filter;
-            const response = await API.GET(`${endpoint}`);
-            if (response && response.data) {
-                setData(response.data);
-            }
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
+      const endpoint = filterDictionary[filter] || filter;
+      const response = await API.GET(`${endpoint}`);
+      if (response && response.data) {
+        setData(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
+  };
 
-    useEffect(() => {
-        if (filter !== 'statusBy') handleRequest();
-        if (filter === 'statusBy') setData(["Playing", "Done", "Abandoned"]);
+  useEffect(() => {
+    if (filter !== "statusBy") handleRequest();
+    if (filter === "statusBy") setData(["Playing", "Done", "Abandoned"]);
 
-        onSelected({
-            target: { value: "" }
-        } as React.ChangeEvent<HTMLSelectElement>);
-    }, [filter]);
+    onSelected({
+      target: { value: "" },
+    } as React.ChangeEvent<HTMLSelectElement>);
+  }, [filter]);
 
-    return (
-        <Container>
-            <FilterContainer>
-                <SelectInput value={filter} onChange={onFilter} >
-                    <option value="" disabled>
-                        Filter by
-                    </option>
-                    {Object.entries(filterDictionary).map(([key, label]) => (
-                        <option key={key} value={key}>{label}</option>
-                    ))}
-                </SelectInput>
-                {filter && (
-                    <SelectInput onChange={onSelected} value={selected}>
-                        <option value="" disabled>
-                            Filter by
-                        </option>
-                        {data.map((item) => (
-                            <option key={item} value={item}>
-                                {item}
-                            </option>
-                        ))}
-                    </SelectInput>
-                )}
-            </FilterContainer>
-            <FavoriteContainer>
-                <span>Favorite?</span>
-                <Checkbox isFavorite={isFavorite} onFavorite={onFavorite} />
-            </FavoriteContainer>
-        </Container>
-    );
+  return (
+    <Container>
+      <FilterContainer>
+        <SelectInput value={filter} onChange={onFilter}>
+          <option value="" disabled>
+            Filter by
+          </option>
+          {Object.entries(filterDictionary).map(([key, label]) => (
+            <option key={key} value={key}>
+              {label}
+            </option>
+          ))}
+        </SelectInput>
+        {filter && (
+          <SelectInput onChange={onSelected} value={selected}>
+            <option value="" disabled>
+              Choose an option
+            </option>
+            {data.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </SelectInput>
+        )}
+      </FilterContainer>
+      <FavoriteContainer>
+        <span>Favorite?</span>
+        <IconWrapper $isFavorite={isFavorite} onClick={onFavorite}>
+          <Heart />
+        </IconWrapper>
+      </FavoriteContainer>
+    </Container>
+  );
 }
