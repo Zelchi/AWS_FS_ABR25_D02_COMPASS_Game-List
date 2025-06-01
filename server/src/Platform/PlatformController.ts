@@ -7,31 +7,31 @@ export class PlatformController {
     async middleware(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const authHeader = req.headers.authorization;
+            const { userId } = req.body;
 
-            if (!authHeader) {
-                res.status(401).json({ error: 'No authorization header provided' });
+            if (userId) throw new Error('User ID should not be in the request body for this middleware');
+            if (!authHeader) throw new Error('Authorization header should not be present in the request for this middleware');
+
+            const type = authHeader.split(' ')[0];
+            const token = authHeader.split(' ')[1];
+
+            if (type !== 'Bearer') {
+                res.status(401).json({ error: 'Invalid authorization type' });
                 return;
             }
 
-            const [bearer, token] = authHeader.split(' ');
-
-            if (!bearer || !token || bearer !== 'Bearer') {
-                res.status(401).json({ error: 'Invalid authorization format' });
+            if (!token || token === 'null' || token === 'undefined') {
+                res.status(401).json({ error: 'Token is required' });
                 return;
             }
 
-            const decoded = await accountService.verifyToken(token);
-
-            if (!decoded || !decoded.id) {
-                res.status(401).json({ error: 'Invalid token' });
-                return;
+            if (token) {
+                const decoded = await accountService.verifyToken(token);
+                req.body.userId = decoded.id;
+                return next();
             }
-
-            req.body.userId = decoded.id;
-            next();
-
         } catch (error) {
-            res.status(401).json({ error: 'Authentication failed' });
+            res.status(401).json({ error: 'Invalid token' });
         }
     }
 
