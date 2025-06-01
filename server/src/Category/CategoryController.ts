@@ -170,7 +170,7 @@ export class CategoryController {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;
             const search = (req.query.search as string) || '';
-            const sortBy = (req.query.sortBy as string) || 'createdAt';
+            const sortBy = (req.query.sortBy as string) || 'updatedAt';
             const sortOrder = (req.query.sortOrder as 'asc' | 'desc') || 'desc';
             const { userId } = req.body;
 
@@ -181,7 +181,7 @@ export class CategoryController {
                 return;
             }
 
-            const validSortFields = ['name', 'createdAt', 'description'];
+            const validSortFields = ['name', 'updatedAt', 'description'];
             if (!validSortFields.includes(sortBy)) {
                 res.status(400).json({
                     error: `Invalid sort field. Allowed values: ${validSortFields.join(', ')}`
