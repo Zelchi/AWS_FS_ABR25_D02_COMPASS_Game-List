@@ -47,22 +47,13 @@ export default function Games() {
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [sortOrder, setSortOrder] = useState<string>("desc");
 
-    const fetchData = async (path: string) => {
-        const response = await getAllItems<{ games: IGameEntity[] }>(path);
-        if (response && response.games) {
-            console.log("Fetched Games:", response.games);
-            setGames(response.games);
-        }
-    };
+    const pathAPI = `game/page?page=${page}&limit=${limit}` +
+        `&sortBy=${sortBy}&sortOrder=${sortOrder}` +
+        `${filterSelected ? `&${filterList}=${filterSelected}` : ""}` +
+        `${isFavorite ? `&isFavorite=${isFavorite}` : ""}`;
 
-    const pathAPI = `game/page?
-    page=${page}&
-    limit=${limit}&
-    sortBy=${sortBy}&
-    sortOrder=${sortOrder}&
-    ${isFavorite ? `isFavorite=${isFavorite}&` : ""}
-    ${filterList ? `${filterList}=${filterSelected}&` : ""}
-    `;
+    console.log(filterSelected);
+    console.log(filterList);
 
     console.log("API Path:", pathAPI);
 
@@ -97,7 +88,13 @@ export default function Games() {
         setIsFavorite(false);
         setSearch("");
         setSortBy("updatedAt");
-        fetchData(pathAPI);
+    };
+
+    const fetchData = async (path: string) => {
+        const response = await getAllItems<{ games: IGameEntity[] }>(path);
+        if (response && response.games) {
+            setGames(response.games);
+        }
     };
 
     const handleRequest = async (): Promise<void> => {
@@ -107,8 +104,8 @@ export default function Games() {
     };
 
     useEffect(() => {
-        fetchData(pathAPI);
-    }, [page, limit, sortBy, sortOrder, filterSelected, isFavorite, sortBy]);
+        handleRequest();
+    }, [page, limit, sortBy, sortOrder, filterSelected, isFavorite]);
 
     return (
         <SiteLayout>
