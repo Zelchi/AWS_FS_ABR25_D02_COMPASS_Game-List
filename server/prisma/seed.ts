@@ -449,33 +449,34 @@ async function main() {
         acquisDate: new Date('2022-10-21'),
         finishDate: new Date('2023-01-10'),
         categories: {
-          connect: [{ id: categories[0].id }]
+          connect: [{ id: categories[0].id }, { id: categories[6].id }]
         },
         platforms: {
           connect: [{ id: platforms[0].id }, { id: platforms[1].id }, { id: platforms[2].id }]
         }
       }
+    }),
+    prisma.game.create({
+      data: {
+        userId: user1.id,
+        name: 'The Witcher 3: Wild Hunt',
+        description: 'Open-world RPG based on the Witcher series',
+        imageUrl: 'https://image.api.playstation.com/vulca2/1516/4YdK4x6G4L9EGpgWPkiPVj8y.png',
+        price: 4999,
+        rating: 5,
+        status: 'done',
+        favorite: true,
+        acquisDate: new Date('2015-05-19'),
+        finishDate: new Date('2015-07-30'),
+        categories: {
+          connect: [{ id: categories[0].id }, { id: categories[2].id }, { id: categories[6].id }]
+        },
+        platforms: {
+          connect: [{ id: platforms[3].id }, { id: platforms[4].id }]
+        }
+      }
     })
   ]);
-  prisma.game.create({
-    data: {
-      userId: user1.id,
-      name: 'Battlefield 2042',
-      description: 'Multiplayer first-person shooter set in a near-future world',
-      imageUrl: 'https://image.api.playstation.com/vulcan/ap/rnd/202111/2210/8YdK4x6G4L9EGpgWPkiPVj8y.png',
-      price: 4999,
-      rating: 2,
-      status: 'abandoned',
-      favorite: false,
-      acquisDate: new Date('2021-11-19'),
-      categories: {
-        connect: [{ id: categories[1].id }, { id: categories[6].id }]
-      },
-      platforms: {
-        connect: [{ id: platforms[2].id }, { id: platforms[3].id }]
-      }
-    }
-  });
 
   console.log('Seeding completed successfully!');
 }
