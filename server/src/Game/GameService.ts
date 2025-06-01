@@ -40,14 +40,15 @@ class GameService {
     }
 
     async getPaginated(
-        page: number, 
-        limit: number, 
+        page: number,
+        limit: number,
         search: string,
-        sortBy: string, 
-        categoryBy: string, 
-        platformBy: string, 
+        sortBy: string,
+        categoryBy: string,
+        platformBy: string,
+        statusBy: string,
         isFavorite: boolean,
-        sortOrder: 'asc' | 'desc', 
+        sortOrder: 'asc' | 'desc',
         userId: string
     ): Promise<{
         games: IGameEntity[],
@@ -55,7 +56,7 @@ class GameService {
         currentPage: number,
         totalPages: number,
     }> {
-        const { games, total } = await gameRepository.findPaginated(page, limit, search, sortBy, categoryBy, platformBy, isFavorite ,sortOrder, userId);
+        const { games, total } = await gameRepository.findPaginated(page, limit, search, sortBy, categoryBy, platformBy, statusBy, isFavorite, sortOrder, userId);
         const totalPages = Math.ceil(total / limit);
 
         return {

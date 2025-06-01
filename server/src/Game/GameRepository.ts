@@ -135,6 +135,7 @@ class GameRepository {
         sortBy: string,
         categoryBy: string,
         platformBy: string,
+        statusBy: string,
         isFavorite: boolean,
         sortOrder: 'asc' | 'desc',
         userId: string
@@ -156,6 +157,10 @@ class GameRepository {
 
             if (search) {
                 where.name = { contains: search };
+            }
+
+            if (statusBy) {
+                where.status = statusBy;
             }
 
             if (categoryBy) {
