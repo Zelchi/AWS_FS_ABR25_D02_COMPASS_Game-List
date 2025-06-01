@@ -449,7 +449,7 @@ async function main() {
         acquisDate: new Date('2022-10-21'),
         finishDate: new Date('2023-01-10'),
         categories: {
-          connect: [{ id: categories[0].id }, { id: categories[6].id }]
+          connect: [{ id: categories[6].id }]
         },
         platforms: {
           connect: [{ id: platforms[0].id }, { id: platforms[1].id }, { id: platforms[2].id }]
