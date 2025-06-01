@@ -126,12 +126,12 @@ logs/
 *.so
 *.dylib
 
-# Images
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.ico
+## Images
+#*.png
+#*.jpg
+#*.jpeg
+#*.gif
+#*.ico
 
 # Archives
 *.zip
