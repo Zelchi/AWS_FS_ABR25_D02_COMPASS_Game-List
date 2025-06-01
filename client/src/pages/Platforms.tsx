@@ -1,7 +1,7 @@
 import SiteLayout from "@/components/global/SiteLayout";
 import React, { useState, ChangeEvent, MouseEvent, useEffect } from "react";
 import { getAllItems } from "@/utils/crudHandlers";
-import { IPlatformEntity } from "@/../../server/src/Category/CategoryEntity";
+import { IPlatformEntity } from "@/../../server/src/Platform/PlatformEntity";
 import Table from "@/components/global/Table";
 import SearchBar from "@/components/global/SearchBar";
 import ClearButton from "@/components/global/ClearButton";

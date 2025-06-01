@@ -1,10 +1,27 @@
-import React, { Dispatch } from "react";
+import React, { Dispatch, useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import TableItem from "@/components/global/TableItem";
 import { EntityWithId } from "@/types/types";
 import SortButton from "@/components/global/SortButton";
 import RatingSummary from "@/components/global/RatingSummary";
 import { useLocation } from "react-router-dom";
+import defaultImage from "@/assets/default-image.jpg";
+import LastUpdate from "@/assets/last-update.svg?react";
+import Edit from "@/assets/pen-outline.svg?react";
+import Delete from "@/assets/trash-outline.svg?react";
+import SafeImage from "@/components/global/SafeImage";
+import MoreIcon from "@/components/global/MoreIcon";
+import { useAddItem } from "@/contexts/AddItemContext";
+import { addItem, deleteItem, getItem, updateItem } from "@/utils/crudHandlers";
+import GameForm from "@/components/forms/GameForm";
+import CategoryForm from "@/components/forms/CategoryForm";
+import PlatformForm from "@/components/forms/PlatformForm";
+
+const getFormByPath = (path: string, onSubmit: (item: any) => void, item?: any) => {
+  if (path.includes("games")) return <GameForm onSubmit={onSubmit} initialData={item} />;
+  if (path.includes("categories")) return <CategoryForm onSubmit={onSubmit} initialData={item} />;
+  if (path.includes("platforms")) return <PlatformForm onSubmit={onSubmit} initialData={item} />;
+};
 
 type TableProps<T extends EntityWithId> = {
   data: T[];
@@ -24,10 +41,11 @@ const TableEL = styled.table`
   border-spacing: 0 1.5rem;
 `;
 
-const TableRow = styled.tr`
+const TableRow = styled.tr<{ $location: string }>`
+  cursor: pointer;
   border-radius: 20px;
 
-  td {
+  > td {
     background-color: var(--color-white);
     padding: 1.5rem 0;
     padding-right: 1.5rem;
@@ -36,43 +54,64 @@ const TableRow = styled.tr`
     font-family: var(--font-primary);
 
     &:first-child {
-      border-radius: 0.8rem 0 0 0.8rem;
-      padding-left: 1.5rem;
+      border-radius: ${({ $location }) => ($location === "/games" ? "0" : "0.8rem 0 0 0.8rem")};
+      background-color: ${({ $location }) =>
+        $location === "/games" ? "transparent" : "var(--color-white)"};
+      padding-left: ${({ $location }) => ($location === "/games" ? "0" : "1.5rem")};
+    }
+
+    &:nth-child(2) {
+      border-radius: ${({ $location }) => ($location === "/games" ? "0.8rem 0 0 0.8rem" : "0")};
+      padding-left: ${({ $location }) => ($location === "/games" ? "1.5rem" : "0")};
     }
 
     &:last-child {
       border-radius: 0 0.8rem 0.8rem 0;
+
+      span {
+        display: ${({ $location }) => ($location === "/games" ? "flex" : "auto")};
+        flex-wrap: ${({ $location }) => ($location === "/games" ? "nowrap" : "auto")};
+        gap: ${({ $location }) => ($location === "/games" ? "2.6rem" : "0")};
+
+        button {
+          cursor: pointer;
+          border: none;
+          background-color: transparent;
+          width: 1.9rem;
+          height: 1.9rem;
+          fill: var(--color-aqua);
+          transition: var(--transition);
+
+          &:hover {
+            fill: var(--color-aqua-dark);
+          }
+        }
+      }
     }
   }
 `;
 
-const GameImage = styled.span<{ $bgImage: string }>`
+const GameImage = styled(SafeImage)`
   display: block;
   width: 6.5rem;
   height: 5.5rem;
-  background: ${({ $bgImage }) => `url(${$bgImage})`};
-  background-size: cover;
-  background-position: center;
   border-radius: 0.8rem;
 `;
 
-const PlatformImageContainer = styled.td`
-  //height: 100%;
-  //display: flex;
-  //flex-direction: column;
-  //align-items: center;
-  //justify-content: center;
-  //gap: 0.5rem;
+const PlatformImageContainer = styled.span`
+  max-width: 8rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 `;
 
-const PlatformImage = styled.span<{ $bgImage: string }>`
+const PlatformImage = styled(SafeImage)`
   display: block;
   width: 2.5rem;
   height: 2.5rem;
-  background: ${({ $bgImage }) => `url(${$bgImage})`};
-  background-size: cover;
-  background-position: center;
-  border-radius: 100%;
+  border-radius: 50%;
 `;
 
 const Rating = styled(RatingSummary)`
@@ -87,6 +126,16 @@ const RatingField = styled.span`
   gap: 0.5rem;
 `;
 
+const TableEl = styled.td<{ $width: boolean }>`
+  width: ${({ $width }) => ($width ? "100%" : "auto")};
+`;
+
+const LastUpdateIcon = styled(LastUpdate)`
+  width: 1.9rem;
+  height: 1.9rem;
+  fill: var(--color-aqua);
+`;
+
 export default function Table<T extends EntityWithId>({
   data,
   header,
@@ -98,7 +147,87 @@ export default function Table<T extends EntityWithId>({
   onItemsChange,
   onClear,
 }: TableProps<T>) {
+  const [editingItem, setEditingItem] = useState<T | null>(null);
+  const { setAddItemHandler, setFormComponent } = useAddItem();
   const location = useLocation().pathname;
+  const [mode, setMode] = useState<"add" | "edit">("add");
+
+  const handleGet = useCallback(
+    async (item: EntityWithId) => {
+      if (!item.id) return;
+      const data = await getItem<T>(item.id, path);
+      if (data) {
+        console.log(data);
+        onItemsChange([data]);
+      }
+    },
+    [onItemsChange],
+  );
+
+  const handleAdd = useCallback(
+    async (item: T) => {
+      const data = await addItem<T>(item, path);
+      if (data) {
+        onItemsChange(data);
+        onClear?.();
+        setFormComponent(null);
+      }
+    },
+    [onItemsChange, onClear, setFormComponent, path],
+  );
+
+  const handleUpdate = useCallback(
+    async (item: T) => {
+      const data = await updateItem<T>(item, path);
+      if (data) {
+        onItemsChange(data);
+        setFormComponent(null);
+      }
+    },
+    [onItemsChange, setFormComponent],
+  );
+
+  const handleDelete = useCallback(
+    async (item: EntityWithId) => {
+      if (!item.id) return;
+      const data = await deleteItem<T>(item.id, path);
+      if (data) {
+        onItemsChange(data);
+      }
+    },
+    [onItemsChange],
+  );
+
+  const openEditForm = useCallback(
+    (item: T) => {
+      setEditingItem(item);
+      setFormComponent(getFormByPath(location, handleUpdate, item));
+    },
+    [handleUpdate, location, setFormComponent],
+  );
+
+  useEffect(() => {
+    let form;
+    if (mode === "add") {
+      form = getFormByPath(location, handleAdd);
+    } else {
+      form = getFormByPath(location, handleUpdate, editingItem);
+    }
+    setFormComponent(form);
+
+    setAddItemHandler(() => () => {
+      if (mode === "add") {
+        setFormComponent(getFormByPath(location, handleAdd));
+      } else {
+        setFormComponent(getFormByPath(location, handleUpdate, editingItem));
+      }
+    });
+
+    return () => {
+      setFormComponent(null);
+      setAddItemHandler(null);
+    };
+  }, [location, mode, editingItem, handleAdd, handleUpdate, setFormComponent, setAddItemHandler]);
 
   const sorted = [...data].sort((a, b) => {
     function getValue<T>(item: T, key: keyof T): any {
@@ -132,10 +261,24 @@ export default function Table<T extends EntityWithId>({
     <TableEL>
       <thead>
         <tr>
-          <th style={{ color: "white", textAlign: "left" }}>Image</th>
-          <th style={{ color: "white", textAlign: "left" }}>Platform image</th>
+          {location === "/games" && (
+            <>
+              <th>
+                <SortButton
+                  head={"updatedAt"}
+                  onClick={onSortByAndOrder}
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                >
+                  <LastUpdateIcon />
+                </SortButton>
+              </th>
+              <th style={{ color: "white", textAlign: "left" }}></th>
+              <th style={{ color: "white", textAlign: "left" }}></th>
+            </>
+          )}
           {header.map((head) => (
-            <th key={head}>
+            <th key={head} style={{ paddingRight: "1.5rem" }}>
               <SortButton
                 head={head}
                 onClick={onSortByAndOrder}
@@ -146,23 +289,32 @@ export default function Table<T extends EntityWithId>({
               </SortButton>
             </th>
           ))}
-          <th style={{ color: "white", textAlign: "left" }}>Buttons</th>
+          <th style={{ color: "white", textAlign: "left" }}></th>
         </tr>
       </thead>
       <tbody>
         {sorted.map((item) => (
-          <TableRow key={item.id}>
-            {item.imageUrl ? (
+          <TableRow key={item.id} $location={location}>
+            {"imageUrl" in item ? (
               location === "/games" ? (
                 <>
-                  <td>
-                    <GameImage $bgImage={(item as any)["imageUrl"]}></GameImage>
+                  <td>{""}</td>
+                  <td style={{ width: "10rem" }}>
+                    <GameImage
+                      src={(item as any)["imageUrl"] || defaultImage}
+                      fallback={defaultImage}
+                    />
                   </td>
-                  <PlatformImageContainer>
-                    {(item as any).platforms?.map((platform: { id: string; imageUrl: string }) => (
-                      <PlatformImage key={platform.id} $bgImage={platform.imageUrl ?? ""} />
-                    ))}
-                  </PlatformImageContainer>
+                  <td style={{ width: "7rem" }}>
+                    <PlatformImageContainer>
+                      {(item as any).platforms
+                        ?.slice(0, 3)
+                        .map((platform: { id: string; imageUrl: string }) => (
+                          <PlatformImage key={platform.id} src={platform.imageUrl} />
+                        ))}
+                      {(item as any).platforms.length > 3 && <MoreIcon />}
+                    </PlatformImageContainer>
+                  </td>
                 </>
               ) : (
                 ""
@@ -171,24 +323,36 @@ export default function Table<T extends EntityWithId>({
               ""
             )}
             {header.map((head) => (
-              <TableItem<T> key={head} path={path} onItemsChange={onItemsChange} onClear={onClear}>
-                {head === "rating" ? (
-                  <RatingField>
-                    <Rating
-                      color={"var(--color-aqua)"}
-                      bgColor={"var(--color-grey-light-05)"}
-                      rating={(item as any)[head]}
-                      maxRating={5}
-                    />
-                  </RatingField>
-                ) : (item as any)[head] instanceof Date ? (
-                  (item as any)[head].toLocaleDateString()
-                ) : (
-                  String((item as any)[head] ?? "")
-                )}
-              </TableItem>
+              <TableEl key={head} $width={head === "title"}>
+                <TableItem<T> path={path} onItemsChange={onItemsChange} onClear={onClear}>
+                  {head === "rating" ? (
+                    <RatingField>
+                      <Rating
+                        color={"var(--color-aqua)"}
+                        bgColor={"var(--color-grey-light-05)"}
+                        rating={(item as any)[head]}
+                      />
+                    </RatingField>
+                  ) : head.includes("Date") || head.includes("At") ? (
+                    new Date((item as any)[head]).toLocaleDateString()
+                  ) : head === "price" ? (
+                    `$${(item as any)[head] / 100}`
+                  ) : (
+                    String((item as any)[head] ?? "")
+                  )}
+                </TableItem>
+              </TableEl>
             ))}
-            <td>Buttons</td>
+            <td>
+              <span>
+                <button onClick={() => openEditForm(item)}>
+                  <Edit />
+                </button>
+                <button onClick={() => handleGet(item)}>
+                  <Delete />
+                </button>
+              </span>
+            </td>
           </TableRow>
         ))}
       </tbody>
