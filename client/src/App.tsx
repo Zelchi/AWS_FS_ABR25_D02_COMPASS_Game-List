@@ -9,7 +9,6 @@ import NotFound from "./pages/NotFound";
 import { Auth } from "@/components/global/Auth";
 
 export default function App(): React.JSX.Element {
- 
   return (
     <Routes>
       <Route element={<Auth />}>

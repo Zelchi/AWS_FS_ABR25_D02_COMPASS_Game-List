@@ -28,7 +28,7 @@ const NavItemEl = styled.li<{ $active: boolean }>`
 const NavLink = styled.a<{ $filled: boolean; $active: boolean }>`
   width: 100%;
   padding: 1.2rem;
-    padding-left: 4rem;
+  padding-left: 4rem;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -40,26 +40,25 @@ const NavLink = styled.a<{ $filled: boolean; $active: boolean }>`
   font-family: var(--font-primary);
   text-decoration: none;
   transition: var(--transition);
-  
+
   span {
-      flex-shrink: 0;
     display: inline-block;
+    flex-shrink: 0;
     stroke: ${({ $filled, $active }) =>
-        $filled ? "none" : $active ? "var(--color-black)" : "var(--color-white)"};
+      $filled ? "none" : $active ? "var(--color-black)" : "var(--color-white)"};
     fill: ${({ $filled, $active }) =>
-        !$filled ? "none" : $active ? "var(--color-black)" : "var(--color-white)"};
-    width: 1.8rem;
+      !$filled ? "none" : $active ? "var(--color-black)" : "var(--color-white)"};
     transition: var(--transition);
+    width: 1.8rem;
 
     @media (max-width: 48em) {
       display: none;
       font-size: 1.2rem;
-    } 
-      
+    }
+
     @media (max-width: 30em) {
-        
       display: block;
-        font-size: 1.4rem;
+      font-size: 1.4rem;
     }
   }
 
@@ -83,68 +82,70 @@ const NavLink = styled.a<{ $filled: boolean; $active: boolean }>`
   }
 
   @media (max-width: 64em) {
-      
-      padding: 1.2rem;
-      padding-left: 1.5rem;
-  }
-    
-    @media (max-width: 48em) {  
-    width: fit-content;
-    padding: .8rem;
+    padding: 1.2rem;
+    padding-left: 1.5rem;
   }
 
-    @media (max-width: 30em) {  
-        justify-content: center;
-        width: 100%;
-      padding: 1.2rem;
-    }
+  @media (max-width: 48em) {
+    padding: 0.8rem;
+    width: fit-content;
+  }
+
+  @media (max-width: 30em) {
+    justify-content: center;
+    padding: 1.2rem;
+    width: 100%;
+  }
 `;
 
 type NavItemProps = {
-    path: string;
-    label: string;
-    icon: JSX.Element;
+  path: string;
+  label: string;
+  icon: JSX.Element;
 };
 
 export function NavItem({ path, label, icon }: NavItemProps) {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const isActive = location.pathname === path;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isActive = location.pathname === path;
 
-    const removeToken = () => {
-        localStorage.removeItem("token");
+  const removeToken = () => {
+    localStorage.removeItem("token");
+  };
+
+  const handleNavigation = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    if (label === "Logout") {
+      removeToken();
+      navigate("/login");
+    } else {
+      navigate(path);
     }
+  };
 
-    const handleNavigation = (e: MouseEvent<HTMLAnchorElement>) => {
-        e.preventDefault();
-
-        if (label === "Logout") {
-            removeToken();
-            navigate('/login');
-        } else {
-            navigate(path);
-        }
-    }
-
-    return (
-        <NavItemEl $active={isActive}>
-            <NavLink
-                href={path}
-                onClick={handleNavigation}
-                $active={isActive}
-                $filled={label === "Home" || label === "Logout"}>
-                {label === "Logout" ? (
-                    <>
-                        <p style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}>{label}</p>
-                        <span>{icon}</span>
-                    </>
-                ) : (
-                    <>
-                        <span>{icon}</span>
-                        {label}
-                    </>
-                )}
-            </NavLink>
-        </NavItemEl>
-    );
+  return (
+    <NavItemEl $active={isActive}>
+      <NavLink
+        href={path}
+        onClick={handleNavigation}
+        $active={isActive}
+        $filled={label === "Home" || label === "Logout"}
+      >
+        {label === "Logout" ? (
+          <>
+            <p style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}>
+              {label}
+            </p>
+            <span>{icon}</span>
+          </>
+        ) : (
+          <>
+            <span>{icon}</span>
+            {label}
+          </>
+        )}
+      </NavLink>
+    </NavItemEl>
+  );
 }

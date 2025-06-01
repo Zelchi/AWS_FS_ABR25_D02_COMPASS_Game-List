@@ -3,12 +3,7 @@ import { InputHTMLAttributes, forwardRef } from "react";
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
   ({ className, ...props }, ref) => {
-    return (
-      <input
-        ref={ref}
-        {...props}
-      />
-    );
+    return <input ref={ref} {...props} />;
   },
 );
 
