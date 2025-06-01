@@ -229,7 +229,7 @@ export class GameController {
                 sortBy,
                 categoryBy,
                 platformBy,
-                statusBy,
+                statusBy.toLowerCase(),
                 isFavorite,
                 sortOrder,
                 userId
