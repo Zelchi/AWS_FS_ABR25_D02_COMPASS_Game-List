@@ -1,6 +1,6 @@
 export interface IDashboardEntity {
     id?: string;
-    userId?: string;
+    userId: string;
     totalPrice: number;
     topPlatform?: string | null;
     topCategory?: string | null;

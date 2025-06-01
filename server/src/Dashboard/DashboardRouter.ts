@@ -17,13 +17,13 @@ class DashboardRouter {
     }
 
     private setupRoutes(): void {
-        // this.router.get("/", (req: Request, res: Response) => 
-        //     dashboardController.getRelatory(req, res)
-        // );
+        this.router.get("/", (req: Request, res: Response) => 
+            dashboardController.getRelatory(req, res)
+        );
 
-        // this.router.get("/ask", (req: Request, res: Response) => 
-        //     dashboardController.getAsk(req, res)
-        // );
+        this.router.get("/ask", (req: Request, res: Response) => 
+            dashboardController.getAsk(req, res)
+        );
     }
 
     public getRouter(): Router {

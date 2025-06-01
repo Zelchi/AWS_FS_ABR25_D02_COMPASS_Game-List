@@ -1,7 +1,5 @@
 import { prisma } from '../db';
 import { IGameEntity } from '../Game/GameEntity';
-import { ICategoryEntity } from '../Category/CategoryEntity';
-import { IPlatformEntity } from '../Platform/PlatformEntity';
 import { IDashboardEntity } from './DashboardEntity';
 
 class DashboardRepository {
@@ -9,7 +7,7 @@ class DashboardRepository {
     async allData(userId: string): Promise<{
         games: Pick<IGameEntity, 'price' | 'rating' | 'status' | 'favorite'>[];
         categories: { id: string, name: string, _count: { games: number } }[];
-        platforms: { id: string, name: string, _count: { games: number } }[];
+        platforms: { id: string, name: string, imageUrl: string, _count: { games: number } }[];
     }> {
         try {
             const [games, categories, platforms] = await Promise.all([
@@ -37,6 +35,7 @@ class DashboardRepository {
                     select: {
                         id: true,
                         name: true,
+                        imageUrl: true,
                         _count: {
                             select: { games: true }
                         }
@@ -64,7 +63,7 @@ class DashboardRepository {
             throw new Error('Failed to save dashboard');
         }
     }
-    
+
     async getDashboard(userId: string): Promise<IDashboardEntity | null> {
         try {
             return await prisma.dashboard.findUnique({
@@ -75,7 +74,32 @@ class DashboardRepository {
             throw new Error('Failed to fetch dashboard');
         }
     }
-    
+
+    async getPlayingGamesWithUpdateStatus(userId: string): Promise<Array<{
+        id: string;
+        name: string;
+        imageUrl: string;
+        updatedAt: Date;
+    }>> {
+        try {
+            return await prisma.game.findMany({
+                where: {
+                    userId,
+                    status: 'playing',
+                    deletedAt: null
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    imageUrl: true,
+                    updatedAt: true
+                }
+            });
+        } catch (error) {
+            console.error('Error fetching playing games with update status:', error);
+            throw new Error('Failed to fetch playing games with update status');
+        }
+    }
     
 }
 

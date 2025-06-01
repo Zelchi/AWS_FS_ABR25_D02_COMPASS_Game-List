@@ -70,7 +70,7 @@ model Platform {
 model Dashboard {
   id             String   @id @default(uuid())
   userId         String   @unique
-  totalPrice     Int      @default(0)
+  totalPrice     Float      @default(0)
   topPlatform    String?
   topCategory    String?
   avgRating      Float    @default(0)
