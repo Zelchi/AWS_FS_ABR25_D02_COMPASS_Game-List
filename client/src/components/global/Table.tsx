@@ -1,9 +1,9 @@
 import React, { Dispatch } from "react";
 import styled from "styled-components";
 import TableItem from "@/components/global/TableItem";
-import SortIcon from "@/assets/sort.svg?react";
-import SortIconFilled from "@/assets/sort-filled.svg?react";
 import { EntityWithId } from "@/types/types";
+import SortButton from "@/components/global/SortButton";
+import RatingSummary from "@/components/global/RatingSummary";
 
 type TableProps<T extends EntityWithId> = {
   data: T[];
@@ -17,13 +17,54 @@ type TableProps<T extends EntityWithId> = {
   onClear?: () => void;
 };
 
-const TableRow = styled.tr``;
+const TableEL = styled.table`
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 1.5rem;
+`;
 
-const SortIconWrapper = styled.span<{ $asc?: boolean }>`
-  width: 1.2rem;
+const TableRow = styled.tr`
+  border-radius: 20px;
+
+  td {
+    background-color: var(--color-white);
+    padding: 1.5rem 0;
+    padding-right: 1.5rem;
+    font-weight: 400;
+    font-size: 1.4rem;
+    font-family: var(--font-primary);
+
+    &:first-child {
+      border-radius: 0.8rem 0 0 0.8rem;
+      padding-left: 1.5rem;
+    }
+
+    &:last-child {
+      border-radius: 0 0.8rem 0.8rem 0;
+    }
+  }
+`;
+
+const Image = styled.span<{ $bgImage: string }>`
+  display: block;
+  width: 6.5rem;
+  height: 5.5rem;
+  background: ${({ $bgImage }) => `url(${$bgImage})`};
+  background-size: cover;
+  background-position: center;
+  border-radius: 0.8rem;
+`;
+
+const Rating = styled(RatingSummary)`
   display: inline-block;
-  fill: var(--color-aqua);
-  transform: ${({ $asc }) => ($asc ? "" : "rotate(180deg)")};
+  width: 2.2rem;
+  height: 2.2rem;
+`;
+
+const RatingField = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;
 
 export default function Table<T extends EntityWithId>({
@@ -62,40 +103,53 @@ export default function Table<T extends EntityWithId>({
   });
 
   return (
-    <table>
+    <TableEL>
       <thead>
-        <TableRow>
+        <tr>
+          <th style={{ color: "white", textAlign: "left" }}>Image</th>
           {header.map((head) => (
             <th key={head}>
-              <button value={head} onClick={onSortByAndOrder}>
-                {labels[head]}{" "}
-                {sortBy === head ? (
-                  <SortIconWrapper $asc={sortOrder === "asc"}>
-                    <SortIconFilled />
-                  </SortIconWrapper>
-                ) : (
-                  <SortIconWrapper>
-                    <SortIcon />
-                  </SortIconWrapper>
-                )}
-              </button>
+              <SortButton
+                head={head}
+                onClick={onSortByAndOrder}
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+              >
+                {labels[head]}
+              </SortButton>
             </th>
           ))}
-        </TableRow>
+          <th style={{ color: "white", textAlign: "left" }}>Buttons</th>
+        </tr>
       </thead>
       <tbody>
         {sorted.map((item) => (
           <TableRow key={item.id}>
+            <td>
+              <Image $bgImage={(item as any)["imageUrl"]}></Image>
+            </td>
             {header.map((head) => (
               <TableItem<T> key={head} path={path} onItemsChange={onItemsChange} onClear={onClear}>
-                {(item as any)[head] instanceof Date
-                  ? (item as any)[head].toLocaleDateString()
-                  : String((item as any)[head] ?? "")}
+                {head === "rating" ? (
+                  <RatingField>
+                    <Rating
+                      color={"var(--color-aqua)"}
+                      bgColor={"var(--color-grey-light-05)"}
+                      rating={(item as any)[head]}
+                      maxRating={5}
+                    />
+                  </RatingField>
+                ) : (item as any)[head] instanceof Date ? (
+                  (item as any)[head].toLocaleDateString()
+                ) : (
+                  String((item as any)[head] ?? "")
+                )}
               </TableItem>
             ))}
+            <td>Buttons</td>
           </TableRow>
         ))}
       </tbody>
-    </table>
+    </TableEL>
   );
 }

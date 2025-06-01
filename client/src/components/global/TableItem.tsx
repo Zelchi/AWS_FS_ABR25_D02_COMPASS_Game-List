@@ -21,8 +21,8 @@ type TableItemProps<T extends EntityWithId> = {
   onItemsChange: (items: T[]) => void;
 };
 
-const Container = styled.div`
-  background-color: var(--color-white);
+const Cell = styled.td`
+  color: var(--color-black);
 `;
 
 export default function TableItem<T extends EntityWithId>({
@@ -107,5 +107,5 @@ export default function TableItem<T extends EntityWithId>({
     };
   }, [handleUpdate, location]);
 
-  return <Container>{children}</Container>;
+  return <Cell>{children}</Cell>;
 }
