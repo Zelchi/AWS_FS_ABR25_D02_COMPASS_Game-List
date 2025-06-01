@@ -3,6 +3,7 @@ import cors from 'cors';
 
 import account from './Account/AccountRouter';
 import category from './Category/CategoryRouter';
+import dashboard from './Dashboard/DashboardRouter';
 import game from './Game/GameRouter';
 import platform from './Platform/PlatformRouter';
 
@@ -51,6 +52,7 @@ class App {
 
         router.use('/v1/account', account);
         router.use('/v1/category', category);
+        router.use('/v1/dashboard', dashboard);
         router.use('/v1/game', game);
         router.use('/v1/platform', platform);
 
