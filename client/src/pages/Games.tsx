@@ -1,22 +1,9 @@
-const initialGames: IGameEntity[] = [
-  {
-    id: "1",
-    userId: "1",
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMDi7TU6njAySccHQ_2TuSEEMChNIEjTNCaw&s",
-    name: "Mario Kart",
-    description: "Mario B que ganhei de aniversário",
-    categories: [{ id: "1" }],
-    favorite: true,
-    acquisDate: new Date(Date.now()),
-    status: "Playing",
-    updatedAt: new Date(Date.now()),
-    finishDate: new Date(Date.now()),
-    price: 100,
-    rating: 5,
-    platforms: [{ id: "1" }],
-  },
-];
+import SiteLayout from "@/components/global/SiteLayout";
+import { useState, ChangeEvent, MouseEvent, useEffect } from "react";
+import { getAllItems } from "@/utils/crudHandlers";
+import { IGameEntity } from "@/../../server/src/Game/GameEntity";
+import Table from "@/components/global/Table";
+import FilterAndSearchBar from "@/components/global/ClearButton";
 
 const labels = {
   name: "Title",
@@ -33,15 +20,8 @@ const labels = {
   updatedAt: "Last Update",
 };
 
-import SiteLayout from "@/components/global/SiteLayout";
-import { useState, ChangeEvent, MouseEvent, useEffect } from "react";
-import { getAllItems, getItem } from "@/utils/crudHandlers";
-import { IGameEntity } from "@/../../server/src/Game/GameEntity";
-import FilterAndSearchBar from "@/components/global/FilterAndSearchBar";
-import Table from "@/components/global/Table";
-
 export default function Games() {
-  const [games, setGames] = useState<IGameEntity[]>(initialGames);
+  const [games, setGames] = useState<IGameEntity[]>([]);
   const [page, setPage] = useState<number>(1);
   const [limit] = useState<number>(10);
   const [search, setSearch] = useState<string>("");
@@ -88,6 +68,7 @@ export default function Games() {
     setIsFavorite(false);
     setSearch("");
     setSortBy("updatedAt");
+    fetchData(pathAPI);
   };
 
   const fetchData = async (path: string) => {
@@ -103,9 +84,9 @@ export default function Games() {
     if (searchInput) return fetchData(`${pathAPI}&search=${search}`);
   };
 
-  // useEffect(() => {
-  //   handleRequest();
-  // }, [page, limit, sortBy, sortOrder, filterSelected, isFavorite]);
+  useEffect(() => {
+    handleRequest();
+  }, [page, limit, sortBy, sortOrder, filterSelected, isFavorite]);
 
   return (
     <SiteLayout>

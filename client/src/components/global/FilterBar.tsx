@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import API from "../../utils/API";
 import Heart from "@/assets/heart.svg?react";
-import Checkbox from "@/components/global/Checkbox";
 
 const Container = styled.div`
   display: flex;

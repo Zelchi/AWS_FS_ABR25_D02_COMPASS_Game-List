@@ -18,7 +18,6 @@ export function normalizeRating(value: number, maxValue: number): number {
 }
 
 type RatingSummaryProps = {
-  children: ReactNode;
   className?: string;
   rating: number;
   maxRating: number;

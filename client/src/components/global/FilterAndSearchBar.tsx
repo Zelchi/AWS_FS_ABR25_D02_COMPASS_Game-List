@@ -1,22 +1,14 @@
 import styled from "styled-components";
-import CloseIcon from "../../assets/close.svg?react";
+import React from "react";
+import FilterBar from "@/components/global/FilterBar";
+import SearchBar from "@/components/global/SearchBar";
+import ClearButton from "@/components/global/ClearButton";
 
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 2.5rem;
 `;
-
-const CloseIconWrapper = styled.span`
-  width: 1.2rem;
-  display: inline-block;
-  fill: var(--color-white);
-`;
-
-import React from "react";
-import SearchBar from "@/components/global/SearchBar";
-import FilterBar from "@/components/global/FilterBar";
-import Button from "@/components/global/Button";
 
 type FilterAndSearchBarProps = {
   filter: string;
@@ -54,12 +46,7 @@ export default function FilterAndSearchBar({
         onFavorite={onFavorite}
       />
       <SearchBar search={search} onSearch={onSearch} onRequest={onRequest} />
-      <Button size="medium" variant="secondary" onClick={onClear}>
-        Clear
-        <CloseIconWrapper>
-          <CloseIcon />
-        </CloseIconWrapper>
-      </Button>
+      <ClearButton onClick={onClear} />
     </Container>
   );
 }
