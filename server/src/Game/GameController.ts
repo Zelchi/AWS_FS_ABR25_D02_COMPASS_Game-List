@@ -187,7 +187,7 @@ export class GameController {
             const sortBy = (req.query.sortBy as string) || 'updatedAt';
             const categoryBy = (req.query.categoryBy as string) || '';
             const platformBy = (req.query.platformBy as string) || '';
-            const statusBy = (req.query.statusBy as string);
+            const statusBy = (req.query.statusBy as string) || '';
             const isFavorite = req.query.isFavorite === 'true' ? true : false;
             const sortOrder = (req.query.sortOrder as 'asc' | 'desc') || 'desc';
             const { userId } = req.body;
@@ -199,16 +199,16 @@ export class GameController {
                 return;
             }
 
-            const validStatusFields = ["playing", "done", "abandoned"]
             const validSortFields = ['name', 'updatedAt', 'acquisDate', 'status', 'rating', 'price', 'finishDate'];
-            if (!validSortFields.includes(sortBy)) {
+            if (sortBy && !validSortFields.includes(sortBy)) {
                 res.status(400).json({
                     error: `Invalid sort field. Allowed values: ${validSortFields.join(', ')}`
                 });
                 return;
             }
 
-            if (statusBy && !validStatusFields.includes(statusBy)) {
+            const validStatusFields = ["none", "playing", "done", "abandoned"];
+            if (statusBy && !validStatusFields.includes(statusBy.toLowerCase())) {
                 res.status(400).json({
                     error: `Invalid status field. Allowed values: ${validStatusFields.join(', ')}`
                 });
@@ -229,11 +229,12 @@ export class GameController {
                 sortBy,
                 categoryBy,
                 platformBy,
+                statusBy,
                 isFavorite,
                 sortOrder,
                 userId
             );
-            
+
             res.status(200).json(paginatedResult);
         } catch (error) {
             res.status(500).json({ error: 'Internal server error' });
