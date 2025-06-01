@@ -1,5 +1,11 @@
-import { IPlatformEntity } from "@/../../server/src/Category/CategoryEntity";
+import { ICategoryEntity } from "@/../../server/src/Category/CategoryEntity";
 
-export default function CategoryForm({ onSubmit }: { onSubmit: (data: IPlatformEntity) => void }) {
+export default function CategoryForm({
+  onSubmit,
+  initialData,
+}: {
+  onSubmit: (data: ICategoryEntity) => void;
+  initialData?: ICategoryEntity;
+}) {
   return <form>Category Form</form>;
 }

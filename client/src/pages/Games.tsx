@@ -3,7 +3,7 @@ import { useState, ChangeEvent, MouseEvent, useEffect } from "react";
 import { getAllItems } from "@/utils/crudHandlers";
 import { IGameEntity } from "@/../../server/src/Game/GameEntity";
 import Table from "@/components/global/Table";
-import FilterAndSearchBar from "@/components/global/ClearButton";
+import FilterAndSearchBar from "@/components/global/FilterAndSearchBar";
 
 const labels = {
   name: "Title",
@@ -104,12 +104,12 @@ export default function Games() {
       />
       <Table<IGameEntity>
         data={games}
-        header={["name", "rating", "price", "acquisDate", "finishDate", "updatedAt"]}
+        header={["name", "rating", "price", "acquisDate", "finishDate"]}
         labels={labels}
         sortBy={sortBy}
         sortOrder={sortOrder}
         onSortByAndOrder={handleSortByAndOrder}
-        path={pathAPI}
+        path={"/game"}
         onItemsChange={setGames}
         onClear={handleClear}
       />

@@ -35,7 +35,7 @@ export default function SortButton({
 }: {
   children: ReactNode;
   head: string;
-  sortBy: string;
+  sortBy?: string;
   sortOrder: string;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }) {

@@ -20,7 +20,7 @@ export function normalizeRating(value: number, maxValue: number): number {
 type RatingSummaryProps = {
   className?: string;
   rating: number;
-  maxRating: number;
+  maxRating?: number;
   color?: string;
   bgColor?: string;
 };
