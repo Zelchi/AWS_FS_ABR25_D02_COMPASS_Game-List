@@ -52,11 +52,6 @@ export default function Games() {
         `${filterSelected ? `&${filterList}=${filterSelected}` : ""}` +
         `${isFavorite ? `&isFavorite=${isFavorite}` : ""}`;
 
-    console.log(filterSelected);
-    console.log(filterList);
-
-    console.log("API Path:", pathAPI);
-
     const handleFilterList = (e: ChangeEvent<HTMLSelectElement>): void => {
         setFilterList(e.target.value);
     };
