@@ -3,7 +3,7 @@ import { CategoryRegisterDto, CategoryUpdateDto } from "./CategoryDto";
 import { categoryService } from "./CategoryService";
 import { accountService } from "../Account/AccountService";
 
-export class CategoryController {
+class CategoryController {
     async middleware(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const authHeader = req.headers.authorization;

@@ -18,6 +18,7 @@ model User {
   categories Category[] @relation("UserCategory")
   games      Game[]     @relation("UserGame")
   platforms  Platform[] @relation("UserPlatform")
+  dashboard  Dashboard?
 }
 
 model Game {
@@ -64,4 +65,19 @@ model Platform {
   deletedAt  DateTime?
   user       User      @relation("UserPlatform", fields: [userId], references: [id])
   games      Game[]    @relation("PlatformGame")
+}
+
+model Dashboard {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  totalPrice     Float      @default(0)
+  topPlatform    String?
+  topCategory    String?
+  avgRating      Float    @default(0)
+  totalFavorites Int      @default(0)
+  totalAbandoned Int      @default(0)
+  totalDone      Int      @default(0)
+  totalPlaying   Int      @default(0)
+  lastUpdated    DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id])
 }

@@ -8,6 +8,7 @@ async function main() {
 
   await prisma.game.deleteMany();
   await prisma.category.deleteMany();
+  await prisma.dashboard.deleteMany();
   await prisma.platform.deleteMany();
   await prisma.user.deleteMany();
 
@@ -147,8 +148,8 @@ async function main() {
       data: {
         userId: user1.id,
         name: 'Origin',
-        company: 'Electronic Arts',
-        acquisDate: new Date('2021-09-01'),
+        company: 'EA Games',
+        acquisDate: new Date('2021-08-20'),
         imageUrl: ''
       }
     }),
@@ -459,6 +460,7 @@ async function main() {
     prisma.game.create({
       data: {
         userId: user1.id,
+<<<<<<< HEAD
         name: 'The Witcher 3: Wild Hunt',
         description: 'Open-world RPG based on the Witcher series',
         imageUrl: 'https://image.api.playstation.com/vulca2/1516/4YdK4x6G4L9EGpgWPkiPVj8y.png',
@@ -473,10 +475,51 @@ async function main() {
         },
         platforms: {
           connect: [{ id: platforms[3].id }, { id: platforms[4].id }]
+=======
+        name: 'Hollow Knight',
+        description: 'Challenging metroidvania with beautiful hand-drawn art',
+        imageUrl: 'https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg',
+        price: 1499,
+        rating: 5,
+        status: 'playing',
+        favorite: true,
+        acquisDate: new Date('2021-05-05'),
+        categories: {
+          connect: [{ id: categories[1].id }, { id: categories[2].id }]
+        },
+        platforms: {
+          connect: [{ id: platforms[1].id }, { id: platforms[3].id }]
+        }
+      }
+    }),
+    prisma.game.create({
+      data: {
+        userId: user1.id,
+        name: 'Red Dead Redemption 2',
+        description: 'Epic western action-adventure in an open world',
+        imageUrl: 'https://image.api.playstation.com/vulcan/ap/rnd/202208/0914/68ZgnHfBgtfsdIYI7lUALVYA.jpg',
+        price: 5999,
+        rating: 5,
+        status: 'playing',
+        favorite: true,
+        acquisDate: new Date('2021-04-10'),
+        categories: {
+          connect: [{ id: categories[1].id }, { id: categories[2].id }, { id: categories[6].id }]
+        },
+        platforms: {
+          connect: [{ id: platforms[0].id }, { id: platforms[2].id }, { id: platforms[3].id }]
+>>>>>>> feat/dashbord
         }
       }
     })
   ]);
+
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+  for (const game of games) {
+    await prisma.$executeRaw`UPDATE "Game" SET "updatedAt" = ${oneYearAgo.toISOString()} WHERE "id" = ${game.id}`;
+  }
 
   console.log('Seeding completed successfully!');
 }
