@@ -457,6 +457,25 @@ async function main() {
       }
     })
   ]);
+  prisma.game.create({
+    data: {
+      userId: user1.id,
+      name: 'Battlefield 2042',
+      description: 'Multiplayer first-person shooter set in a near-future world',
+      imageUrl: 'https://image.api.playstation.com/vulcan/ap/rnd/202111/2210/8YdK4x6G4L9EGpgWPkiPVj8y.png',
+      price: 4999,
+      rating: 2,
+      status: 'abandoned',
+      favorite: false,
+      acquisDate: new Date('2021-11-19'),
+      categories: {
+        connect: [{ id: categories[1].id }, { id: categories[6].id }]
+      },
+      platforms: {
+        connect: [{ id: platforms[2].id }, { id: platforms[3].id }]
+      }
+    }
+  });
 
   console.log('Seeding completed successfully!');
 }
