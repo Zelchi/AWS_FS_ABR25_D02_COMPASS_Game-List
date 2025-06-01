@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import React from "react";
+import { MouseEvent, JSX } from "react";
 
 const NavItemEl = styled.li<{ $active: boolean }>`
   width: 100%;
@@ -104,7 +103,7 @@ const NavLink = styled.a<{ $filled: boolean; $active: boolean }>`
 type NavItemProps = {
     path: string;
     label: string;
-    icon: React.JSX.Element;
+    icon: JSX.Element;
 };
 
 export function NavItem({ path, label, icon }: NavItemProps) {
@@ -113,16 +112,30 @@ export function NavItem({ path, label, icon }: NavItemProps) {
     const isActive = location.pathname === path;
 
     const removeToken = () => {
-        axios.defaults.headers.common["Authorization"] = "";
         localStorage.removeItem("token");
+    }
+
+    const handleNavigation = (e: MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
+
+        if (label === "Logout") {
+            removeToken();
+            navigate('/login');
+        } else {
+            navigate(path);
+        }
     }
 
     return (
         <NavItemEl $active={isActive}>
-            <NavLink href={path} $active={isActive} $filled={label === "Home" || label === "Logout"}>
+            <NavLink
+                href={path}
+                onClick={handleNavigation}
+                $active={isActive}
+                $filled={label === "Home" || label === "Logout"}>
                 {label === "Logout" ? (
                     <>
-                        <p onClick={removeToken} style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}>{label}</p>
+                        <p style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}>{label}</p>
                         <span>{icon}</span>
                     </>
                 ) : (

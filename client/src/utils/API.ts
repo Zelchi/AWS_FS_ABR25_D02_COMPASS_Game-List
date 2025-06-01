@@ -2,21 +2,19 @@ import axios from "axios";
 
 class API {
     private address = "http://localhost:8080/api/v1";
-    private route = axios.create({ baseURL: `${this.address}` });
+    private token = localStorage.getItem("token");
+    private route = axios.create({ baseURL: `${this.address}`, headers: { "Content-Type": "application/json", "Authorization": `Bearer ${this.token}` } });
 
     public Auth = async (): Promise<Boolean> => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        if (this.token) {
             try {
-                const { status } = await axios.get(`${this.address}/account`);
+                const { status } = await this.route.get(`${this.address}/account`);
 
                 if (status === 200) {
-                    localStorage.setItem("token", token);
                     return true;
                 }
+
             } catch (error) {
-                console.error("Error on verifying token:", error);
                 localStorage.removeItem("token");
                 return false;
             }

@@ -1,112 +1,141 @@
 const initialGames: IGameEntity[] = [
-  {
-    id: "1",
-    userId: "1",
-    imageUrl: "",
-    name: "Mario Kart",
-    description: "Mario B que ganhei de aniversário",
-    categories: [{ id: "1" }],
-    favorite: true,
-    acquisDate: new Date(Date.now()),
-    finishDate: null,
-    status: "Playing",
-    updatedAt: new Date(Date.now()),
-  },
+    {
+        id: "1",
+        userId: "1",
+        imageUrl: "",
+        name: "Mario Kart",
+        description: "Mario B que ganhei de aniversário",
+        categories: [{ id: "1" }],
+        favorite: true,
+        acquisDate: new Date(Date.now()),
+        finishDate: null,
+        status: "Playing",
+        updatedAt: new Date(Date.now()),
+    },
 ];
 
 const labels = {
-  name: "Title",
-  description: "Description",
-  imageUrl: "Image",
-  status: "Status",
-  favorite: "Favorite",
-  rating: "Rating",
-  acquisDate: "Acquisition Date",
-  finishDate: "Finished Date",
-  price: "Price",
-  categories: "Categories",
-  platforms: "Platforms",
-  updatedAt: "Last Update",
+    name: "Title",
+    description: "Description",
+    imageUrl: "Image",
+    status: "Status",
+    favorite: "Favorite",
+    rating: "Rating",
+    acquisDate: "Acquisition Date",
+    finishDate: "Finished Date",
+    price: "Price",
+    categories: "Categories",
+    platforms: "Platforms",
+    updatedAt: "Last Update",
 };
 
 import SiteLayout from "@/components/global/SiteLayout";
-import React, { useState } from "react";
+import { useState, ChangeEvent, MouseEvent, useEffect } from "react";
 import { getAllItems, getItem } from "@/utils/crudHandlers";
 import { IGameEntity } from "@/../../server/src/Game/GameEntity";
 import FilterAndSearchBar from "@/components/global/FilterAndSearchBar";
 import Table from "@/components/global/Table";
 
 export default function Games() {
-  const [page, setPage] = useState<number>(1);
-  const [games, setGames] = useState<IGameEntity[]>(initialGames);
-  const [filter, setFilter] = useState<string>("");
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>("");
-  const [sortBy, setSortBy] = useState<string>("updatedAt");
-  const [sortOrder, setSortOrder] = useState<string>("asc");
+    const [games, setGames] = useState<IGameEntity[]>(initialGames);
+    const [page, setPage] = useState<number>(1);
+    const [limit] = useState<number>(10);
+    const [search, setSearch] = useState<string>("");
+    const [sortBy, setSortBy] = useState<string>("updatedAt");
+    const [filterList, setFilterList] = useState<string>("");
+    const [filterSelected, setFilterSelected] = useState("");
+    const [isFavorite, setIsFavorite] = useState<boolean>(false);
+    const [sortOrder, setSortOrder] = useState<string>("desc");
 
-  const pathAPI = `/api/v1/game/page?page=${page}&limit={5}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+    const fetchData = async (path: string) => {
+        const response = await getAllItems<{ games: IGameEntity[] }>(path);
+        if (response && response.games) {
+            console.log("Fetched Games:", response.games);
+            setGames(response.games);
+        }
+    };
 
-  const handleFilter = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    setFilter(e.target.value);
-  };
+    const pathAPI = `game/page?
+    page=${page}&
+    limit=${limit}&
+    sortBy=${sortBy}&
+    sortOrder=${sortOrder}&
+    ${isFavorite ? `isFavorite=${isFavorite}&` : ""}
+    ${filterList ? `${filterList}=${filterSelected}&` : ""}
+    `;
 
-  const handleFavorite = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setIsFavorite((is) => !is);
-  };
+    console.log("API Path:", pathAPI);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setSearch(e.target.value);
-  };
+    const handleFilterList = (e: ChangeEvent<HTMLSelectElement>): void => {
+        setFilterList(e.target.value);
+    };
 
-  const handleSortByAndOrder = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    if (e.currentTarget.value === sortBy) {
-      setSortOrder((order) => (order === "asc" ? "desc" : "asc"));
-      return;
+    const handleFilterSelected = (e: ChangeEvent<HTMLSelectElement>): void => {
+        setFilterSelected(e.target.value);
     }
-    setSortOrder("asc");
-    setSortBy(e.currentTarget.value);
-  };
 
-  const handleClear = () => {
-    setFilter("");
-    setIsFavorite(false);
-    setSearch("");
-    setSortBy("updatedAt");
-  };
+    const handleFavorite = (e: ChangeEvent<HTMLInputElement>): void => {
+        setIsFavorite((is) => !is);
+    };
 
-  const handleRequest = async () => {
-    if (!search.trim()) return;
-    const data = await getAllItems<IGameEntity>(`${pathAPI}&search=${search}`);
-    if (data) {
-      setGames(data);
-    }
-  };
+    const handleSearch = (e: ChangeEvent<HTMLInputElement>): void => {
+        setSearch(e.target.value);
+    };
 
-  return (
-    <SiteLayout>
-      <FilterAndSearchBar
-        filter={filter}
-        onFilter={handleFilter}
-        isFavorite={isFavorite}
-        onFavorite={handleFavorite}
-        search={search}
-        onSearch={handleSearch}
-        onRequest={handleRequest}
-        onClear={handleClear}
-      />
-      <Table<IGameEntity>
-        data={games}
-        header={["name", "rating", "price", "acquisDate", "finishDate", "updatedAt"]}
-        labels={labels}
-        sortBy={sortBy}
-        sortOrder={sortOrder}
-        onSortByAndOrder={handleSortByAndOrder}
-        path={pathAPI}
-        onItemsChange={setGames}
-        onClear={handleClear}
-      />
-      {/*Pagination*/}
-    </SiteLayout>
-  );
+    const handleSortByAndOrder = (e: MouseEvent<HTMLButtonElement>): void => {
+        if (e.currentTarget.value === sortBy) {
+            setSortOrder((order) => (order === "asc" ? "desc" : "asc"));
+            return;
+        }
+        setSortOrder("asc");
+        setSortBy(e.currentTarget.value);
+    };
+
+    const handleClear = () => {
+        setFilterList("");
+        setFilterSelected("");
+        setIsFavorite(false);
+        setSearch("");
+        setSortBy("updatedAt");
+        fetchData(pathAPI);
+    };
+
+    const handleRequest = async (): Promise<void> => {
+        const searchInput = search.trim();
+        if (!searchInput) return fetchData(pathAPI);
+        if (searchInput) return fetchData(`${pathAPI}&search=${search}`);
+    };
+
+    useEffect(() => {
+        fetchData(pathAPI);
+    }, [page, limit, sortBy, sortOrder, filterSelected, isFavorite, sortBy]);
+
+    return (
+        <SiteLayout>
+            <FilterAndSearchBar
+                filter={filterList}
+                onFilter={handleFilterList}
+                selected={filterSelected}
+                onSelected={handleFilterSelected}
+                isFavorite={isFavorite}
+                onFavorite={handleFavorite}
+                search={search}
+                onSearch={handleSearch}
+                onRequest={handleRequest}
+                onClear={handleClear}
+            />
+            <Table<IGameEntity>
+                data={games}
+                header={["name", "rating", "price", "acquisDate", "finishDate", "updatedAt"]}
+                labels={labels}
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+                onSortByAndOrder={handleSortByAndOrder}
+                path={pathAPI}
+                onItemsChange={setGames}
+                onClear={handleClear}
+            />
+            {/*Pagination*/}
+        </SiteLayout>
+    );
 }
