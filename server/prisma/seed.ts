@@ -55,6 +55,34 @@ async function main() {
         name: 'Strategy',
         description: 'Games that emphasize tactical decision-making'
       }
+    }),
+    prisma.category.create({
+      data: {
+        userId: user1.id,
+        name: 'Simulation',
+        description: 'Games that simulate real-world activities'
+      }
+    }),
+    prisma.category.create({
+      data: {
+        userId: user1.id,
+        name: 'Racing',
+        description: 'Vehicle racing and driving games'
+      }
+    }),
+    prisma.category.create({
+      data: {
+        userId: user1.id,
+        name: 'Open World',
+        description: 'Games with extensive explorable environments'
+      }
+    }),
+    prisma.category.create({
+      data: {
+        userId: user1.id,
+        name: 'Shooter',
+        description: 'Games focused on shooting mechanics'
+      }
     })
   ]);
 
@@ -96,6 +124,60 @@ async function main() {
         acquisDate: new Date('2021-11-05'),
         imageUrl: 'https://b.thumbs.redditmedia.com/xvwxkNXOkvdu9d6S67odp1gCPfhB1A3qKDs7kdwO5ts.png'
       }
+    }),
+    prisma.platform.create({
+      data: {
+        userId: user1.id,
+        name: 'Epic Games Store',
+        company: 'Epic Games',
+        acquisDate: new Date('2021-12-01'),
+        imageUrl: 'https://www.flowgames.gg/wp-content/uploads/2023/11/Epic-Games-Emblem-scaled.jpg'
+      }
+    }),
+    prisma.platform.create({
+      data: {
+        userId: user1.id,
+        name: 'GOG',
+        company: 'CD Projekt',
+        acquisDate: new Date('2021-10-15'),
+        imageUrl: 'https://www.notebookcheck.info/fileadmin/_processed_/b/1/csm_Notebookcheck128_096ff4d4f0.jpg'
+      }
+    }),
+    prisma.platform.create({
+      data: {
+        userId: user1.id,
+        name: 'Origin',
+        company: 'Electronic Arts',
+        acquisDate: new Date('2021-09-01'),
+        imageUrl: 'https://cdn1.iconfinder.com/data/icons/metro-ui-dock-icon-set--icons-by-dakirby/512/Origins.png'
+      }
+    }),
+    prisma.platform.create({
+      data: {
+        userId: user1.id,
+        name: 'Battle.net',
+        company: 'Blizzard Entertainment',
+        acquisDate: new Date('2021-08-20'),
+        imageUrl: 'https://platform.polygon.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/7141739/battle_net.jpg?quality=90&strip=all&crop=7.8125,0,84.375,100'
+      }
+    }),
+    prisma.platform.create({
+      data: {
+        userId: user1.id,
+        name: 'Apple Arcade',
+        company: 'Apple Inc.',
+        acquisDate: new Date('2021-07-15'),
+        imageUrl: 'https://pbs.twimg.com/profile_images/1604907734377168897/xxhy8MZr_400x400.jpg'
+      }
+    }),
+    prisma.platform.create({
+      data: {
+        userId: user1.id,
+        name: 'Google Play Games',
+        company: 'Google',
+        acquisDate: new Date('2021-06-10'),
+        imageUrl: 'https://logowik.com/content/uploads/images/google-play-store4701.jpg'
+      }
     })
   ]);
 
@@ -121,7 +203,6 @@ async function main() {
         }
       }
     }),
-
     prisma.game.create({
       data: {
         userId: user1.id,
@@ -135,7 +216,7 @@ async function main() {
         acquisDate: new Date('2023-05-12'),
         finishDate: new Date('2023-06-30'),
         categories: {
-          connect: [{ id: categories[1].id }]
+          connect: [{ id: categories[1].id }, { id: categories[2].id }, { id: categories[6].id }]
         },
         platforms: {
           connect: [{ id: platforms[1].id }]
@@ -185,7 +266,7 @@ async function main() {
         userId: user1.id,
         name: 'Elden Ring',
         description: 'Open world action RPG by FromSoftware',
-        imageUrl: 'https://image.api.playstation.com/vulcan/ap/rnd/202108/0410/62UmxLNSb0a0iT0BvzwH3XJF.png',
+        imageUrl: 'https://image.api.playstation.com/vulcan/ap/rnd/202110/2000/YMUoJUYNX0xWk6eTKuZLr5Iw.jpg',
         price: 5999,
         rating: 5,
         status: 'done',
@@ -263,7 +344,7 @@ async function main() {
         userId: user1.id,
         name: 'Horizon Forbidden West',
         description: 'Action RPG set in a post-apocalyptic world',
-        imageUrl: 'https://image.api.playstation.com/vulcan/ap/rnd/202107/3100/1dy5w4Y5iwt9kanSlPXHBRNQ.png',
+        imageUrl: 'https://image.api.playstation.com/vulcan/ap/rnd/202107/3100/DLgLjXPNm5aX4dJ3qvXOCKW4.jpg',
         price: 5999,
         rating: 4,
         status: 'done',
@@ -283,14 +364,14 @@ async function main() {
         userId: user1.id,
         name: 'Animal Crossing: New Horizons',
         description: 'Life simulation game',
-        imageUrl: 'https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70010000027619/9989957eae3a6b545194c42fec2071675c34aadacd65e6b33fdfe7b3b6a86c3a',
+        imageUrl: 'https://images.kabum.com.br/produtos/fotos/648273/animal-crossing-new-horizons_1729002296_g.jpg',
         price: 3999,
         rating: 4,
         status: 'playing',
         favorite: false,
         acquisDate: new Date('2020-03-20'),
         categories: {
-          connect: [{ id: categories[2].id }]
+          connect: [{ id: categories[2].id }, { id: categories[4].id }]
         },
         platforms: {
           connect: [{ id: platforms[1].id }]
@@ -302,14 +383,14 @@ async function main() {
         userId: user1.id,
         name: 'Halo Infinite',
         description: 'First-person shooter',
-        imageUrl: 'https://store-images.s-microsoft.com/image/apps.21536.13727851868390641.c9cc5f66-aff8-406c-af6b-440838730be0.68796bde-cbf5-4eaa-a299-011417041da6',
+        imageUrl: 'https://platform.polygon.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/23164453/Halo_Infinite_audio_log_collectibles_guide.jpg',
         price: 5999,
         rating: 3,
         status: 'abandoned',
         favorite: false,
         acquisDate: new Date('2021-12-08'),
         categories: {
-          connect: [{ id: categories[1].id }]
+          connect: [{ id: categories[1].id }, { id: categories[7].id }]
         },
         platforms: {
           connect: [{ id: platforms[2].id }]
@@ -328,10 +409,10 @@ async function main() {
         favorite: true,
         acquisDate: new Date('2021-05-14'),
         categories: {
-          connect: [{ id: categories[0].id }, { id: categories[3].id }]
+          connect: [{ id: categories[0].id }, { id: categories[3].id }, { id: categories[4].id }]
         },
         platforms: {
-          connect: [{ id: platforms[1].id }, { id: platforms[3].id }]
+          connect: [{ id: platforms[0].id }, { id: platforms[1].id }, { id: platforms[3].id }, { id: platforms[5].id }, { id: platforms[8].id }, { id: platforms[9].id }]
         }
       }
     }),
@@ -348,7 +429,7 @@ async function main() {
         acquisDate: new Date('2021-11-09'),
         finishDate: new Date('2022-01-15'),
         categories: {
-          connect: [{ id: categories[1].id }]
+          connect: [{ id: categories[1].id }, { id: categories[5].id }, { id: categories[6].id }]
         },
         platforms: {
           connect: [{ id: platforms[2].id }, { id: platforms[3].id }]
