@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Checkbox from "@/components/global/Checkbox";
+import API from "../../utils/API";
+
 
 const Container = styled.div`
   display: flex;
@@ -44,42 +46,77 @@ const SelectInput = styled.select`
   }
 `;
 
+const filterDicionary = {
+    categoryBy: "category",
+    platformBy: "platform",
+    statusBy: "status",
+} as const;
+type FilterKey = keyof typeof filterDicionary;
+
+const statusDicionary = {
+    playing: "Playing",
+    done: "Done",
+    abandoned: "Abandoned",
+} as const;
+
 type FilterBarType = {
-  filter: string;
-  onFilter: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  isFavorite: boolean;
-  onFavorite: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    filter: FilterKey;
+    onFilter: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    selected: string;
+    onSelected: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    isFavorite: boolean;
+    onFavorite: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export default function FilterBar({ filter, onFilter, isFavorite, onFavorite }: FilterBarType) {
-  // `/api/v1/${filter}/page`
+const statusOptions = ["playing", "done", "abandoned"];
 
-  // DADOS DA API ABAIXO - FICTÍCIOS POR ENQUANTO
-  const data = ["RPG", "Action", "Adventure"];
+export default function FilterBar({ filter, onFilter, selected, onSelected, isFavorite, onFavorite }: FilterBarType) {
+    const [data, setData] = useState<string[]>([]);
 
-  return (
-    <Container>
-      <FilterContainer>
-        <SelectInput value={filter} onChange={onFilter}>
-          <option value="" disabled>
-            Filter by
-          </option>
-          <option value="category">Category</option>
-          <option value="platform">Platform</option>
-          <option value="status">Status</option>
-        </SelectInput>
-        {filter && (
-          <SelectInput>
-            {data.map((item) => (
-              <option key={item}>{item}</option>
-            ))}
-          </SelectInput>
-        )}
-      </FilterContainer>
-      <FavoriteContainer>
-        <span>Favorite?</span>
-        <Checkbox isFavorite={isFavorite} onFavorite={onFavorite} />
-      </FavoriteContainer>
-    </Container>
-  );
+    const handleRequest = async () => {
+        try {
+            const response = await API.GET(`${filterDicionary[filter]}`);
+            if (response && response.data) {
+                setData(response.data);
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+
+    useEffect(() => {
+        if (filter !== 'statusBy') handleRequest();
+        if (filter === 'statusBy') setData(statusOptions);
+    }, [filter]);
+
+    return (
+        <Container>
+            <FilterContainer>
+                <SelectInput value={filter} onChange={onFilter} >
+                    <option value="" disabled>
+                        Filter by
+                    </option>
+                    <option value="categoryBy">Category</option>
+                    <option value="platformBy">Platform</option>
+                    <option value="statusBy">Status</option>
+                </SelectInput>
+                {filter && (
+                    <SelectInput onChange={onSelected} value={selected}>
+                        <option value="" disabled>
+                            Filter by
+                        </option>
+                        {data.map((item) => (
+                            <option key={item} value={item}>
+                                {filter === 'statusBy' ? statusDicionary[item as keyof typeof statusDicionary] : item}
+                            </option>
+                        ))}
+                    </SelectInput>
+                )}
+            </FilterContainer>
+            <FavoriteContainer>
+                <span>Favorite?</span>
+                <Checkbox isFavorite={isFavorite} onFavorite={onFavorite} />
+            </FavoriteContainer>
+        </Container>
+    );
 }

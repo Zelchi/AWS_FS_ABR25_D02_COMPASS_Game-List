@@ -1,11 +1,12 @@
 import API from "@/utils/API";
 import { EntityWithId } from "@/types/types";
 
-export async function getAllItems<T>(path: string): Promise<T[] | null> {
+export async function getAllItems<T>(path: string): Promise<T | null> {
   try {
-    const response = await API.GET(path);
-    if (response.status === 200) {
-      return response.data as T[];
+    const { data, status } = await API.GET(path);
+
+    if (status === 200) {
+      return data;
     }
   } catch (error) {
     console.error(`GET failed for ${path}:`, error);
