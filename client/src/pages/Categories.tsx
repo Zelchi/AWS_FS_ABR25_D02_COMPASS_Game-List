@@ -1,100 +1,70 @@
-import { useState } from "react";
-import { AddCategoryModal } from "./AddCategoryModal";
-import { EditCategoryModal } from "./EditCategoryModal";
-import Button from "../components/src/components/ui/Button";
 import SiteLayout from "@/components/global/SiteLayout";
+import React, { useState, ChangeEvent, MouseEvent, useEffect } from "react";
+import { getAllItems } from "@/utils/crudHandlers";
+import { IPlatformEntity } from "@/../../server/src/Category/CategoryEntity";
+import Table from "@/components/global/Table";
+import SearchBar from "@/components/global/SearchBar";
+import ClearButton from "@/components/global/ClearButton";
 
-type Category = {
-  id: number;
-  name: string;
+const labels = {
+  name: "Name",
 };
 
 export default function Categories() {
-  const [categories, setCategories] = useState<Category[]>([
-    { id: 1, name: "RPG" },
-    { id: 2, name: "Action" },
-    { id: 3, name: "Adventure" },
-  ]);
+  const [categories, setCategories] = useState<IPlatformEntity[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [limit] = useState<number>(10);
+  const [search, setSearch] = useState<string>("");
+  const [sortOrder, setSortOrder] = useState<string>("desc");
 
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const pathAPI =
+    `category/page?page=${page}&limit=${limit}` + `&sortBy=name&sortOrder=${sortOrder}`;
 
-  const handleAddCategory = (name: string) => {
-    const newCategory = {
-      id: Date.now(), // In a real app, the backend would return the ID
-      name,
-    };
-    setCategories([...categories, newCategory]);
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>): void => {
+    setSearch(e.target.value);
   };
 
-  const handleEditCategory = (name: string) => {
-    if (!selectedCategory) return;
-    setCategories((prev) =>
-      prev.map((cat) => (cat.id === selectedCategory.id ? { ...cat, name } : cat)),
-    );
+  const handleSortOrder = (e: MouseEvent<HTMLButtonElement>): void => {
+    setSortOrder((order) => (order === "asc" ? "desc" : "asc"));
   };
 
-  const handleDeleteCategory = (id: number) => {
-    setCategories((prev) => prev.filter((cat) => cat.id !== id));
+  const handleClear = () => {
+    setSearch("");
+    fetchData(pathAPI);
   };
+
+  const fetchData = async (path: string) => {
+    const response = await getAllItems<{ categories: IPlatformEntity[] }>(path);
+    if (response && response.categories) {
+      setCategories(response.categories);
+    }
+  };
+
+  const handleRequest = async (): Promise<void> => {
+    const searchInput = search.trim();
+    if (!searchInput) return fetchData(pathAPI);
+    if (searchInput) return fetchData(`${pathAPI}&search=${search}`);
+  };
+
+  useEffect(() => {
+    handleRequest();
+  }, [page, limit, sortOrder]);
 
   return (
     <SiteLayout>
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">Categories</h2>
-          {/*<Button onClick={() => setIsAddModalOpen(true)}>+ New Category</Button>*/}
-        </div>
-
-        <ul className="space-y-2">
-          {categories.map((category) => (
-            <li
-              key={category.id}
-              className="flex justify-between items-center bg-gray-100 rounded-lg px-4 py-2"
-            >
-              <span>{category.name}</span>
-              <div className="space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setSelectedCategory(category);
-                    setIsEditModalOpen(true);
-                  }}
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleDeleteCategory(category.id)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </li>
-          ))}
-        </ul>
-
-        {/* Modals */}
-        <AddCategoryModal
-          isOpen={isAddModalOpen}
-          onClose={() => setIsAddModalOpen(false)}
-          onSubmit={handleAddCategory}
-        />
-        {selectedCategory && (
-          <EditCategoryModal
-            isOpen={isEditModalOpen}
-            onClose={() => {
-              setSelectedCategory(null);
-              setIsEditModalOpen(false);
-            }}
-            onSubmit={handleEditCategory}
-            defaultName={selectedCategory.name}
-          />
-        )}
-      </div>
+      <SearchBar search={search} onSearch={handleSearch} onRequest={handleRequest} />
+      <ClearButton onClick={handleClear} />
+      <Table<IPlatformEntity>
+        data={categories}
+        header={["name"]}
+        labels={labels}
+        sortOrder={sortOrder}
+        onSortByAndOrder={handleSortOrder}
+        path={pathAPI}
+        onItemsChange={setCategories}
+        onClear={handleClear}
+      />
+      {/*Pagination*/}
     </SiteLayout>
   );
 }
