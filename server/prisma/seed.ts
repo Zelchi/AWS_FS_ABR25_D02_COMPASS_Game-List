@@ -149,7 +149,7 @@ async function main() {
         name: 'Origin',
         company: 'Electronic Arts',
         acquisDate: new Date('2021-09-01'),
-        imageUrl: 'https://cdn1.iconfinder.com/data/icons/metro-ui-dock-icon-set--icons-by-dakirby/512/Origins.png'
+        imageUrl: ''
       }
     }),
     prisma.platform.create({
@@ -228,7 +228,7 @@ async function main() {
         userId: user1.id,
         name: 'Starfield',
         description: 'Bethesda\'s epic space RPG',
-        imageUrl: 'https://example.com/starfield.jpg',
+        imageUrl: '',
         price: 6999,
         rating: 2,
         status: 'abandoned',
