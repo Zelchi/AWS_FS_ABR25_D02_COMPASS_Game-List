@@ -230,7 +230,7 @@ async function main() {
         description: 'Bethesda\'s epic space RPG',
         imageUrl: 'https://example.com/starfield.jpg',
         price: 6999,
-        rating: 4,
+        rating: 2,
         status: 'abandoned',
         favorite: false,
         acquisDate: new Date('2023-09-06'),
