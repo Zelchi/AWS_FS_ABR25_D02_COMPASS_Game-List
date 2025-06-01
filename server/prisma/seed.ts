@@ -113,7 +113,7 @@ async function main() {
         name: 'Xbox Series X',
         company: 'Microsoft',
         acquisDate: new Date('2022-02-20'),
-        imageUrl: 'https://i.pinimg.com/736x/69/af/1b/69af1b021e6fe4d37383f80cdaf0cc26.jpg'
+        imageUrl: 'asdasdasdasdasdasdasda'
       }
     }),
     prisma.platform.create({
