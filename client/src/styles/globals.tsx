@@ -47,9 +47,9 @@ const GlobalStyle = createGlobalStyle`
     }
 
     body {
-        box-sizing: border-box;
-        font-family: sans-serif;
-    }
+    box-sizing: border-box;
+    font-family: var(--font-primary);
+}
 `;
 
 export default GlobalStyle;
