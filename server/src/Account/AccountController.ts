@@ -10,23 +10,24 @@ export class AccountController {
             const { userId } = req.body;
 
             if (userId) throw new Error('User ID should not be in the request body for this middleware');
-            if (!authHeader) throw new Error('Authorization header should not be present in the request for this middleware');
 
-            const type = authHeader.split(' ')[0];
-            const token = authHeader.split(' ')[1];
+            if (authHeader) {
+                const type = authHeader.split(' ')[0];
+                const token = authHeader.split(' ')[1];
 
-            if (type !== 'Bearer') {
-                res.status(401).json({ error: 'Invalid authorization type' });
-                return;
-            }
+                if (type !== 'Bearer') {
+                    res.status(401).json({ error: 'Invalid authorization type' });
+                    return;
+                }
 
-            if (!token || token === 'null' || token === 'undefined') {
-                return next();
-            }
+                if (!token || token === 'null' || token === 'undefined') {
+                    return next();
+                }
 
-            if (token) {
-                const decoded = await accountService.verifyToken(token);
-                req.body.userId = decoded.id;
+                if (token) {
+                    const decoded = await accountService.verifyToken(token);
+                    req.body.userId = decoded.id;
+                }
             }
 
             return next();

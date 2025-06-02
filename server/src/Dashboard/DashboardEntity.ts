@@ -9,5 +9,8 @@ export interface IDashboardEntity {
     totalAbandoned: number;
     totalDone: number;
     totalPlaying: number;
+    totalGames: number;    
+    totalCategories: number; 
+    totalPlatforms: number;
     lastUpdated?: Date;
 }

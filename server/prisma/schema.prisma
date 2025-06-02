@@ -70,7 +70,7 @@ model Platform {
 model Dashboard {
   id             String   @id @default(uuid())
   userId         String   @unique
-  totalPrice     Float      @default(0)
+  totalPrice     Float    @default(0)
   topPlatform    String?
   topCategory    String?
   avgRating      Float    @default(0)
@@ -78,6 +78,9 @@ model Dashboard {
   totalAbandoned Int      @default(0)
   totalDone      Int      @default(0)
   totalPlaying   Int      @default(0)
+  totalGames     Int      @default(0)      
+  totalCategories Int     @default(0)     
+  totalPlatforms Int      @default(0)   
   lastUpdated    DateTime @default(now())
   user           User     @relation(fields: [userId], references: [id])
 }

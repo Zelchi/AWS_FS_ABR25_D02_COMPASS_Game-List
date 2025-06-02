@@ -36,6 +36,10 @@ class DashboardService {
             const totalDone = games.filter(game => game.status === 'done').length;
             const totalPlaying = games.filter(game => game.status === 'playing').length;
 
+            const totalGames = games.length;
+            const totalCategories = categories.length;
+            const totalPlatforms = platforms.length;
+
             const dashboardData = {
                 userId,
                 totalPrice,
@@ -53,6 +57,9 @@ class DashboardService {
                 totalAbandoned,
                 totalDone,
                 totalPlaying,
+                totalGames,      
+                totalCategories,  
+                totalPlatforms, 
                 lastUpdated: new Date()
             };
 
