@@ -7,18 +7,24 @@ import Categories from "./pages/Categories";
 import Platforms from "./pages/Platforms";
 import NotFound from "./pages/NotFound";
 import { Auth } from "@/components/global/Auth";
-import ProtectedRoutes from "@/components/global/ProtectedRoutes";
+import ProtectedRoutes from "@/components/global/routes/ProtectedRoutes";
+import UnprotectedRoutes from "@/components/global/routes/UnprotectedRoutes";
 
 export default function App(): React.JSX.Element {
   return (
     <Routes>
-      <Route element={<ProtectedRoutes />}>
+
+      <Route element={<UnprotectedRoutes />}>
         <Route path="/login" element={<Login />} />
+      </Route>
+
+      <Route element={<ProtectedRoutes />}>
         <Route path="/" element={<Home />} />
         <Route path="/games" element={<Games />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/platforms" element={<Platforms />} />
       </Route>
+
 
       <Route path="/*" element={<NotFound />} />
     </Routes>
