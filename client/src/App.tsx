@@ -12,21 +12,19 @@ import UnprotectedRoutes from "@/components/global/routes/UnprotectedRoutes";
 
 export default function App(): React.JSX.Element {
   return (
-    <Routes>
-
-      <Route element={<UnprotectedRoutes />}>
-        <Route path="/login" element={<Login />} />
-      </Route>
-
-      <Route element={<ProtectedRoutes />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/games" element={<Games />} />
-        <Route path="/categories" element={<Categories />} />
-        <Route path="/platforms" element={<Platforms />} />
-      </Route>
-
-
-      <Route path="/*" element={<NotFound />} />
-    </Routes>
+    <Auth>
+      <Routes>
+        <Route element={<UnprotectedRoutes />}>
+          <Route path="/login" element={<Login />} />
+        </Route>
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/games" element={<Games />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/platforms" element={<Platforms />} />
+        </Route>
+        <Route path="/*" element={<NotFound />} />
+      </Routes>
+    </Auth>
   );
 }

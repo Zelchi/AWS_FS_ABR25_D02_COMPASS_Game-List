@@ -6,13 +6,11 @@ import { ToastContainer } from "react-toastify";
 
 export default function ProtectedRoutes() {
   return (
-    <Auth>
-      <GlobalProvider>
-        <ModalProvider>
-          <ToastContainer position="bottom-right" autoClose={3000} theme="dark" />
-          <Outlet />
-        </ModalProvider>
-      </GlobalProvider>
-    </Auth>
+    <GlobalProvider>
+      <ModalProvider>
+        <ToastContainer position="bottom-right" autoClose={3000} theme="dark" />
+        <Outlet />
+      </ModalProvider>
+    </GlobalProvider>
   );
 }
