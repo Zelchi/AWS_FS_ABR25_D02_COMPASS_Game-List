@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import styled from "styled-components";
 import SearchBar from "@/components/global/SearchBar";
 import ClearButton from "@/components/global/ClearButton";
@@ -17,31 +17,19 @@ const SearchContainerEl = styled.div`
   }
 `;
 
-type SearchContainerProps = {
-  search: string;
-  onSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onRequest?: () => Promise<void>;
-  onClick: () => void;
-};
-
-export default function SearchContainer({
-  search,
-  onSearch,
-  onRequest,
-  onClick,
-}: SearchContainerProps) {
+export default function SearchContainer({ onLoadItems }: { onLoadItems: () => Promise<void> }) {
   const isMobile = useMediaQuery({ maxWidth: 30 * 16 });
 
   return (
     <>
       {isMobile ? (
         <SearchContainerEl>
-          <SearchBar search={search} onSearch={onSearch} onRequest={onRequest} />
+          <SearchBar onLoadItems={onLoadItems} />
         </SearchContainerEl>
       ) : (
         <SearchContainerEl>
-          <SearchBar search={search} onSearch={onSearch} onRequest={onRequest} />
-          <ClearButton onClick={onClick} />
+          <SearchBar onLoadItems={onLoadItems} />
+          <ClearButton onLoadItems={onLoadItems} />
         </SearchContainerEl>
       )}
     </>

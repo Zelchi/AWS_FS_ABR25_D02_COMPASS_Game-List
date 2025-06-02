@@ -3,3 +3,5 @@ export type EntityWithId = {
   imageUrl?: string;
   platforms?: { id: string }[] | undefined;
 };
+
+export type SortOrder = "asc" | "desc";

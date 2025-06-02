@@ -2,6 +2,7 @@ import styled from "styled-components";
 import React, { ReactNode } from "react";
 import SortIconFilled from "@/assets/sort-filled.svg?react";
 import SortIcon from "@/assets/sort.svg?react";
+import { useGlobal } from "@/contexts/globalContext";
 
 const Button = styled.button`
   cursor: pointer;
@@ -36,21 +37,11 @@ const SortIconWrapper = styled.span<{ $asc?: boolean }>`
   transition: var(--transition);
 `;
 
-export default function SortButton({
-  children,
-  onClick,
-  sortBy,
-  sortOrder,
-  head,
-}: {
-  children: ReactNode;
-  head: string;
-  sortBy?: string;
-  sortOrder: string;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-}) {
+export default function SortButton({ children, head }: { children: ReactNode; head: string }) {
+  const { sortBy, sortOrder, handleSortByAndOrder } = useGlobal();
+
   return (
-    <Button value={head} onClick={onClick}>
+    <Button value={head} onClick={handleSortByAndOrder}>
       {children}{" "}
       {sortBy === head ? (
         <SortIconWrapper $asc={sortOrder === "asc"}>

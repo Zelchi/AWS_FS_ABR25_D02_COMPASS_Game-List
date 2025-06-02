@@ -1,12 +1,11 @@
-import { useEffect, useCallback, JSX } from "react";
-import { Outlet } from "react-router-dom";
+import { useEffect, JSX, ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import API from "../../utils/API";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export function Auth(): JSX.Element {
+export function Auth({ children }: { children: ReactNode }): JSX.Element {
   const navigate = useNavigate();
 
   const { data: isAuthenticated, isLoading } = useQuery({
@@ -36,10 +35,5 @@ export function Auth(): JSX.Element {
     }
   }, [isAuthenticated]);
 
-  return (
-    <div>
-      <ToastContainer position="bottom-right" autoClose={3000} theme="dark" />
-      <Outlet />
-    </div>
-  );
+  return <div>{children}</div>;
 }
