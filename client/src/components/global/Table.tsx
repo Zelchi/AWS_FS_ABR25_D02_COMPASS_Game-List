@@ -86,7 +86,8 @@ const TableRow = styled.tr<{ $location: string }>`
         gap: 2.6rem;
 
         @media (max-width: 30em) {
-          flex-direction: column;
+          flex-direction: ${({ $location }) => ($location === "/games" ? "column" : "row")};
+          justify-content: ${({ $location }) => ($location === "/games" ? "center" : "flex-end")};
           gap: 1rem;
         }
 
