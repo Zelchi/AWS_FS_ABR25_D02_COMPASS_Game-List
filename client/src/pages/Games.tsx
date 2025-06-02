@@ -4,6 +4,8 @@ import { getAllItems } from "@/utils/crudHandlers";
 import { IGameEntity } from "@/../../server/src/Game/GameEntity";
 import Table from "@/components/global/Table";
 import FilterAndSearchBar from "@/components/global/FilterAndSearchBar";
+import { useAddItem } from "@/contexts/AddItemContext";
+import GameForm from "@/components/forms/GameForm";
 
 const labels = {
   name: "Title",
@@ -30,6 +32,8 @@ export default function Games() {
   const [filterSelected, setFilterSelected] = useState("");
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [sortOrder, setSortOrder] = useState<string>("desc");
+  const { formComponent } = useAddItem();
+
 
   const pathAPI =
     `game/page?page=${page}&limit=${limit}` +
@@ -113,7 +117,7 @@ export default function Games() {
         onItemsChange={setGames}
         onClear={handleClear}
       />
-      {/*Pagination*/}
+      <GameForm></GameForm>
     </SiteLayout>
   );
 }

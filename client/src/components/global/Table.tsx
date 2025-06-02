@@ -18,21 +18,21 @@ import CategoryForm from "@/components/forms/CategoryForm";
 import PlatformForm from "@/components/forms/PlatformForm";
 
 const getFormByPath = (path: string, onSubmit: (item: any) => void, item?: any) => {
-  if (path.includes("games")) return <GameForm onSubmit={onSubmit} initialData={item} />;
-  if (path.includes("categories")) return <CategoryForm onSubmit={onSubmit} initialData={item} />;
-  if (path.includes("platforms")) return <PlatformForm onSubmit={onSubmit} initialData={item} />;
+    if (path.includes("games")) return <GameForm onSubmit={onSubmit} initialData={item} />;
+    if (path.includes("categories")) return <CategoryForm onSubmit={onSubmit} initialData={item} />;
+    if (path.includes("platforms")) return <PlatformForm onSubmit={onSubmit} initialData={item} />;
 };
 
 type TableProps<T extends EntityWithId> = {
-  data: T[];
-  header: string[];
-  labels: { [key: string]: string };
-  sortBy?: string;
-  sortOrder: string;
-  onSortByAndOrder: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  path: string;
-  onItemsChange: Dispatch<React.SetStateAction<any[]>>;
-  onClear?: () => void;
+    data: T[];
+    header: string[];
+    labels: { [key: string]: string };
+    sortBy?: string;
+    sortOrder: string;
+    onSortByAndOrder: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    path: string;
+    onItemsChange: Dispatch<React.SetStateAction<any[]>>;
+    onClear?: () => void;
 };
 
 const TableEL = styled.table`
@@ -137,225 +137,228 @@ const LastUpdateIcon = styled(LastUpdate)`
 `;
 
 export default function Table<T extends EntityWithId>({
-  data,
-  header,
-  labels,
-  sortBy,
-  sortOrder,
-  onSortByAndOrder,
-  path,
-  onItemsChange,
-  onClear,
+    data,
+    header,
+    labels,
+    sortBy,
+    sortOrder,
+    onSortByAndOrder,
+    path,
+    onItemsChange,
+    onClear,
 }: TableProps<T>) {
-  const [editingItem, setEditingItem] = useState<T | null>(null);
-  const { setAddItemHandler, setFormComponent } = useAddItem();
-  const location = useLocation().pathname;
-  const [mode, setMode] = useState<"add" | "edit">("add");
+    const [editingItem, setEditingItem] = useState<T | null>(null);
+    const { setAddItemHandler, setFormComponent, openModal, formComponent } = useAddItem();
+    const location = useLocation().pathname;
+    const [mode, setMode] = useState<"add" | "edit">("add");
 
-  const handleGet = useCallback(
-    async (item: EntityWithId) => {
-      if (!item.id) return;
-      const data = await getItem<T>(item.id, path);
-      if (data) {
-        console.log(data);
-        onItemsChange([data]);
-      }
-    },
-    [onItemsChange],
-  );
+    const handleGet = useCallback(
+        async (item: EntityWithId) => {
+            if (!item.id) return;
+            const data = await getItem<T>(item.id, path);
+            if (data) {
+                console.log(data);
+                onItemsChange([data]);
+            }
+        },
+        [onItemsChange],
+    );
 
-  const handleAdd = useCallback(
-    async (item: T) => {
-      const data = await addItem<T>(item, path);
-      if (data) {
-        onItemsChange(data);
-        onClear?.();
-        setFormComponent(null);
-      }
-    },
-    [onItemsChange, onClear, setFormComponent, path],
-  );
 
-  const handleUpdate = useCallback(
-    async (item: T) => {
-      const data = await updateItem<T>(item, path);
-      if (data) {
-        onItemsChange(data);
-        setFormComponent(null);
-      }
-    },
-    [onItemsChange, setFormComponent],
-  );
 
-  const handleDelete = useCallback(
-    async (item: EntityWithId) => {
-      if (!item.id) return;
-      const data = await deleteItem<T>(item.id, path);
-      if (data) {
-        onItemsChange(data);
-      }
-    },
-    [onItemsChange],
-  );
+    const handleAdd = useCallback(
+        async (item: T) => {
+            const data = await addItem<T>(item, path);
+            if (data) {
+                onItemsChange(data);
+                onClear?.();
+                setFormComponent(null);
+            }
+        },
+        [onItemsChange, onClear, setFormComponent, path],
+    );
 
-  const openEditForm = useCallback(
-    (item: T) => {
-      setEditingItem(item);
-      setFormComponent(getFormByPath(location, handleUpdate, item));
-    },
-    [handleUpdate, location, setFormComponent],
-  );
+    const handleUpdate = useCallback(
+        async (item: T) => {
+            const data = await updateItem<T>(item, path);
+            if (data) {
+                onItemsChange(data);
+                setFormComponent(null);
+            }
+        },
+        [onItemsChange, setFormComponent],
+    );
 
-  useEffect(() => {
-    let form;
-    if (mode === "add") {
-      form = getFormByPath(location, handleAdd);
-    } else {
-      form = getFormByPath(location, handleUpdate, editingItem);
-    }
-    setFormComponent(form);
+    const handleDelete = useCallback(
+        async (item: EntityWithId) => {
+            if (!item.id) return;
+            const data = await deleteItem<T>(item.id, path);
+            if (data) {
+                onItemsChange(data);
+            }
+        },
+        [onItemsChange],
+    );
 
-    setAddItemHandler(() => () => {
-      if (mode === "add") {
-        setFormComponent(getFormByPath(location, handleAdd));
-      } else {
-        setFormComponent(getFormByPath(location, handleUpdate, editingItem));
-      }
+    const openEditForm = useCallback(
+        (item: T) => {
+            setFormComponent(getFormByPath(location, handleUpdate, item));
+            setEditingItem(item);
+            openModal();
+        },
+        [handleUpdate, location, setFormComponent],
+    );
+
+    useEffect(() => {
+        let form;
+        if (mode === "add") {
+            form = getFormByPath(location, handleAdd);
+        } else {
+            form = getFormByPath(location, handleUpdate, editingItem);
+        }
+        setFormComponent(form);
+
+        setAddItemHandler(() => () => {
+            if (mode === "add") {
+                setFormComponent(getFormByPath(location, handleAdd));
+            } else {
+                setFormComponent(getFormByPath(location, handleUpdate, editingItem));
+            }
+        });
+
+        return () => {
+            setFormComponent(null);
+            setAddItemHandler(null);
+        };
+    }, [location, mode, editingItem, handleAdd, handleUpdate, setFormComponent, setAddItemHandler]);
+
+    const sorted = [...data].sort((a, b) => {
+        function getValue<T>(item: T, key: keyof T): any {
+            return item[key];
+        }
+
+        const aValue = getValue(a, sortBy as keyof T);
+        const bValue = getValue(b, sortBy as keyof T);
+
+        if (aValue === null) return 1;
+        if (bValue === null) return -1;
+
+        if (aValue instanceof Date && bValue instanceof Date) {
+            return sortOrder === "asc"
+                ? aValue.getTime() - bValue.getTime()
+                : bValue.getTime() - aValue.getTime();
+        }
+
+        if (typeof aValue === "string" && typeof bValue === "string") {
+            return sortOrder === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+        }
+
+        if (typeof aValue === "number" && typeof bValue === "number") {
+            return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
+        }
+
+        return 0;
     });
 
-    return () => {
-      setFormComponent(null);
-      setAddItemHandler(null);
-    };
-  }, [location, mode, editingItem, handleAdd, handleUpdate, setFormComponent, setAddItemHandler]);
-
-  const sorted = [...data].sort((a, b) => {
-    function getValue<T>(item: T, key: keyof T): any {
-      return item[key];
-    }
-
-    const aValue = getValue(a, sortBy as keyof T);
-    const bValue = getValue(b, sortBy as keyof T);
-
-    if (aValue === null) return 1;
-    if (bValue === null) return -1;
-
-    if (aValue instanceof Date && bValue instanceof Date) {
-      return sortOrder === "asc"
-        ? aValue.getTime() - bValue.getTime()
-        : bValue.getTime() - aValue.getTime();
-    }
-
-    if (typeof aValue === "string" && typeof bValue === "string") {
-      return sortOrder === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
-    }
-
-    if (typeof aValue === "number" && typeof bValue === "number") {
-      return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
-    }
-
-    return 0;
-  });
-
-  return (
-    <TableEL>
-      <thead>
-        <tr>
-          {location === "/games" && (
-            <>
-              <th>
-                <SortButton
-                  head={"updatedAt"}
-                  onClick={onSortByAndOrder}
-                  sortBy={sortBy}
-                  sortOrder={sortOrder}
-                >
-                  <LastUpdateIcon />
-                </SortButton>
-              </th>
-              <th style={{ color: "white", textAlign: "left" }}></th>
-              <th style={{ color: "white", textAlign: "left" }}></th>
-            </>
-          )}
-          {header.map((head) => (
-            <th key={head} style={{ paddingRight: "1.5rem" }}>
-              <SortButton
-                head={head}
-                onClick={onSortByAndOrder}
-                sortBy={sortBy}
-                sortOrder={sortOrder}
-              >
-                {labels[head]}
-              </SortButton>
-            </th>
-          ))}
-          <th style={{ color: "white", textAlign: "left" }}></th>
-        </tr>
-      </thead>
-      <tbody>
-        {sorted.map((item) => (
-          <TableRow key={item.id} $location={location}>
-            {"imageUrl" in item ? (
-              location === "/games" ? (
-                <>
-                  <td>{""}</td>
-                  <td style={{ width: "10rem" }}>
-                    <GameImage
-                      src={(item as any)["imageUrl"] || defaultImage}
-                      fallback={defaultImage}
-                    />
-                  </td>
-                  <td style={{ width: "7rem" }}>
-                    <PlatformImageContainer>
-                      {(item as any).platforms
-                        ?.slice(0, 3)
-                        .map((platform: { id: string; imageUrl: string }) => (
-                          <PlatformImage key={platform.id} src={platform.imageUrl} />
+    return (
+        <TableEL>
+            <thead>
+                <tr>
+                    {location === "/games" && (
+                        <>
+                            <th>
+                                <SortButton
+                                    head={"updatedAt"}
+                                    onClick={onSortByAndOrder}
+                                    sortBy={sortBy}
+                                    sortOrder={sortOrder}
+                                >
+                                    <LastUpdateIcon />
+                                </SortButton>
+                            </th>
+                            <th style={{ color: "white", textAlign: "left" }}></th>
+                            <th style={{ color: "white", textAlign: "left" }}></th>
+                        </>
+                    )}
+                    {header.map((head) => (
+                        <th key={head} style={{ paddingRight: "1.5rem" }}>
+                            <SortButton
+                                head={head}
+                                onClick={onSortByAndOrder}
+                                sortBy={sortBy}
+                                sortOrder={sortOrder}
+                            >
+                                {labels[head]}
+                            </SortButton>
+                        </th>
+                    ))}
+                    <th style={{ color: "white", textAlign: "left" }}></th>
+                </tr>
+            </thead>
+            <tbody>
+                {sorted.map((item) => (
+                    <TableRow key={item.id} $location={location}>
+                        {"imageUrl" in item ? (
+                            location === "/games" ? (
+                                <>
+                                    <td>{""}</td>
+                                    <td style={{ width: "10rem" }}>
+                                        <GameImage
+                                            src={(item as any)["imageUrl"] || defaultImage}
+                                            fallback={defaultImage}
+                                        />
+                                    </td>
+                                    <td style={{ width: "7rem" }}>
+                                        <PlatformImageContainer>
+                                            {(item as any).platforms
+                                                ?.slice(0, 3)
+                                                .map((platform: { id: string; imageUrl: string }) => (
+                                                    <PlatformImage key={platform.id} src={platform.imageUrl} />
+                                                ))}
+                                            {(item as any).platforms.length > 3 && <MoreIcon />}
+                                        </PlatformImageContainer>
+                                    </td>
+                                </>
+                            ) : (
+                                ""
+                            )
+                        ) : (
+                            ""
+                        )}
+                        {header.map((head) => (
+                            <TableEl key={head} $width={head === "title"}>
+                                <TableItem<T> path={path} onItemsChange={onItemsChange} onClear={onClear}>
+                                    {head === "rating" ? (
+                                        <RatingField>
+                                            <Rating
+                                                color={"var(--color-aqua)"}
+                                                bgColor={"var(--color-grey-light-05)"}
+                                                rating={(item as any)[head]}
+                                            />
+                                        </RatingField>
+                                    ) : head.includes("Date") || head.includes("At") ? (
+                                        new Date((item as any)[head]).toLocaleDateString()
+                                    ) : head === "price" ? (
+                                        `$${(item as any)[head] / 100}`
+                                    ) : (
+                                        String((item as any)[head] ?? "")
+                                    )}
+                                </TableItem>
+                            </TableEl>
                         ))}
-                      {(item as any).platforms.length > 3 && <MoreIcon />}
-                    </PlatformImageContainer>
-                  </td>
-                </>
-              ) : (
-                ""
-              )
-            ) : (
-              ""
-            )}
-            {header.map((head) => (
-              <TableEl key={head} $width={head === "title"}>
-                <TableItem<T> path={path} onItemsChange={onItemsChange} onClear={onClear}>
-                  {head === "rating" ? (
-                    <RatingField>
-                      <Rating
-                        color={"var(--color-aqua)"}
-                        bgColor={"var(--color-grey-light-05)"}
-                        rating={(item as any)[head]}
-                      />
-                    </RatingField>
-                  ) : head.includes("Date") || head.includes("At") ? (
-                    new Date((item as any)[head]).toLocaleDateString()
-                  ) : head === "price" ? (
-                    `$${(item as any)[head] / 100}`
-                  ) : (
-                    String((item as any)[head] ?? "")
-                  )}
-                </TableItem>
-              </TableEl>
-            ))}
-            <td>
-              <span>
-                <button onClick={() => openEditForm(item)}>
-                  <Edit />
-                </button>
-                <button onClick={() => handleGet(item)}>
-                  <Delete />
-                </button>
-              </span>
-            </td>
-          </TableRow>
-        ))}
-      </tbody>
-    </TableEL>
-  );
+                        <td>
+                            <span>
+                                <button onClick={() => openEditForm(item)}>
+                                    <Edit />
+                                </button>
+                                <button onClick={() => handleGet(item)}>
+                                    <Delete />
+                                </button>
+                            </span>
+                        </td>
+                    </TableRow>
+                ))}
+            </tbody>
+        </TableEL>
+    );
 }

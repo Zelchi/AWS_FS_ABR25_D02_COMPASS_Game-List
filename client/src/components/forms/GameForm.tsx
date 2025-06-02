@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IGameEntity } from "@/../../server/src/Game/GameEntity";
+import { useAddItem } from "@/contexts/AddItemContext";
+import Modal from "../global/Modal";
 
 export default function GameForm({
   onSubmit,
@@ -9,29 +11,29 @@ export default function GameForm({
   initialData?: IGameEntity;
 }) {
   const [game, setGame] = useState<Partial<IGameEntity>>({ title: "", category: "" });
-
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   onSubmit({
-  //     ...game,
-  //     id: Date.now(),
-  //     createdAt: new Date(),
-  //     updatedAt: new Date(),
-  //     acquired: new Date(),
-  //     finished: new Date(),
-  //     status: "Backlog",
-  //     favorite: false,
-  //     image: "",
-  //   } as IGameEntity);
-  // };
+  const { isModalOpen, closeModal } = useAddItem();
 
   return (
-    <form>
-      <input
-        placeholder="Título"
-        onChange={(e) => setGame((g) => ({ ...g, title: e.target.value }))}
-      />
-      <button type="submit">Salvar</button>
-    </form>
+    <Modal
+      isOpen={isModalOpen}
+      onClose={() => closeModal()}
+      title="New Game"
+      size="md"
+    >
+      <form>
+        <input
+          placeholder="Título"
+          onChange={(e) => setGame((g) => ({ ...g, title: e.target.value }))}
+        />
+        <button type="submit">Salvar</button>
+      </form>
+
+      <div>
+        <button onClick={() => closeModal()}>
+          Fechar
+        </button>
+      </div>
+    </Modal>
+
   );
 }
