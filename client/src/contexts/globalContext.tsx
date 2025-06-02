@@ -10,6 +10,7 @@ import { IGameEntity } from "@/../../server/src/Game/GameEntity";
 import { ICategoryEntity } from "@/../../server/src/Category/CategoryEntity";
 import { IPlatformEntity } from "@/../../server/src/Platform/PlatformEntity";
 import { SortOrder } from "@/types/types";
+import { useMediaQuery } from "react-responsive";
 
 type GlobalContextType = {
   games: IGameEntity[];
@@ -25,13 +26,24 @@ type GlobalContextType = {
   sortBy: string;
   setSortBy: React.Dispatch<React.SetStateAction<string>>;
   sortOrder: SortOrder;
+  filters: string;
+  setFilters: React.Dispatch<React.SetStateAction<string>>;
+  selectedFilter: string;
+  setSelectedFilter: React.Dispatch<React.SetStateAction<string>>;
+  isFavorite: boolean;
+  setIsFavorite: React.Dispatch<React.SetStateAction<boolean>>;
   setSortOrder: React.Dispatch<React.SetStateAction<SortOrder>>;
   handleSearch: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSortBy: (e: MouseEvent<HTMLButtonElement> | ChangeEvent<HTMLSelectElement>) => void;
   handleSortOrder: (e: MouseEvent<HTMLButtonElement> | ChangeEvent<HTMLSelectElement>) => void;
   handleSortByAndOrder: (e: MouseEvent<HTMLButtonElement>) => void;
+  handleFilters: (e: ChangeEvent<HTMLSelectElement>) => void;
+  handleSelectedFilter: (e: ChangeEvent<HTMLSelectElement>) => void;
+  handleIsFavorite: () => void;
   handleClear: () => void;
   limit: number;
+  isMobile: boolean;
+  isLaptop: boolean;
 };
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -44,8 +56,13 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [search, setSearch] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("updatedAt");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+  const [filters, setFilters] = useState<string>("");
+  const [selectedFilter, setSelectedFilter] = useState("");
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   const limit = 10;
+  const isMobile = useMediaQuery({ maxWidth: 30 * 16 });
+  const isLaptop = useMediaQuery({ maxWidth: 67 * 16 });
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>): void => {
     setSearch(e.target.value);
@@ -78,11 +95,26 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     setSortBy(e.currentTarget.value);
   };
 
+  const handleFilters = (e: ChangeEvent<HTMLSelectElement>): void => {
+    setFilters(e.target.value);
+  };
+
+  const handleSelectedFilter = (e: ChangeEvent<HTMLSelectElement>): void => {
+    setSelectedFilter(e.target.value);
+  };
+
+  const handleIsFavorite = (): void => {
+    setIsFavorite((is) => !is);
+  };
+
   const handleClear = () => {
     setPage(1);
     setSearch("");
-    setSortBy("updatedAt");
+    setSortBy(isLaptop ? "" : "updatedAt");
     setSortOrder("desc");
+    setFilters("");
+    setSelectedFilter("");
+    setIsFavorite(false);
   };
 
   return (
@@ -102,12 +134,23 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setSortBy,
         sortOrder,
         setSortOrder,
+        filters,
+        setFilters,
+        selectedFilter,
+        setSelectedFilter,
+        isFavorite,
+        setIsFavorite,
         handleSearch,
         handleSortBy,
         handleSortOrder,
         handleSortByAndOrder,
         handleClear,
+        handleFilters,
+        handleSelectedFilter,
+        handleIsFavorite,
         limit,
+        isMobile,
+        isLaptop,
       }}
     >
       {children}

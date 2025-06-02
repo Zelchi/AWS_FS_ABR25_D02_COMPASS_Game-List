@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import API from "../../utils/API";
 import Heart from "@/assets/heart.svg?react";
-import { useMediaQuery } from "react-responsive";
 import ClearButton from "@/components/global/ClearButton";
+import { useGlobal } from "@/contexts/globalContext";
+import { getLabel, isLabelKey } from "@/utils/labels";
 
 const Container = styled.div`
   display: flex;
@@ -121,22 +122,6 @@ const FavoriteAndClearWrapper = styled.div`
   }
 `;
 
-type FilterBarType = {
-  filter: string;
-  labels: { [key: string]: string };
-  header: string[];
-  onFilter: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  selected: string;
-  sortBy: string;
-  onSortBy: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  sortOrder: string;
-  onSortOrder: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  onSelected: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  isFavorite: boolean;
-  onFavorite: () => void;
-  onClear: () => void;
-};
-
 const filterDictionary: Record<string, string> = {
   categoryBy: "Category",
   platformBy: "Platform",
@@ -144,29 +129,34 @@ const filterDictionary: Record<string, string> = {
 };
 
 export default function FilterBar({
-  filter,
-  labels,
   header,
-  onFilter,
-  selected,
-  sortBy,
-  onSortBy,
-  sortOrder,
-  onSortOrder,
-  onSelected,
-  isFavorite,
-  onFavorite,
-  onClear,
-}: FilterBarType) {
+  onLoadItems,
+}: {
+  header: string[];
+  onLoadItems: () => Promise<void>;
+}) {
+  const {
+    sortBy,
+    sortOrder,
+    filters,
+    selectedFilter,
+    isFavorite,
+    handleSortBy,
+    handleSortOrder,
+    handleFilters,
+    handleSelectedFilter,
+    handleIsFavorite,
+    isMobile,
+    isLaptop,
+  } = useGlobal();
+
   const [data, setData] = useState<string[]>([]);
-  const isLaptop = useMediaQuery({ maxWidth: 67 * 16 });
-  const isMobile = useMediaQuery({ maxWidth: 30 * 16 });
 
   const handleRequest = async () => {
     try {
-      if (!filter) return setData([]);
+      if (!filters) return setData([]);
 
-      const endpoint = filterDictionary[filter] || filter;
+      const endpoint = filterDictionary[filters] || filters;
       const response = await API.GET(`${endpoint}`);
       if (response && response.data) {
         setData(response.data);
@@ -177,20 +167,20 @@ export default function FilterBar({
   };
 
   useEffect(() => {
-    if (filter !== "statusBy") handleRequest();
-    if (filter === "statusBy") setData(["Playing", "Done", "Abandoned"]);
+    if (filters !== "statusBy") handleRequest();
+    if (filters === "statusBy") setData(["Playing", "Done", "Abandoned"]);
 
-    onSelected({
+    handleSelectedFilter({
       target: { value: "" },
     } as React.ChangeEvent<HTMLSelectElement>);
-  }, [filter]);
+  }, [filters]);
 
   return (
     <Container>
       {isMobile ? (
         <>
           <FilterContainer>
-            <SelectInput onChange={onFilter} value={filter}>
+            <SelectInput onChange={handleFilters} value={filters}>
               <option value="" disabled>
                 Filter by
               </option>
@@ -200,8 +190,8 @@ export default function FilterBar({
                 </option>
               ))}
             </SelectInput>
-            {filter && (
-              <SelectInput onChange={onSelected} value={selected}>
+            {filters && (
+              <SelectInput onChange={handleSelectedFilter} value={selectedFilter}>
                 <option value="" disabled>
                   Choose an option
                 </option>
@@ -214,18 +204,18 @@ export default function FilterBar({
             )}
           </FilterContainer>
           <SortContainer>
-            <SelectInput onChange={onSortBy} value={sortBy}>
+            <SelectInput onChange={handleSortBy} value={sortBy}>
               <option value="" disabled>
                 Sort by
               </option>
-              {["updatedAt", ...header].map((item) => (
-                <option key={item} value={item}>
-                  {labels[item]}
+              {["updatedAt", ...header].map((head) => (
+                <option key={head} value={head}>
+                  {isLabelKey(head) ? getLabel(head) : ""}
                 </option>
               ))}
             </SelectInput>
             {sortBy && (
-              <SelectInput onChange={onSortOrder} value={sortOrder}>
+              <SelectInput onChange={handleSortOrder} value={sortOrder}>
                 <option value="" disabled>
                   Choose an option
                 </option>
@@ -236,17 +226,17 @@ export default function FilterBar({
           </SortContainer>
           <FavoriteContainer>
             <span>Filter by favorite</span>
-            <IconWrapper $isFavorite={isFavorite} onClick={onFavorite}>
+            <IconWrapper $isFavorite={isFavorite} onClick={handleIsFavorite}>
               <Heart />
             </IconWrapper>
           </FavoriteContainer>
-          <ClearButton onClick={onClear} />
+          <ClearButton onLoadItems={onLoadItems} />
         </>
       ) : isLaptop ? (
         <>
           <div style={{ display: "flex", gap: "1rem" }}>
             <FilterContainer>
-              <SelectInput onChange={onFilter} value={filter}>
+              <SelectInput onChange={handleFilters} value={filters}>
                 <option value="" disabled>
                   Filter by
                 </option>
@@ -256,8 +246,8 @@ export default function FilterBar({
                   </option>
                 ))}
               </SelectInput>
-              {filter && (
-                <SelectInput onChange={onSelected} value={selected}>
+              {filters && (
+                <SelectInput onChange={handleSelectedFilter} value={selectedFilter}>
                   <option value="" disabled>
                     Choose an option
                   </option>
@@ -270,18 +260,18 @@ export default function FilterBar({
               )}
             </FilterContainer>
             <SortContainer>
-              <SelectInput onChange={onSortBy} value={sortBy}>
+              <SelectInput onChange={handleSortBy} value={sortBy}>
                 <option value="" disabled>
                   Sort by
                 </option>
-                {["updatedAt", ...header].map((item) => (
-                  <option key={item} value={item}>
-                    {labels[item]}
+                {["updatedAt", ...header].map((head) => (
+                  <option key={head} value={head}>
+                    {isLabelKey(head) ? getLabel(head) : ""}
                   </option>
                 ))}
               </SelectInput>
               {sortBy && (
-                <SelectInput onChange={onSortOrder} value={sortOrder}>
+                <SelectInput onChange={handleSortOrder} value={sortOrder}>
                   <option value="" disabled>
                     Choose an option
                   </option>
@@ -294,17 +284,17 @@ export default function FilterBar({
           <FavoriteAndClearWrapper>
             <FavoriteContainer>
               <span>Filter by favorite</span>
-              <IconWrapper $isFavorite={isFavorite} onClick={onFavorite}>
+              <IconWrapper $isFavorite={isFavorite} onClick={handleIsFavorite}>
                 <Heart />
               </IconWrapper>
             </FavoriteContainer>
-            <ClearButton onClick={onClear} />
+            <ClearButton onLoadItems={onLoadItems} />
           </FavoriteAndClearWrapper>
         </>
       ) : (
         <>
           <FilterContainer>
-            <SelectInput value={filter} onChange={onFilter}>
+            <SelectInput value={filters} onChange={handleFilters}>
               <option value="" disabled>
                 Filter by
               </option>
@@ -314,8 +304,8 @@ export default function FilterBar({
                 </option>
               ))}
             </SelectInput>
-            {filter && (
-              <SelectInput onChange={onSelected} value={selected}>
+            {filters && (
+              <SelectInput onChange={handleSelectedFilter} value={selectedFilter}>
                 <option value="" disabled>
                   Choose an option
                 </option>
@@ -329,7 +319,7 @@ export default function FilterBar({
           </FilterContainer>
           <FavoriteContainer>
             <span>Favorite?</span>
-            <IconWrapper $isFavorite={isFavorite} onClick={onFavorite}>
+            <IconWrapper $isFavorite={isFavorite} onClick={handleIsFavorite}>
               <Heart />
             </IconWrapper>
           </FavoriteContainer>

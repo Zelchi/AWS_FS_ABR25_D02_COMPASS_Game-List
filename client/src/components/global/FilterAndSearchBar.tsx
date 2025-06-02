@@ -4,6 +4,7 @@ import FilterBar from "@/components/global/FilterBar";
 import SearchBar from "@/components/global/SearchBar";
 import ClearButton from "@/components/global/ClearButton";
 import { useMediaQuery } from "react-responsive";
+import { useGlobal } from "@/contexts/globalContext";
 
 const Container = styled.div`
   display: flex;
@@ -19,85 +20,27 @@ const Container = styled.div`
   }
 `;
 
-type FilterAndSearchBarProps = {
-  filter: string;
-  labels: { [key: string]: string };
-  header: string[];
-  onFilter: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  selected: string;
-  sortBy: string;
-  onSortBy: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  sortOrder: string;
-  onSortOrder: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  onSelected: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  isFavorite: boolean;
-  onFavorite: () => void;
-  search: string;
-  onSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onRequest?: () => Promise<void>;
-  onClear: () => void;
-};
-
 export default function FilterAndSearchBar({
-  filter,
-  labels,
   header,
-  onFilter,
-  sortBy,
-  onSortBy,
-  sortOrder,
-  onSortOrder,
-  selected,
-  onSelected,
-  isFavorite,
-  onFavorite,
-  search,
-  onSearch,
-  onRequest,
-  onClear,
-}: FilterAndSearchBarProps) {
-  const isLaptop = useMediaQuery({ maxWidth: 67 * 16 });
+  onLoadItems,
+}: {
+  header: string[];
+  onLoadItems: () => Promise<void>;
+}) {
+  const { isLaptop } = useGlobal();
 
   return (
     <Container>
       {isLaptop ? (
         <>
-          <SearchBar search={search} onSearch={onSearch} onRequest={onRequest} onClick={() => {}} />
-          <FilterBar
-            filter={filter}
-            labels={labels}
-            header={header}
-            sortBy={sortBy}
-            onSortBy={onSortBy}
-            sortOrder={sortOrder}
-            onSortOrder={onSortOrder}
-            selected={selected}
-            isFavorite={isFavorite}
-            onFilter={onFilter}
-            onSelected={onSelected}
-            onFavorite={onFavorite}
-            onClear={onClear}
-          />
+          <SearchBar onLoadItems={onLoadItems} />
+          <FilterBar header={header} onLoadItems={onLoadItems} />
         </>
       ) : (
         <>
-          <FilterBar
-            filter={filter}
-            labels={labels}
-            header={header}
-            sortBy={sortBy}
-            onSortBy={onSortBy}
-            sortOrder={sortOrder}
-            onSortOrder={onSortOrder}
-            selected={selected}
-            isFavorite={isFavorite}
-            onFilter={onFilter}
-            onSelected={onSelected}
-            onFavorite={onFavorite}
-            onClear={onClear}
-          />
-          <SearchBar search={search} onSearch={onSearch} onRequest={onRequest} onClick={() => {}} />
-          <ClearButton onClick={onClear} />
+          <FilterBar header={header} onLoadItems={onLoadItems} />
+          <SearchBar onLoadItems={onLoadItems} />
+          <ClearButton onLoadItems={onLoadItems} />
         </>
       )}
     </Container>

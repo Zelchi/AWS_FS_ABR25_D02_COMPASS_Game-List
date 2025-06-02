@@ -1,12 +1,11 @@
 import styled from "styled-components";
 import SearchIcon from "../../assets/search.svg?react";
 import Button from "@/components/global/Button";
-import React, { Dispatch } from "react";
+import React from "react";
 import { useMediaQuery } from "react-responsive";
 import ClearButton from "@/components/global/ClearButton";
 import { useLocation } from "react-router-dom";
 import { useGlobal } from "@/contexts/globalContext";
-import { useCategory } from "@/contexts/categoryContext";
 
 const SearchContainer = styled.form<{ $path: string }>`
   display: flex;
@@ -84,7 +83,7 @@ export default function SearchBar({ onLoadItems }: { onLoadItems: () => Promise<
         </>
       ) : (
         <>
-          <Input value={search} onChange={handleSearch} placeholder="Search game"></Input>
+          <Input value={search} onChange={handleSearch} placeholder="Search..."></Input>
           <Button size="medium" type="submit">
             Search
             <SearchIconWrapper>
