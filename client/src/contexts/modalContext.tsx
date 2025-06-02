@@ -1,27 +1,36 @@
-import { createContext, useState, ReactNode } from "react";
+import React, { createContext, ReactNode, useContext, useState } from "react";
 
 type ModalContextType = {
-    isOpen: boolean;
-    setIsOpen: (isOpen: boolean) => void;
-    modalContent: ReactNode | null;
-    setModalContent: (content: ReactNode | null) => void;
+  isModalOpen: boolean;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  modalContent: ReactNode | null;
+  setModalContent: React.Dispatch<React.SetStateAction<ReactNode | null>>;
 };
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
-export const ModalProvider = ({ children }: { children: ReactNode }) => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [modalContent, setModalContent] = useState<ReactNode | null>(null);
 
-    return (
-        <ModalContext.Provider
-            value={{
-                isOpen,
-                setIsOpen,
-                modalContent,
-                setModalContent,
-            }}
-        >
-            {children}
-        </ModalContext.Provider>
-    );
-}
+export const ModalProvider = ({ children }: { children: ReactNode }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<ReactNode | null>(null);
+
+  return (
+    <ModalContext.Provider
+      value={{
+        isModalOpen,
+        setIsModalOpen,
+        modalContent,
+        setModalContent,
+      }}
+    >
+      {children}
+    </ModalContext.Provider>
+  );
+};
+
+export const useModal = () => {
+  const context = useContext(ModalContext);
+  if (!context) {
+    throw new Error("useModal must be used inside a ModalProvider");
+  }
+  return context;
+};
