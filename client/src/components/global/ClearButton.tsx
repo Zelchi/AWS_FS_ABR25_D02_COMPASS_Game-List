@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Button from "@/components/global/Button";
 import CloseIcon from "@/assets/close.svg?react";
-import React from "react";
+import { useEffect, useState } from "react";
 import { useGlobal } from "@/contexts/globalContext";
 
 const CloseIconWrapper = styled.span`
@@ -19,15 +19,23 @@ const ButtonWrapper = styled.div`
 
 export default function ClearButton({ onLoadItems }: { onLoadItems: () => Promise<void> }) {
   const { handleClear } = useGlobal();
+  const [cleared, setCleared] = useState(false);
+
+  useEffect(() => {
+    if (cleared) {
+      onLoadItems();
+      setCleared(false);
+    }
+  }, [cleared, onLoadItems]);
 
   return (
     <ButtonWrapper>
       <Button
         size="medium"
         variant="secondary"
-        onClick={async () => {
-          await handleClear();
-          await onLoadItems();
+        onClick={() => {
+          handleClear();
+          setCleared(true);
         }}
       >
         Clear
