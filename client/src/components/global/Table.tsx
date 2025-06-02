@@ -191,7 +191,7 @@ export default function Table<T extends EntityWithId>({
 }: TableProps<T>) {
   const isLaptop = useMediaQuery({ maxWidth: 67 * 16 });
   const [editingItem, setEditingItem] = useState<T | null>(null);
-  const { setAddItemHandler, setFormComponent } = useAddItem();
+  const { setAddItemHandler, setFormComponent, openModal, formComponent } = useAddItem();
   const location = useLocation().pathname;
   const [mode, setMode] = useState<"add" | "edit">("add");
 
@@ -243,8 +243,9 @@ export default function Table<T extends EntityWithId>({
 
   const openEditForm = useCallback(
     (item: T) => {
-      setEditingItem(item);
       setFormComponent(getFormByPath(location, handleUpdate, item));
+      setEditingItem(item);
+      openModal();
     },
     [handleUpdate, location, setFormComponent],
   );

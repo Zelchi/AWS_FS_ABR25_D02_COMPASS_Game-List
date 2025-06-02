@@ -5,6 +5,8 @@ import { IGameEntity } from "@/../../server/src/Game/GameEntity";
 import Table from "@/components/global/Table";
 import FilterAndSearchBar from "@/components/global/FilterAndSearchBar";
 import { useMediaQuery } from "react-responsive";
+import GameForm from "@/components/forms/GameForm";
+import { useAddItem } from "@/contexts/AddItemContext";
 
 const labels = {
   name: "Title",
@@ -23,6 +25,9 @@ const labels = {
 
 export default function Games() {
   const isMobile = useMediaQuery({ maxWidth: 67 * 16 });
+  const { formComponent } = useAddItem();
+  const header = ["name", "rating", "price", "acquisDate", "finishDate"];
+
   const [games, setGames] = useState<IGameEntity[]>([]);
   const [page, setPage] = useState<number>(1);
   const [limit] = useState<number>(10);
@@ -32,7 +37,6 @@ export default function Games() {
   const [filterSelected, setFilterSelected] = useState("");
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [sortOrder, setSortOrder] = useState<string>("desc");
-  const header = ["name", "rating", "price", "acquisDate", "finishDate"];
 
   const pathAPI =
     `game/page?page=${page}&limit=${limit}` +
@@ -130,7 +134,7 @@ export default function Games() {
         onItemsChange={setGames}
         onClear={handleClear}
       />
-      {/*Pagination*/}
+      <GameForm></GameForm>
     </SiteLayout>
   );
 }
