@@ -44,28 +44,28 @@ const SubGreeting = styled.p`
 `;
 
 export default function Home() {
-    const { data } = useQuery({
-        queryKey: ["relatoryAndStatus"],
-        queryFn: () => API.GET('dashboard'),
-        staleTime: 20 * 60 * 1000,
-        retry: false,
-    });
+  const { data } = useQuery({
+    queryKey: ["relatoryAndStatus"],
+    queryFn: () => API.GET("dashboard"),
+    staleTime: 20 * 60 * 1000,
+    retry: false,
+  });
 
-    console.log(data);
+  console.log(data);
 
-    return (
-        <SiteLayout>
-            <Greeting>Hello, Juan!</Greeting>
-            <SubGreeting>Choose one of options below.</SubGreeting>
-            <Row>
-                <FeatureCard iconSrc={controllerIcon} title="Games" number="243" showButton />
-                <FeatureCard iconSrc={tagIcon} title="Categories" number="13" showButton />
-            </Row>
+  return (
+    <SiteLayout>
+      <Greeting>Hello, Juan!</Greeting>
+      <SubGreeting>Choose one of options below.</SubGreeting>
+      <Row>
+        <FeatureCard iconSrc={controllerIcon} title="Games" number="243" showButton />
+        <FeatureCard iconSrc={tagIcon} title="Categories" number="13" showButton />
+      </Row>
 
-            <Row style={{ marginTop: "5.1rem" }}>
-                <FeatureCard iconSrc={chipIcon} title="Platforms" number="4" showButton />
-                <FeatureCard iconSrc={starIcon} title="Favorite Games" number="3" />
-            </Row>
-        </SiteLayout>
-    );
+      <Row style={{ marginTop: "5.1rem" }}>
+        <FeatureCard iconSrc={chipIcon} title="Platforms" number="4" showButton />
+        <FeatureCard iconSrc={starIcon} title="Favorite Games" number="3" />
+      </Row>
+    </SiteLayout>
+  );
 }
