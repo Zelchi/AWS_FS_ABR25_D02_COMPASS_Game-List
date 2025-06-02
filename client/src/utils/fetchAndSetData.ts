@@ -24,6 +24,6 @@ export const fetchAndSetData = async <T>({
       setData(data);
     }
   } catch (error) {
-    console.error("Error searching data:", error);
+    console.error("Error fetching data: ", error);
   }
 };

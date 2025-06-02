@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Container = styled.div`
   background-color: #50676e;
@@ -7,9 +7,5 @@ const Container = styled.div`
 `;
 
 export const AskCards = (): React.JSX.Element => {
-    return (
-        <Container >
-            a
-        </Container>
-    );
-}
+  return <Container>a</Container>;
+};
