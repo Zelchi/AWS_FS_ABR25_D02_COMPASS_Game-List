@@ -10,6 +10,7 @@ import { useAddItem } from "@/contexts/AddItemContext";
 
 const labels = {
   name: "Title",
+  company: "Company",
   description: "Description",
   imageUrl: "Image",
   status: "Status",

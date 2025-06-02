@@ -1,6 +1,5 @@
 import React, { ReactNode, useState } from "react";
 import styled from "styled-components";
-import { AddItemProvider } from "@/contexts/AddItemContext";
 import SideBar from "@/components/navigation/SideBar";
 import SiteHeader from "@/components/global/SiteHeader";
 
@@ -44,14 +43,12 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AddItemProvider>
-      <Container $isOpen={isOpen}>
-        <SideBar />
-        <MainContent>
-          <SiteHeader isOpen={isOpen} onOpen={handleOpen} />
-          <section>{children}</section>
-        </MainContent>
-      </Container>
-    </AddItemProvider>
+    <Container $isOpen={isOpen}>
+      <SideBar />
+      <MainContent>
+        <SiteHeader isOpen={isOpen} onOpen={handleOpen} />
+        <section>{children}</section>
+      </MainContent>
+    </Container>
   );
 }

@@ -2,12 +2,12 @@ import styled from "styled-components";
 import Button from "@/components/global/Button";
 import CloseIcon from "@/assets/close.svg?react";
 import React from "react";
+import { useGlobal } from "@/contexts/globalContext";
 
 const CloseIconWrapper = styled.span`
   width: 1.2rem;
   display: inline-block;
   fill: var(--color-white);
-  //padding: 0.2rem 0;
 `;
 
 const ButtonWrapper = styled.div`
@@ -17,10 +17,19 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-export default function ClearButton({ onClick }: { onClick: () => void }) {
+export default function ClearButton({ onLoadItems }: { onLoadItems: () => Promise<void> }) {
+  const { handleClear } = useGlobal();
+
   return (
     <ButtonWrapper>
-      <Button size="medium" variant="secondary" onClick={onClick}>
+      <Button
+        size="medium"
+        variant="secondary"
+        onClick={async () => {
+          await handleClear();
+          await onLoadItems();
+        }}
+      >
         Clear
         <CloseIconWrapper>
           <CloseIcon />

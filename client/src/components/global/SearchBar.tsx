@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import SearchIcon from "../../assets/search.svg?react";
 import Button from "@/components/global/Button";
-import React from "react";
+import React, { Dispatch } from "react";
 import { useMediaQuery } from "react-responsive";
 import ClearButton from "@/components/global/ClearButton";
 import { useLocation } from "react-router-dom";
+import { useGlobal } from "@/contexts/globalContext";
+import { useCategory } from "@/contexts/categoryContext";
 
 const SearchContainer = styled.form<{ $path: string }>`
   display: flex;
@@ -56,17 +58,8 @@ const SearchIconWrapper = styled.span`
   fill: var(--color-white);
 `;
 
-export default function SearchBar({
-  search,
-  onSearch,
-  onRequest,
-  onClick,
-}: {
-  search: string;
-  onSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onRequest?: () => Promise<void>;
-  onClick: () => void;
-}) {
+export default function SearchBar({ onLoadItems }: { onLoadItems: () => Promise<void> }) {
+  const { search, handleSearch } = useGlobal();
   const isMobile = useMediaQuery({ maxWidth: 30 * 16 });
   const path = useLocation().pathname;
 
@@ -74,24 +67,24 @@ export default function SearchBar({
     <SearchContainer
       onSubmit={(e) => {
         e.preventDefault();
-        onRequest?.();
+        onLoadItems();
       }}
       $path={path}
     >
       {isMobile ? (
         <>
-          <Input value={search} onChange={onSearch} placeholder="Search game"></Input>
+          <Input value={search} onChange={handleSearch} placeholder="Search game"></Input>
           <Button size="medium" type="submit">
             Search
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
           </Button>
-          {path !== "/games" && <ClearButton onClick={onClick}></ClearButton>}
+          {path !== "/games" && <ClearButton onLoadItems={onLoadItems} />}
         </>
       ) : (
         <>
-          <Input value={search} onChange={onSearch} placeholder="Search game"></Input>
+          <Input value={search} onChange={handleSearch} placeholder="Search game"></Input>
           <Button size="medium" type="submit">
             Search
             <SearchIconWrapper>
