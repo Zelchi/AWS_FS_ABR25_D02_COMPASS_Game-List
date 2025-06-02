@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import MoreIcon from "@/components/global/MoreIcon";
+import { useEffect, useState } from "react";
 
-type SafeImageProps = {
+type SmartImageProps = {
   src: string;
   fallback?: string;
   className?: string;
+  onValid?: () => void;
 };
 
-export default function SafeImage({ src, fallback, className }: SafeImageProps) {
+export default function SmartImage({ src, fallback, className, onValid }: SmartImageProps) {
   const [finalSrc, setFinalSrc] = useState<string | null>(null);
 
   useEffect(() => {
@@ -19,17 +19,31 @@ export default function SafeImage({ src, fallback, className }: SafeImageProps) 
     let isMounted = true;
     const img = new Image();
 
-    img.onload = () => isMounted && setFinalSrc(src);
-    img.onerror = () => isMounted && setFinalSrc(fallback ?? null);
+    img.onload = () => {
+      if (isMounted) {
+        setFinalSrc(src);
+        onValid?.();
+      }
+    };
+
+    img.onerror = () => {
+      if (isMounted) {
+        if (fallback) {
+          setFinalSrc(fallback);
+        } else {
+          setFinalSrc(null);
+        }
+      }
+    };
 
     img.src = src;
 
     return () => {
       isMounted = false;
     };
-  }, [src, fallback]);
+  }, [src, fallback, onValid]);
 
-  if (!finalSrc) return <MoreIcon />;
+  if (!finalSrc) return null;
 
   return (
     <span

@@ -1,5 +1,6 @@
 const labels = {
   name: "Name",
+  company: "Company",
   description: "Description",
   imageUrl: "Image",
   status: "Status",

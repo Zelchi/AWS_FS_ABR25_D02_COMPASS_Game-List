@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import SortButton from "@/components/global/SortButton";
 import RatingSummary from "@/components/global/RatingSummary";
-import SafeImage from "@/components/global/SafeImage";
+import SmartImage from "@/components/global/SmartImage";
 import MoreIcon from "@/components/global/MoreIcon";
 import defaultImage from "@/assets/default-image.jpg";
 import LastUpdate from "@/assets/last-update.svg?react";
@@ -13,6 +13,7 @@ import Delete from "@/assets/trash-outline.svg?react";
 import { sortItems } from "@/utils/sortItems";
 import { useGlobal } from "@/contexts/globalContext";
 import { getLabel, isLabelKey } from "@/utils/labels";
+import PlatformImages from "@/components/global/PlatformImages";
 
 const TableEL = styled.table`
   width: 100%;
@@ -61,11 +62,13 @@ const TableRow = styled.tr<{ $location: string }>`
       span {
         display: flex;
         flex-wrap: nowrap;
+          justify-content: flex-end;
         gap: 2.6rem;
 
         @media (max-width: 30em) {
           flex-direction: ${({ $location }) => ($location === "/games" ? "column" : "row")};
           justify-content: ${({ $location }) => ($location === "/games" ? "center" : "flex-end")};
+          align-items: ${({ $location }) => ($location === "/games" ? "flex-end" : "center")};
           gap: 1rem;
         }
 
@@ -111,27 +114,11 @@ const TableItem = styled.span`
   color: var(--color-black);
 `;
 
-const GameImage = styled(SafeImage)`
+const GameImage = styled(SmartImage)`
   display: block;
   width: 6.5rem;
   height: 5.5rem;
   border-radius: 0.8rem;
-`;
-
-const PlatformImageContainer = styled.span`
-  max-width: 8rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-`;
-
-const PlatformImage = styled(SafeImage)`
-  display: block;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
 `;
 
 const Rating = styled(RatingSummary)`
@@ -167,10 +154,10 @@ type TableProps<T> = {
 };
 
 export default function Table<T extends Record<string, any>>({ data, header }: TableProps<T>) {
-  const { sortBy, sortOrder } = useGlobal();
-  const isLaptop = useMediaQuery({ maxWidth: 67 * 16 });
+  const { sortBy, sortOrder, isLaptop, isMobile } = useGlobal();
   const location = useLocation().pathname;
   const sorted = [...data].sort(sortItems<T>(sortBy, sortOrder));
+  const maxSizeText = 30;
 
   return (
     <TableEL>
@@ -195,11 +182,17 @@ export default function Table<T extends Record<string, any>>({ data, header }: T
                 <th style={{ color: "white", textAlign: "left" }}></th>
               </>
             )}
-            {header.map((head) => (
-              <th key={head} style={{ paddingRight: "1.5rem" }}>
-                <SortButton head={head}>{isLabelKey(head) ? getLabel(head) : ""}</SortButton>
-              </th>
-            ))}
+            {header.map((head) =>
+              head === "name" ? (
+                <th key={head} style={{ paddingRight: "1.5rem", width: "30%" }}>
+                  <SortButton head={head}>{isLabelKey(head) ? getLabel(head) : ""}</SortButton>
+                </th>
+              ) : (
+                <th key={head} style={{ paddingRight: "1.5rem" }}>
+                  <SortButton head={head}>{isLabelKey(head) ? getLabel(head) : ""}</SortButton>
+                </th>
+              ),
+            )}
             <th style={{ color: "white", textAlign: "left" }}></th>
           </tr>
         </thead>
@@ -219,14 +212,7 @@ export default function Table<T extends Record<string, any>>({ data, header }: T
                     />
                   </td>
                   <td style={{ width: "7rem" }}>
-                    <PlatformImageContainer>
-                      {(item as any).platforms
-                        ?.slice(0, 3)
-                        .map((platform: { id: string; imageUrl: string }) => (
-                          <PlatformImage key={platform.id} src={platform.imageUrl} />
-                        ))}
-                      {(item as any).platforms.length > 3 && <MoreIcon />}
-                    </PlatformImageContainer>
+                    <PlatformImages game={item as any} />
                   </td>
                 </>
               ) : (
@@ -238,7 +224,13 @@ export default function Table<T extends Record<string, any>>({ data, header }: T
             {header.map((head) => (
               <TableEl key={head} $width={head === "title"}>
                 <TableItem>
-                  {head === "rating" ? (
+                  {head === "name" ? (
+                    (item as any)[head].length > maxSizeText ? (
+                      (item as any)[head].slice(0, maxSizeText).trim() + "..."
+                    ) : (
+                      (item as any)[head]
+                    )
+                  ) : head === "rating" ? (
                     <RatingField>
                       <Rating
                         color={"var(--color-aqua)"}
@@ -256,7 +248,7 @@ export default function Table<T extends Record<string, any>>({ data, header }: T
                 </TableItem>
               </TableEl>
             ))}
-            <td style={{ width: "6.5rem" }}>
+            <td style={{ width: "6.5rem", marginLeft: "auto" }}>
               <span>
                 <button>
                   <Edit />

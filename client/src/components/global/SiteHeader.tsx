@@ -1,7 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { useAddItem } from "@/contexts/AddItemContext";
 import ToggleButton from "@/components/navigation/ToggleButton";
 import Button from "@/components/global/Button";
 import { useMediaQuery } from "react-responsive";
@@ -72,7 +71,6 @@ const ButtonWrapper = styled.div`
 
 export default function SiteHeader({ isOpen, onOpen }: { isOpen: boolean; onOpen: () => void }) {
   const isMobile = useMediaQuery({ maxWidth: 30 * 16 });
-  const { triggerAddItem } = useAddItem();
   const path = useLocation().pathname;
 
   return (
@@ -86,7 +84,7 @@ export default function SiteHeader({ isOpen, onOpen }: { isOpen: boolean; onOpen
                 <Title>{routes.find((route) => route.path === path)?.label}</Title>
                 {path !== "/" && <Separator />}
                 <ButtonWrapper>
-                  <Button size="medium" onClick={triggerAddItem}>
+                  <Button size="medium">
                     Add new{" "}
                     {path === "/games" ? "game" : path === "/categories" ? "category" : "platform"}
                   </Button>
@@ -96,7 +94,7 @@ export default function SiteHeader({ isOpen, onOpen }: { isOpen: boolean; onOpen
               <>
                 <Title>{routes.find((route) => route.path === path)?.label}</Title>
                 <ButtonWrapper>
-                  <Button size="medium" onClick={triggerAddItem}>
+                  <Button size="medium">
                     Add new{" "}
                     {path === "/games" ? "game" : path === "/categories" ? "category" : "platform"}
                   </Button>
