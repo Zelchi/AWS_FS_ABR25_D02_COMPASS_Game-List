@@ -1,5 +1,6 @@
 import { ReactNode, useRef } from "react";
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 
 type ButtonType = {
   children: ReactNode;
@@ -9,7 +10,7 @@ type ButtonType = {
   variant?: "primary" | "secondary";
 };
 
-const ButtonEl = styled.button<{ $size?: string; $variant: string }>`
+const ButtonEl = styled.button<{ $size?: string; $variant: string; $path: string }>`
   cursor: pointer;
   width: ${({ $size }) => ($size === "large" ? "100%" : "fit-content")};
   padding: ${({ $size }) => ($size === "large" ? "1.4rem" : ".8rem 1.2rem")};
@@ -35,6 +36,10 @@ const ButtonEl = styled.button<{ $size?: string; $variant: string }>`
     background-color: ${({ $variant }) =>
       $variant === "primary" ? "var(--color-aqua-dark)" : "var(--color-grey-04)"};
   }
+
+  @media (max-width: 30em) {
+    // width: ${({ $path }) => ($path === "/games" ? "100%" : "")};
+  }
 `;
 
 export default function Button({
@@ -44,6 +49,7 @@ export default function Button({
   size,
   variant = "primary",
 }: ButtonType) {
+  const path = useLocation().pathname;
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleClick = () => {
@@ -52,7 +58,14 @@ export default function Button({
   };
 
   return (
-    <ButtonEl ref={buttonRef} type={type} onClick={handleClick} $size={size} $variant={variant}>
+    <ButtonEl
+      ref={buttonRef}
+      type={type}
+      onClick={handleClick}
+      $size={size}
+      $variant={variant}
+      $path={path}
+    >
       {children}
     </ButtonEl>
   );

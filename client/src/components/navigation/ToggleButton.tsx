@@ -11,14 +11,17 @@ const Button = styled.button<{ $isOpen: boolean }>`
   transform: ${({ $isOpen }) => ($isOpen ? "rotate(0deg)" : "rotate(-180deg)")};
   transition: all 0.3s ease-in-out;
 
+  &:hover,
+  &:focus {
+    span {
+      fill: var(--color-aqua);
+    }
+  }
+
   span {
     display: block;
     fill: var(--color-grey-light-05);
     transition: var(--transition);
-
-    &:hover {
-      fill: var(--color-aqua);
-    }
   }
 
   @media (max-width: 48em) {

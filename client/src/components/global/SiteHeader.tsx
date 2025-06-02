@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useAddItem } from "@/contexts/AddItemContext";
 import ToggleButton from "@/components/navigation/ToggleButton";
 import Button from "@/components/global/Button";
+import { useMediaQuery } from "react-responsive";
 
 export const routes = [
   {
@@ -30,6 +31,11 @@ export const routes = [
 const Header = styled.header`
   display: flex;
   align-items: center;
+
+  @media (max-width: 30em) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const Title = styled.h1`
@@ -43,13 +49,29 @@ const Title = styled.h1`
 const Separator = styled.hr`
   color: var(--color-grey-light-01);
   margin: 3rem 0;
+
+  @media (max-width: 30em) {
+    margin: 1.5rem 0 2rem;
+    width: 100%;
+  }
 `;
 
 const ButtonWrapper = styled.div`
   margin-left: auto;
+
+  @media (max-width: 30em) {
+    margin: 0;
+    margin-bottom: 3rem;
+    width: 100%;
+
+    & > * {
+      width: 100%;
+    }
+  }
 `;
 
 export default function SiteHeader({ isOpen, onOpen }: { isOpen: boolean; onOpen: () => void }) {
+  const isMobile = useMediaQuery({ maxWidth: 30 * 16 });
   const { triggerAddItem } = useAddItem();
   const path = useLocation().pathname;
 
@@ -59,17 +81,32 @@ export default function SiteHeader({ isOpen, onOpen }: { isOpen: boolean; onOpen
         <ToggleButton isOpen={isOpen} onOpen={onOpen} />
         {path !== "/" && (
           <>
-            <Title>{routes.find((route) => route.path === path)?.label}</Title>
-            <ButtonWrapper>
-              <Button size="medium" onClick={triggerAddItem}>
-                Add new{" "}
-                {path === "/games" ? "game" : path === "/categories" ? "category" : "platform"}
-              </Button>
-            </ButtonWrapper>
+            {isMobile ? (
+              <>
+                <Title>{routes.find((route) => route.path === path)?.label}</Title>
+                {path !== "/" && <Separator />}
+                <ButtonWrapper>
+                  <Button size="medium" onClick={triggerAddItem}>
+                    Add new{" "}
+                    {path === "/games" ? "game" : path === "/categories" ? "category" : "platform"}
+                  </Button>
+                </ButtonWrapper>
+              </>
+            ) : (
+              <>
+                <Title>{routes.find((route) => route.path === path)?.label}</Title>
+                <ButtonWrapper>
+                  <Button size="medium" onClick={triggerAddItem}>
+                    Add new{" "}
+                    {path === "/games" ? "game" : path === "/categories" ? "category" : "platform"}
+                  </Button>
+                </ButtonWrapper>
+              </>
+            )}
           </>
         )}
       </Header>
-      {path !== "/" && <Separator />}
+      {path !== "/" && !isMobile && <Separator />}
     </>
   );
 }

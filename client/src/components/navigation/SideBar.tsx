@@ -31,6 +31,11 @@ const LogoContainer = styled.div`
   width: 11.8rem;
   margin-top: 2.4rem;
   margin-bottom: 3.2rem;
+  transition: var(--transition);
+
+  &:has(a:focus, a:hover) {
+    transform: scale(1.1);
+  }
 
   @media (max-width: 48em) {
     margin-top: 1rem;

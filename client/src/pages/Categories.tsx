@@ -3,8 +3,7 @@ import React, { useState, ChangeEvent, MouseEvent, useEffect } from "react";
 import { getAllItems } from "@/utils/crudHandlers";
 import { IPlatformEntity } from "@/../../server/src/Category/CategoryEntity";
 import Table from "@/components/global/Table";
-import SearchBar from "@/components/global/SearchBar";
-import ClearButton from "@/components/global/ClearButton";
+import SearchContainer from "@/components/global/SearchContainer";
 
 const labels = {
   name: "Name",
@@ -52,8 +51,12 @@ export default function Categories() {
 
   return (
     <SiteLayout>
-      <SearchBar search={search} onSearch={handleSearch} onRequest={handleRequest} />
-      <ClearButton onClick={handleClear} />
+      <SearchContainer
+        search={search}
+        onSearch={handleSearch}
+        onRequest={handleRequest}
+        onClick={handleClear}
+      />
       <Table<IPlatformEntity>
         data={categories}
         header={["name"]}

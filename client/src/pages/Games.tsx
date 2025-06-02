@@ -4,6 +4,7 @@ import { getAllItems } from "@/utils/crudHandlers";
 import { IGameEntity } from "@/../../server/src/Game/GameEntity";
 import Table from "@/components/global/Table";
 import FilterAndSearchBar from "@/components/global/FilterAndSearchBar";
+import { useMediaQuery } from "react-responsive";
 
 const labels = {
   name: "Title",
@@ -21,15 +22,17 @@ const labels = {
 };
 
 export default function Games() {
+  const isMobile = useMediaQuery({ maxWidth: 67 * 16 });
   const [games, setGames] = useState<IGameEntity[]>([]);
   const [page, setPage] = useState<number>(1);
   const [limit] = useState<number>(10);
   const [search, setSearch] = useState<string>("");
-  const [sortBy, setSortBy] = useState<string>("updatedAt");
+  const [sortBy, setSortBy] = useState<string>(isMobile ? "" : "updatedAt");
   const [filterList, setFilterList] = useState<string>("");
   const [filterSelected, setFilterSelected] = useState("");
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [sortOrder, setSortOrder] = useState<string>("desc");
+  const header = ["name", "rating", "price", "acquisDate", "finishDate"];
 
   const pathAPI =
     `game/page?page=${page}&limit=${limit}` +
@@ -62,12 +65,20 @@ export default function Games() {
     setSortBy(e.currentTarget.value);
   };
 
+  const handleSortBy = (e: ChangeEvent<HTMLSelectElement>): void => {
+    setSortBy(e.target.value);
+  };
+
+  const handleSortOrder = (e: ChangeEvent<HTMLSelectElement>): void => {
+    setSortOrder((order) => (order === "asc" ? "desc" : "asc"));
+  };
+
   const handleClear = () => {
     setFilterList("");
     setFilterSelected("");
     setIsFavorite(false);
     setSearch("");
-    setSortBy("updatedAt");
+    setSortBy(isMobile ? "" : "updatedAt");
     fetchData(pathAPI);
   };
 
@@ -92,8 +103,14 @@ export default function Games() {
     <SiteLayout>
       <FilterAndSearchBar
         filter={filterList}
+        labels={labels}
+        header={header}
         onFilter={handleFilterList}
         selected={filterSelected}
+        sortBy={sortBy}
+        onSortBy={handleSortBy}
+        sortOrder={sortOrder}
+        onSortOrder={handleSortOrder}
         onSelected={handleFilterSelected}
         isFavorite={isFavorite}
         onFavorite={handleFavorite}
@@ -104,7 +121,7 @@ export default function Games() {
       />
       <Table<IGameEntity>
         data={games}
-        header={["name", "rating", "price", "acquisDate", "finishDate"]}
+        header={isMobile ? ["name"] : header}
         labels={labels}
         sortBy={sortBy}
         sortOrder={sortOrder}

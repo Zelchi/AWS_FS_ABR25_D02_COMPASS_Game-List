@@ -16,6 +16,16 @@ const Button = styled.button`
   font-weight: 600;
   font-size: 1.2rem;
   color: var(--color-grey-03);
+  transition: var(--transition);
+
+  &:hover,
+  &:focus {
+    color: var(--color-aqua);
+
+    svg {
+      fill: var(--color-aqua);
+    }
+  }
 `;
 
 const SortIconWrapper = styled.span<{ $asc?: boolean }>`

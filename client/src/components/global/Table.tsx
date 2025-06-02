@@ -16,6 +16,7 @@ import { addItem, deleteItem, getItem, updateItem } from "@/utils/crudHandlers";
 import GameForm from "@/components/forms/GameForm";
 import CategoryForm from "@/components/forms/CategoryForm";
 import PlatformForm from "@/components/forms/PlatformForm";
+import { useMediaQuery } from "react-responsive";
 
 const getFormByPath = (path: string, onSubmit: (item: any) => void, item?: any) => {
   if (path.includes("games")) return <GameForm onSubmit={onSubmit} initialData={item} />;
@@ -44,6 +45,12 @@ const TableEL = styled.table`
 const TableRow = styled.tr<{ $location: string }>`
   cursor: pointer;
   border-radius: 20px;
+  transition: var(--transition);
+
+  &:hover,
+  &:focus {
+    transform: scale(1.02);
+  }
 
   > td {
     background-color: var(--color-white);
@@ -52,6 +59,11 @@ const TableRow = styled.tr<{ $location: string }>`
     font-weight: 400;
     font-size: 1.4rem;
     font-family: var(--font-primary);
+
+    @media (max-width: 30em) {
+      padding: 1rem 0;
+      padding-right: 1rem;
+    }
 
     &:first-child {
       border-radius: ${({ $location }) => ($location === "/games" ? "0" : "0.8rem 0 0 0.8rem")};
@@ -69,9 +81,14 @@ const TableRow = styled.tr<{ $location: string }>`
       border-radius: 0 0.8rem 0.8rem 0;
 
       span {
-        display: ${({ $location }) => ($location === "/games" ? "flex" : "auto")};
-        flex-wrap: ${({ $location }) => ($location === "/games" ? "nowrap" : "auto")};
-        gap: ${({ $location }) => ($location === "/games" ? "2.6rem" : "0")};
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 2.6rem;
+
+        @media (max-width: 30em) {
+          flex-direction: column;
+          gap: 1rem;
+        }
 
         button {
           cursor: pointer;
@@ -82,12 +99,32 @@ const TableRow = styled.tr<{ $location: string }>`
           fill: var(--color-aqua);
           transition: var(--transition);
 
-          &:hover {
+          &:hover,
+          &:focus {
             fill: var(--color-aqua-dark);
           }
         }
       }
     }
+
+    @media (max-width: 67em) {
+      &:first-child {
+        border-radius: 0.8rem 0 0 0.8rem;
+        background-color: var(--color-white);
+        padding-left: 1.5rem;
+      }
+
+      &:nth-child(2) {
+        border-radius: ${({ $location }) =>
+          $location === "/categories" ? "0 0.8rem 0.8rem 0" : "0"};
+        padding-left: 0;
+      }
+    }
+
+      @media (max-width: 30em) {
+          &:first-child {
+              padding-left: 1rem;
+          }
   }
 `;
 
@@ -131,9 +168,14 @@ const TableEl = styled.td<{ $width: boolean }>`
 `;
 
 const LastUpdateIcon = styled(LastUpdate)`
-  width: 1.9rem;
-  height: 1.9rem;
-  fill: var(--color-aqua);
+  width: 1.7rem;
+  height: 1.7rem;
+  fill: var(--color-grey-03);
+  transition: var(--transition);
+
+  &:hover {
+    fill: var(--color-aqua);
+  }
 `;
 
 export default function Table<T extends EntityWithId>({
@@ -147,6 +189,7 @@ export default function Table<T extends EntityWithId>({
   onItemsChange,
   onClear,
 }: TableProps<T>) {
+  const isLaptop = useMediaQuery({ maxWidth: 67 * 16 });
   const [editingItem, setEditingItem] = useState<T | null>(null);
   const { setAddItemHandler, setFormComponent } = useAddItem();
   const location = useLocation().pathname;
@@ -259,46 +302,56 @@ export default function Table<T extends EntityWithId>({
 
   return (
     <TableEL>
-      <thead>
-        <tr>
-          {location === "/games" && (
-            <>
-              <th>
+      {isLaptop ? (
+        ""
+      ) : (
+        <thead>
+          <tr role="option">
+            {location === "/games" && (
+              <>
+                {isLaptop ? (
+                  ""
+                ) : (
+                  <th>
+                    <SortButton
+                      head={"updatedAt"}
+                      onClick={onSortByAndOrder}
+                      sortBy={sortBy}
+                      sortOrder={sortOrder}
+                    >
+                      <LastUpdateIcon />
+                    </SortButton>
+                  </th>
+                )}
+
+                <th style={{ color: "white", textAlign: "left" }}></th>
+                <th style={{ color: "white", textAlign: "left" }}></th>
+              </>
+            )}
+            {header.map((head) => (
+              <th key={head} style={{ paddingRight: "1.5rem" }}>
                 <SortButton
-                  head={"updatedAt"}
+                  head={head}
                   onClick={onSortByAndOrder}
                   sortBy={sortBy}
                   sortOrder={sortOrder}
                 >
-                  <LastUpdateIcon />
+                  {labels[head]}
                 </SortButton>
               </th>
-              <th style={{ color: "white", textAlign: "left" }}></th>
-              <th style={{ color: "white", textAlign: "left" }}></th>
-            </>
-          )}
-          {header.map((head) => (
-            <th key={head} style={{ paddingRight: "1.5rem" }}>
-              <SortButton
-                head={head}
-                onClick={onSortByAndOrder}
-                sortBy={sortBy}
-                sortOrder={sortOrder}
-              >
-                {labels[head]}
-              </SortButton>
-            </th>
-          ))}
-          <th style={{ color: "white", textAlign: "left" }}></th>
-        </tr>
-      </thead>
+            ))}
+            <th style={{ color: "white", textAlign: "left" }}></th>
+          </tr>
+        </thead>
+      )}
+
       <tbody>
         {sorted.map((item) => (
-          <TableRow key={item.id} $location={location}>
+          <TableRow key={item.id} $location={location} role="option" tabIndex={0}>
             {"imageUrl" in item ? (
               location === "/games" ? (
                 <>
-                  <td>{""}</td>
+                  {isLaptop ? "" : <td></td>}
                   <td style={{ width: "10rem" }}>
                     <GameImage
                       src={(item as any)["imageUrl"] || defaultImage}
@@ -343,7 +396,7 @@ export default function Table<T extends EntityWithId>({
                 </TableItem>
               </TableEl>
             ))}
-            <td>
+            <td style={{ width: "6.5rem" }}>
               <span>
                 <button onClick={() => openEditForm(item)}>
                   <Edit />
