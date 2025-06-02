@@ -1,58 +1,79 @@
 import { useEffect, useState } from "react";
 
+const banList: string[] = [];
+
 type SmartImageProps = {
-  src: string;
-  fallback?: string;
-  className?: string;
-  onValid?: () => void;
+    src: string;
+    fallback?: string;
+    className?: string;
+    onValid?: () => void;
 };
 
 export default function SmartImage({ src, fallback, className, onValid }: SmartImageProps) {
-  const [finalSrc, setFinalSrc] = useState<string | null>(null);
+    const [finalSrc, setFinalSrc] = useState<string | null>(null);
+    const [attempts, setAttempts] = useState<number>(0);
 
-  useEffect(() => {
-    if (!src) {
-      setFinalSrc(null);
-      return;
-    }
+    useEffect(() => {
+        setAttempts(0);
+    }, [src]);
 
-    let isMounted = true;
-    const img = new Image();
-
-    img.onload = () => {
-      if (isMounted) {
-        setFinalSrc(src);
-        onValid?.();
-      }
-    };
-
-    img.onerror = () => {
-      if (isMounted) {
-        if (fallback) {
-          setFinalSrc(fallback);
-        } else {
-          setFinalSrc(null);
+    useEffect(() => {
+        if (!src) {
+            setFinalSrc(null);
+            return;
         }
-      }
-    };
 
-    img.src = src;
+        if (attempts >= 3) {
+            banList.push(src);
+            if (fallback) {
+                setFinalSrc(fallback);
+            } else {
+                setFinalSrc(null);
+            }
+            return;
+        }
 
-    return () => {
-      isMounted = false;
-    };
-  }, [src, fallback, onValid]);
+        let isMounted = true;
+        const img = new Image();
 
-  if (!finalSrc) return null;
+        img.onload = () => {
+            if (isMounted) {
+                setFinalSrc(src);
+                onValid && onValid();
+            }
+        };
 
-  return (
-    <span
-      className={className}
-      style={{
-        backgroundImage: `url(${finalSrc})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    />
-  );
+        img.onerror = () => {
+            if (isMounted) {
+                setAttempts((attempt) => ++attempt);
+                if (attempts >= 3) {
+                    banList.push(src);
+                    if (fallback) {
+                        setFinalSrc(fallback);
+                    } else {
+                        setFinalSrc(null);
+                    }
+                }
+            }
+        };
+
+        img.src = src;
+
+        return () => {
+            isMounted = false;
+        };
+    }, [src, attempts, fallback]);
+
+    if (!finalSrc) return null;
+
+    return (
+        <span
+            className={className}
+            style={{
+                backgroundImage: `url(${finalSrc})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+            }}
+        />
+    );
 }
