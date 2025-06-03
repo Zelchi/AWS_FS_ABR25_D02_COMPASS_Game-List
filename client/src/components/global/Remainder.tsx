@@ -260,7 +260,7 @@ export function Remainder({ data, className }: RemainderProps) {
 
   return (
     <Wrapper>
-      {remainderGames ?? (
+      {remainderGames ? (
         <Container className={className}>
           <ImageContainer>
             <Image src={game?.imageUrl || defaultImage} fallback={defaultImage}></Image>
@@ -296,6 +296,8 @@ export function Remainder({ data, className }: RemainderProps) {
             </QuestionWrapper>
           </QuestionContainer>
         </Container>
+      ) : (
+        ""
       )}
     </Wrapper>
   );
