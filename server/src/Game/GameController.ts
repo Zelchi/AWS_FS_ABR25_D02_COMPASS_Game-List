@@ -207,7 +207,7 @@ export class GameController {
                 return;
             }
 
-            const validStatusFields = ["none", "playing", "done", "abandoned"];
+            const validStatusFields = ["playing", "done", "abandoned"];
             if (statusBy && !validStatusFields.includes(statusBy.toLowerCase())) {
                 res.status(400).json({
                     error: `Invalid status field. Allowed values: ${validStatusFields.join(', ')}`
