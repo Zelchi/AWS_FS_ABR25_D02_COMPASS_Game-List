@@ -19,7 +19,7 @@ class GameDto {
     }
 
     static validateStatus(status: string): boolean {
-        return typeof status === 'string' && ['none', 'playing', 'completed', 'abandoned'].includes(status);
+        return typeof status === 'string' && ["playing", "done", "abandoned"].includes(status);
     }
 
     static validateFavorite(favorite: boolean): boolean {
