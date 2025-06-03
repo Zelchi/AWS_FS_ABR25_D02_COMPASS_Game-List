@@ -9,10 +9,22 @@ import completedGames from "@/assets/completed.png";
 import abandonedGames from "@/assets/abandoned.png";
 import playingGames from "@/assets/playing.png";
 
+const laptopS = 67;
+const tablet = 48;
+const mobile = 30;
+
 const Container = styled.div`
   display: grid;
   grid-template-columns: 2fr 3fr;
   gap: 1.5rem;
+
+  @media (max-width: ${laptopS}em) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (max-width: ${mobile}em) {
+    gap: 1.2rem;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -21,13 +33,29 @@ const Wrapper = styled.div`
 
   &:first-child {
     display: grid;
-    grid-template-columns: calc(50% - 0.75rem) calc(50% - 0.75rem);
+    grid-template-columns: repeat(2, calc(50% - 0.75rem));
+
+    @media (max-width: ${laptopS}em) {
+      grid-template-columns: repeat(4, calc(25% - 1.15rem));
+    }
+
+    @media (max-width: ${tablet}em) {
+      grid-template-columns: repeat(2, calc(50% - 0.75rem));
+    }
+  }
+
+  @media (max-width: ${mobile}em) {
+    gap: 1.2rem;
   }
 `;
 
 const Number = styled.span`
   font-size: 3.5rem;
   font-weight: 700;
+
+  @media (max-width: ${laptopS}em) {
+    font-size: 2.5rem;
+  }
 `;
 
 const PlatformImage = styled(SmartImage)`
@@ -46,7 +74,8 @@ const RatingContainer = styled.div`
   font-size: 3.5rem;
   font-weight: 800;
 
-  span {
+  @media (max-width: ${laptopS}em) {
+    font-size: 2.5rem;
   }
 `;
 
@@ -55,14 +84,26 @@ const HeartContainer = styled.div`
   align-items: center;
   font-size: 3.5rem;
   font-weight: 800;
+
+  @media (max-width: ${laptopS}em) {
+    font-size: 2.5rem;
+  }
 `;
 
 const Rating = styled(RatingSummary)`
   width: 5rem;
+
+  @media (max-width: ${laptopS}em) {
+    width: 4rem;
+  }
 `;
 
 const HeartIcon = styled(Heart)`
   width: 5.2rem;
+
+  @media (max-width: ${laptopS}em) {
+    width: 4.2rem;
+  }
 `;
 
 const Image = styled.img`

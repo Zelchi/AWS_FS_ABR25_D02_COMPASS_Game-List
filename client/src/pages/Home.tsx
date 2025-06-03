@@ -7,7 +7,7 @@ import { IStatistics } from "@/types/types";
 import { Statistics } from "@/components/global/Statistics";
 import { useGlobal } from "@/contexts/globalContext";
 import { useEffect, useState } from "react";
-import { Remainder } from "@/pages/Remainder";
+import { Remainder } from "@/components/global/Remainder";
 import { IGameEntity } from "../../../server/src/Game/GameEntity";
 
 const Container = styled(SiteLayout)`
@@ -42,11 +42,19 @@ const SubGreeting = styled.p`
   font-weight: 400;
   font-size: 2.2rem;
   color: var(--color-grey-08);
+
+  @media (max-width: 48em) {
+    font-size: 1.8rem;
+  }
 `;
 
 const ShortcutContainer = styled(ShortcutCards)`
   margin-top: 2rem;
   margin-bottom: 5rem;
+
+  @media (max-width: 48em) {
+    margin-bottom: 3rem;
+  }
 `;
 
 const RemainderContainer = styled(Remainder)`
@@ -74,9 +82,11 @@ export default function Home() {
     if (dataStatistics) handleUserName();
   }, [dataStatistics, handleUserName]);
 
+  console.log(dataBanner);
+
   return (
     <Container>
-      <RemainderContainer data={dataBanner?.data ?? []} />
+      <RemainderContainer data={dataBanner?.data} />
       <Greeting>{`Hello, ${user}!`}</Greeting>
       <SubGreeting>Choose one of the options below</SubGreeting>
       <ShortcutContainer data={dataStatistics?.data} />

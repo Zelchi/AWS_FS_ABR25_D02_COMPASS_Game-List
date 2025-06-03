@@ -14,6 +14,10 @@ const Container = styled.div`
   text-align: center;
   background-color: var(--color-white);
   border-radius: 0.8rem;
+
+  @media (max-width: 30em) {
+    padding: 1rem;
+  }
 `;
 
 export default function StatsItem({ children }: { children: React.ReactNode }) {
