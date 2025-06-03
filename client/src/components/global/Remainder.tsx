@@ -199,7 +199,8 @@ const Wrapper = styled.div`
   margin-top: 4rem;
     
     @media (max-width: 48em) {
-        margin-top: 1rem
+        margin-top: 1rem;
+    }
 `;
 
 type RemainderProps = {
@@ -260,7 +261,7 @@ export function Remainder({ data, className }: RemainderProps) {
 
   return (
     <Wrapper>
-      {remainderGames ?? (
+      {(remainderGames && remainderGames.length > 0) && (
         <Container className={className}>
           <ImageContainer>
             <Image src={game?.imageUrl || defaultImage} fallback={defaultImage}></Image>
