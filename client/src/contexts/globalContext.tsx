@@ -5,14 +5,18 @@ import React, {
   useState,
   ChangeEvent,
   MouseEvent,
+  useCallback,
 } from "react";
 import { IGameEntity } from "@/../../server/src/Game/GameEntity";
 import { ICategoryEntity } from "@/../../server/src/Category/CategoryEntity";
 import { IPlatformEntity } from "@/../../server/src/Platform/PlatformEntity";
-import { SortOrder } from "@/types/types";
+import { IStatistics, SortOrder } from "@/types/types";
 import { useMediaQuery } from "react-responsive";
+import API from "@/utils/API";
 
 type GlobalContextType = {
+  user: string;
+  setUser: React.Dispatch<React.SetStateAction<string>>;
   games: IGameEntity[];
   setGames: React.Dispatch<React.SetStateAction<IGameEntity[]>>;
   categories: ICategoryEntity[];
@@ -33,6 +37,7 @@ type GlobalContextType = {
   isFavorite: boolean;
   setIsFavorite: React.Dispatch<React.SetStateAction<boolean>>;
   setSortOrder: React.Dispatch<React.SetStateAction<SortOrder>>;
+  handleUserName: () => Promise<void>;
   handleSearch: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSortBy: (e: MouseEvent<HTMLButtonElement> | ChangeEvent<HTMLSelectElement>) => void;
   handleSortOrder: (e: MouseEvent<HTMLButtonElement> | ChangeEvent<HTMLSelectElement>) => void;
@@ -44,11 +49,13 @@ type GlobalContextType = {
   limit: number;
   isMobile: boolean;
   isLaptop: boolean;
+  isLaptopL: boolean;
 };
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<string>("");
   const [games, setGames] = useState<IGameEntity[]>([]);
   const [categories, setCategories] = useState<ICategoryEntity[]>([]);
   const [platforms, setPlatforms] = useState<IPlatformEntity[]>([]);
@@ -63,6 +70,14 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const limit = 10;
   const isMobile = useMediaQuery({ maxWidth: 30 * 16 });
   const isLaptop = useMediaQuery({ maxWidth: 67 * 16 });
+  const isLaptopL = useMediaQuery({ maxWidth: 90 * 16 });
+
+  const handleUserName = useCallback(async () => {
+    const res = await API.GET("account/");
+    if (res.status === 200) {
+      setUser(res.data.name);
+    }
+  }, []);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>): void => {
     setSearch(e.target.value);
@@ -120,6 +135,8 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   return (
     <GlobalContext.Provider
       value={{
+        user,
+        setUser,
         games,
         setGames,
         categories,
@@ -140,6 +157,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setSelectedFilter,
         isFavorite,
         setIsFavorite,
+        handleUserName,
         handleSearch,
         handleSortBy,
         handleSortOrder,
@@ -151,6 +169,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         limit,
         isMobile,
         isLaptop,
+        isLaptopL,
       }}
     >
       {children}

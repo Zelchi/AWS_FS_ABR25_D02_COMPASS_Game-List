@@ -23,6 +23,7 @@ type RatingSummaryProps = {
   maxRating?: number;
   color?: string;
   bgColor?: string;
+  label?: boolean;
 };
 
 export default function RatingSummary({
@@ -31,6 +32,7 @@ export default function RatingSummary({
   maxRating = 5,
   color = "#000",
   bgColor = "#ddd",
+  label = true,
 }: RatingSummaryProps) {
   return (
     <>
@@ -48,7 +50,9 @@ export default function RatingSummary({
           stroke="none"
         />
       </svg>
-      {maxRating > 5 ? ratingLabels[normalizeRating(rating, maxRating)] : ratingLabels[rating]}
+      {label && maxRating > 5
+        ? ratingLabels[normalizeRating(rating, maxRating)]
+        : ratingLabels[rating]}
     </>
   );
 }

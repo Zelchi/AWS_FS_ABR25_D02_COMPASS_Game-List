@@ -26,16 +26,17 @@ const Container = styled.div<{ $isOpen: boolean }>`
 `;
 
 const MainContent = styled.main`
-  min-height: 100vh;
+  height: 100vh;
   background-color: var(--color-grey-dark-02);
   padding: 2.1rem 3rem 3rem;
+  overflow-y: scroll;
 
   @media (max-width: 30em) {
     padding-top: 10.58rem;
   }
 `;
 
-export default function SiteLayout({ children }: { children: ReactNode }) {
+export default function SiteLayout({ children, className }: React.HTMLAttributes<HTMLElement>) {
   const [isOpen, setIsOpen] = useState(true);
 
   const handleOpen = () => {
@@ -47,7 +48,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <SideBar />
       <MainContent>
         <SiteHeader isOpen={isOpen} onOpen={handleOpen} />
-        <section>{children}</section>
+        <section className={className}>{children}</section>
       </MainContent>
     </Container>
   );

@@ -1,71 +1,86 @@
 import SiteLayout from "@/components/global/SiteLayout";
-import FeatureCard from "@/components/global/FeatureCard";
-import controllerIcon from "@/assets/controller-outline2.svg";
-import tagIcon from "@/assets/tag-outline2.svg";
-import chipIcon from "@/assets/hardware-chip-outline.svg";
-import starIcon from "@/assets/star-outline2.svg";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
 import API from "@/utils/API";
+import { ShortcutCards } from "@/components/global/ShortcutCards";
+import { IStatistics } from "@/types/types";
+import { Statistics } from "@/components/global/Statistics";
+import { useGlobal } from "@/contexts/globalContext";
+import { useEffect, useState } from "react";
+import { Remainder } from "@/pages/Remainder";
+import { IGameEntity } from "../../../server/src/Game/GameEntity";
 
-const Row = styled.div`
-  display: flex;
-  gap: 15rem;
-  width: 88.8rem;
-  height: 17.3rem;
-  margin-top: 15rem;
-  margin-left: 5.5rem;
+const Container = styled(SiteLayout)`
+  padding: 0rem 6rem 4rem;
+  background-color: var(--color-grey-dark-02);
+
+  @media (max-width: 84em) {
+    padding: 0rem 4rem;
+  }
+
+  @media (max-width: 48em) {
+    padding: 2rem;
+  }
+
+  @media (max-width: 30em) {
+    padding: 0;
+  }
 `;
 
 const Greeting = styled.h1`
-  position: absolute;
-  top: 7.6rem;
-  left: 35.4rem;
-  width: 17rem;
-  height: 3.4rem;
+  margin-bottom: 0.5rem;
+  line-height: 1;
   font-family: var(--font-primary);
   font-weight: 700;
   font-size: 2.8rem;
-  line-height: 100%;
   color: var(--color-white);
 `;
 
 const SubGreeting = styled.p`
-  position: absolute;
-  top: 11rem;
-  left: 35.4rem;
-  width: 32.3rem;
-  height: 2.7rem;
+  line-height: 1;
   font-family: var(--font-primary);
   font-weight: 400;
   font-size: 2.2rem;
-  line-height: 100%;
-  color: #9d9d9d;
+  color: var(--color-grey-08);
+`;
+
+const ShortcutContainer = styled(ShortcutCards)`
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+`;
+
+const RemainderContainer = styled(Remainder)`
+  margin-bottom: 4rem;
 `;
 
 export default function Home() {
-  const { data } = useQuery({
+  const { user, handleUserName } = useGlobal();
+
+  const { data: dataStatistics } = useQuery({
     queryKey: ["relatoryAndStatus"],
-    queryFn: () => API.GET("dashboard"),
+    queryFn: (): Promise<{ data: IStatistics }> => API.GET("dashboard"),
     staleTime: 20 * 60 * 1000,
     retry: false,
   });
 
-  console.log(data);
+  const { data: dataBanner } = useQuery({
+    queryKey: ["gameReminder"],
+    queryFn: (): Promise<{ data: IGameEntity[] }> => API.GET("dashboard/ask"),
+    staleTime: 20 * 60 * 1000,
+    retry: false,
+  });
+
+  useEffect(() => {
+    if (dataStatistics) handleUserName();
+  }, [dataStatistics, handleUserName]);
 
   return (
-    <SiteLayout>
-      <Greeting>Hello, Juan!</Greeting>
-      <SubGreeting>Choose one of options below.</SubGreeting>
-      <Row>
-        <FeatureCard iconSrc={controllerIcon} title="Games" number="243" showButton />
-        <FeatureCard iconSrc={tagIcon} title="Categories" number="13" showButton />
-      </Row>
-
-      <Row style={{ marginTop: "5.1rem" }}>
-        <FeatureCard iconSrc={chipIcon} title="Platforms" number="4" showButton />
-        <FeatureCard iconSrc={starIcon} title="Favorite Games" number="3" />
-      </Row>
-    </SiteLayout>
+    <Container>
+      <RemainderContainer data={dataBanner?.data ?? []} />
+      <Greeting>{`Hello, ${user}!`}</Greeting>
+      <SubGreeting>Choose one of the options below</SubGreeting>
+      <ShortcutContainer data={dataStatistics?.data} />
+      <Statistics data={dataStatistics} />
+    </Container>
   );
 }

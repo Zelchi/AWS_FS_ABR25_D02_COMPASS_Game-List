@@ -1,11 +1,9 @@
 import React, { Dispatch } from "react";
-import { useMediaQuery } from "react-responsive";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import SortButton from "@/components/global/SortButton";
 import RatingSummary from "@/components/global/RatingSummary";
 import SmartImage from "@/components/global/SmartImage";
-import MoreIcon from "@/components/global/MoreIcon";
 import defaultImage from "@/assets/default-image.jpg";
 import LastUpdate from "@/assets/last-update.svg?react";
 import Edit from "@/assets/pen-outline.svg?react";
@@ -28,7 +26,7 @@ const TableRow = styled.tr<{ $location: string }>`
 
   &:hover,
   &:focus {
-    transform: scale(1.02);
+      box-shadow: 0 0.2rem 1.2rem var(--color-aqua);
   }
 
   > td {
@@ -45,15 +43,8 @@ const TableRow = styled.tr<{ $location: string }>`
     }
 
     &:first-child {
-      border-radius: ${({ $location }) => ($location === "/games" ? "0" : "0.8rem 0 0 0.8rem")};
-      background-color: ${({ $location }) =>
-        $location === "/games" ? "transparent" : "var(--color-white)"};
-      padding-left: ${({ $location }) => ($location === "/games" ? "0" : "1.5rem")};
-    }
-
-    &:nth-child(2) {
-      border-radius: ${({ $location }) => ($location === "/games" ? "0.8rem 0 0 0.8rem" : "0")};
-      padding-left: ${({ $location }) => ($location === "/games" ? "1.5rem" : "0")};
+      border-radius: 0.8rem 0 0 0.8rem;      
+      padding-left: 1.5rem;
     }
 
     &:last-child {
@@ -94,12 +85,6 @@ const TableRow = styled.tr<{ $location: string }>`
         border-radius: 0.8rem 0 0 0.8rem;
         background-color: var(--color-white);
         padding-left: 1.5rem;
-      }
-
-      &:nth-child(2) {
-        border-radius: ${({ $location }) =>
-          $location === "/categories" ? "0 0.8rem 0.8rem 0" : "0"};
-        padding-left: 0;
       }
     }
 
@@ -168,16 +153,11 @@ export default function Table<T extends Record<string, any>>({ data, header }: T
           <tr role="option">
             {location === "/games" && (
               <>
-                {isLaptop ? (
-                  ""
-                ) : (
-                  <th>
-                    <SortButton head={"updatedAt"}>
-                      <LastUpdateIcon />
-                    </SortButton>
-                  </th>
-                )}
-
+                <th>
+                  <SortButton head={"updatedAt"}>
+                    <LastUpdateIcon />
+                  </SortButton>
+                </th>
                 <th style={{ color: "white", textAlign: "left" }}></th>
                 <th style={{ color: "white", textAlign: "left" }}></th>
               </>
@@ -204,8 +184,7 @@ export default function Table<T extends Record<string, any>>({ data, header }: T
             {"imageUrl" in item ? (
               location === "/games" ? (
                 <>
-                  {isLaptop ? "" : <td></td>}
-                  <td style={{ width: "10rem" }}>
+                  <td colSpan={2} style={{ width: "8%" }}>
                     <GameImage
                       src={(item as any)["imageUrl"] || defaultImage}
                       fallback={defaultImage}
