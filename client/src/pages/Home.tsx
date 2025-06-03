@@ -71,22 +71,13 @@ export default function Home() {
     retry: false,
   });
 
-  const { data: dataBanner } = useQuery({
-    queryKey: ["gameReminder"],
-    queryFn: (): Promise<{ data: IGameEntity[] }> => API.GET("dashboard/ask"),
-    staleTime: 20 * 60 * 1000,
-    retry: false,
-  });
-
   useEffect(() => {
     if (dataStatistics) handleUserName();
   }, [dataStatistics, handleUserName]);
 
-  console.log(dataBanner);
-
   return (
     <Container>
-      <RemainderContainer data={dataBanner?.data} />
+      <RemainderContainer />
       <Greeting>{`Hello, ${user}!`}</Greeting>
       <SubGreeting>Choose one of the options below</SubGreeting>
       <ShortcutContainer data={dataStatistics?.data} />

@@ -3,15 +3,17 @@ import styled from "styled-components";
 import Button from "@/components/global/Button";
 import SmartImage from "@/components/global/SmartImage";
 import defaultImage from "@/assets/default-image.jpg";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import API from "@/utils/API";
 import StarRating from "@/components/global/StarRating";
 import { useGlobal } from "@/contexts/globalContext";
+import { useQuery } from "@tanstack/react-query";
+import { motion, AnimatePresence } from "framer-motion";
 
 const laptopS = 67;
 const mobile = 30;
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   position: relative;
   width: 100%;
   height: 20rem;
@@ -73,6 +75,7 @@ const Image = styled(SmartImage)`
 `;
 
 const Title = styled.div`
+  max-width: 95%;
   position: absolute;
   bottom: 3rem;
   left: -3rem;
@@ -191,38 +194,46 @@ const ButtonSet = styled.div`
 
 const Rating = styled(StarRating)`
   font-family: var(--font-primary);
-  font-weight: 500;
+  font-weight: 800;
   margin-top: 2rem;
 `;
 
 const Wrapper = styled.div`
   margin-top: 4rem;
-    
-    @media (max-width: 48em) {
-        margin-top: 1rem;
-    }
+  transition: all 3s;
+
+  @media (max-width: 48em) {
+    margin-top: 1rem;
+  }
 `;
 
-type RemainderProps = {
-  data: IGameEntity[] | undefined;
-  className?: string;
-};
-
-export function Remainder({ data, className }: RemainderProps) {
+export function Remainder({ className }: { className?: string }) {
   const { isLaptop } = useGlobal();
 
-  const [remainderGames, setRemainderGames] = useState<IGameEntity[] | undefined>(undefined);
+  const { data, refetch } = useQuery({
+    queryKey: ["gameReminder"],
+    queryFn: (): Promise<{ data: IGameEntity[] }> => API.GET("dashboard/ask"),
+    staleTime: 20 * 60 * 1000,
+    retry: false,
+    placeholderData: (previousData) => previousData,
+  });
+
   const [rating, setRating] = useState<number>(0);
   const [isRating, setIsRating] = useState(false);
-  const game = remainderGames?.[0] || null;
 
-  const handleClick = () => {
-    setRemainderGames((prev) => prev?.slice(1));
+  const game = data?.data[0];
+
+  const handleClick = async () => {
+    setTimeout(async () => {
+      await refetch();
+      setIsRating(false);
+      setRating(0);
+    }, 500);
   };
 
   const handlePlaying = async () => {
     const res = await API.PUT(`/game/${game?.id}`, game);
-    if (res.status === 200) handleClick();
+    if (res.status === 200) await handleClick();
   };
 
   const handleFinished = async (rating: number) => {
@@ -230,74 +241,106 @@ export function Remainder({ data, className }: RemainderProps) {
       rating,
       status: "done",
     });
-    if (res.status === 200) {
-      setIsRating(false);
-      setRating(0);
-      handleClick();
-    }
+    if (res.status === 200) await handleClick();
   };
 
   const handleAbandoned = async () => {
     const res = await API.PUT(`/game/${game?.id}`, { status: "abandoned" });
-    if (res.status === 200) handleClick();
+    if (res.status === 200) await handleClick();
   };
 
-  const handleIsRating = () => {
-    setIsRating(true);
-  };
+  const handleIsRating = () => setIsRating(true);
 
   const handleRating = async (rating: number) => {
     setRating(rating);
     await handleFinished(rating);
   };
 
-  useEffect(() => {
-    if (data && !remainderGames) {
-      setRemainderGames(data);
-    }
-  }, [data, remainderGames]);
-
-  if (!remainderGames) return;
+  console.log(game);
 
   return (
-    <Wrapper>
-      {(remainderGames && remainderGames.length > 0) && (
-        <Container className={className}>
-          <ImageContainer>
-            <Image src={game?.imageUrl || defaultImage} fallback={defaultImage}></Image>
-            {!isLaptop && (
-              <Title>
-                <p>{game?.name}</p>
-              </Title>
-            )}
-          </ImageContainer>
-          <QuestionContainer>
-            <QuestionWrapper>
-              {isLaptop && (
-                <TitleTag>
-                  <p>{game?.name}</p>
-                </TitleTag>
-              )}
-              <Question>Are you still playing?</Question>
-              {isRating ? (
-                <Rating onSetRating={handleRating} color="var(--color-aqua)" size={36} />
-              ) : (
-                <ButtonSet>
-                  <Button size={"large"} onClick={handlePlaying}>
-                    Yes
-                  </Button>
-                  <Button size={"large"} onClick={handleIsRating}>
-                    No, it's finished
-                  </Button>
-                  <Button size={"large"} onClick={handleAbandoned}>
-                    I quit
-                  </Button>
-                </ButtonSet>
-              )}
-            </QuestionWrapper>
-          </QuestionContainer>
-        </Container>
+    <AnimatePresence mode="wait">
+      {game ? (
+        <motion.div
+          key={game}
+          layout
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <Wrapper>
+            <AnimatePresence mode="wait">
+              <Container
+                className={className}
+                layout
+                key={game?.id}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50, scale: 0.95, filter: "blur(4px)" }}
+                transition={{ duration: 0.5 }}
+              >
+                <ImageContainer>
+                  <Image src={game?.imageUrl || defaultImage} fallback={defaultImage} />
+                  {!isLaptop && (
+                    <Title>
+                      <p>{game?.name}</p>
+                    </Title>
+                  )}
+                </ImageContainer>
+                <QuestionContainer>
+                  <QuestionWrapper>
+                    {isLaptop && <TitleTag>{game?.name}</TitleTag>}
+                    <Question>Are you still playing?</Question>
+                    <AnimatePresence mode="wait">
+                      {isRating ? (
+                        <motion.div
+                          key="rating"
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <Rating onSetRating={handleRating} color="var(--color-aqua)" size={36} />
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="buttons"
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <ButtonSet>
+                            <Button size="large" onClick={handlePlaying}>
+                              Yes
+                            </Button>
+                            <Button size="large" onClick={handleIsRating}>
+                              No, it's finished
+                            </Button>
+                            <Button size="large" onClick={handleAbandoned}>
+                              I quit
+                            </Button>
+                          </ButtonSet>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </QuestionWrapper>
+                </QuestionContainer>
+              </Container>
+            </AnimatePresence>
+          </Wrapper>
+        </motion.div>
+      ) : (
+        <motion.div
+          key="empty"
+          layout
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.4 }}
+        />
       )}
-    </Wrapper>
+    </AnimatePresence>
   );
 }

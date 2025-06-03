@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import SortButton from "@/components/global/SortButton";
@@ -13,10 +13,20 @@ import { useGlobal } from "@/contexts/globalContext";
 import { getLabel, isLabelKey } from "@/utils/labels";
 import PlatformImages from "@/components/global/PlatformImages";
 
-const TableEL = styled.table`
+const tableTransitionDuration = 600;
+
+const TableEL = styled.table<{ $isAnimating: boolean }>`
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 1.5rem;
+
+  tbody {
+    opacity: ${({ $isAnimating }) => ($isAnimating ? "0.5" : "1")};
+    filter: ${({ $isAnimating }) => ($isAnimating ? "blur(.4rem)" : "blur(0)")};
+    transition:
+      filter ${tableTransitionDuration / 1000}s ease,
+      opacity ${tableTransitionDuration / 1000}s ease;
+  }
 `;
 
 const TableRow = styled.tr<{ $location: string }>`
@@ -139,13 +149,35 @@ type TableProps<T> = {
 };
 
 export default function Table<T extends Record<string, any>>({ data, header }: TableProps<T>) {
-  const { sortBy, sortOrder, isLaptop, isMobile } = useGlobal();
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [visibleData, setVisibleData] = useState(data);
+  const { sortBy, sortOrder, isLaptop, games, categories, platforms } = useGlobal();
   const location = useLocation().pathname;
-  const sorted = [...data].sort(sortItems<T>(sortBy, sortOrder));
+  const sorted = [...visibleData].sort(sortItems<T>(sortBy, sortOrder));
   const maxSizeText = 30;
 
+  useEffect(() => {
+    setIsAnimating(true);
+    const timeout = setTimeout(() => {
+      setIsAnimating(false);
+    }, tableTransitionDuration);
+
+    return () => clearTimeout(timeout);
+  }, [games, categories, platforms]);
+
+  useEffect(() => {
+    setIsAnimating(true);
+
+    const timeout = setTimeout(() => {
+      setIsAnimating(false);
+      setVisibleData(data);
+    }, tableTransitionDuration);
+
+    return () => clearTimeout(timeout);
+  }, [data]);
+
   return (
-    <TableEL>
+    <TableEL $isAnimating={isAnimating}>
       {isLaptop ? (
         ""
       ) : (
