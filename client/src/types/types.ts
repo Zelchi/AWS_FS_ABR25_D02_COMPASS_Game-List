@@ -16,3 +16,5 @@ export type IStatistics = {
   totalPlatforms: number;
   lastUpdated: Date;
 };
+
+export type EntityWithId = { id: string };

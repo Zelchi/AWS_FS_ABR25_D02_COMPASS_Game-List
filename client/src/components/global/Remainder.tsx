@@ -222,6 +222,7 @@ export function Remainder({ className }: { className?: string }) {
   const [isRating, setIsRating] = useState(false);
 
   const game = data?.data[0];
+  const gamesKey = data ? "remainder" : null;
 
   const handleClick = async () => {
     setTimeout(async () => {
@@ -232,7 +233,7 @@ export function Remainder({ className }: { className?: string }) {
   };
 
   const handlePlaying = async () => {
-    const res = await API.PUT(`/game/${game?.id}`, game);
+    const res = await API.PUT(`/game/${game?.id}`, game || {});
     if (res.status === 200) await handleClick();
   };
 
@@ -262,7 +263,7 @@ export function Remainder({ className }: { className?: string }) {
     <AnimatePresence mode="wait">
       {game ? (
         <motion.div
-          key={game}
+          key={gamesKey}
           layout
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}

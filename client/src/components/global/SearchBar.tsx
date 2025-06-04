@@ -19,6 +19,7 @@ const SearchContainer = styled.form<{ $path: string }>`
 
   @media (max-width: 30em) {
     flex-wrap: wrap;
+    width: 100%;
   }
 `;
 
