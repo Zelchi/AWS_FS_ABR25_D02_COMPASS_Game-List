@@ -6,6 +6,7 @@ type ValidationResult = {
 };
 
 class GameDto {
+
     static validateUserId(userId: string): boolean {
         return typeof userId === 'string' && userId.trim() !== '';
     }
@@ -15,7 +16,7 @@ class GameDto {
     }
 
     static validateDescription(description?: string): boolean {
-        return description === undefined || description.length <= 1000;
+        return typeof description === 'string' && description.trim() !== '' && description.length <= 500;
     }
 
     static validateImageUrl(imageUrl?: string): boolean {
@@ -28,18 +29,27 @@ class GameDto {
         }
     }
 
-    static validateRating(rating?: number): boolean {
-        return rating === undefined || (rating >= 0 && rating <= 10);
-    }
-
     static validatePrice(price?: number): boolean {
         return price === undefined || price >= 0;
+    }
+
+    static validateRating(rating?: number): boolean {
+        return rating === undefined || (rating >= 1 && rating <= 5);
     }
 
     static validateStatus(status?: string): boolean {
         console.log('Validating status:', status);
         const lowerStatus = typeof status === 'string' ? status.toLowerCase() : '';
         return ['playing', 'done', 'abandoned'].includes(lowerStatus);
+    }
+
+    static validateDate(date?: string | Date): boolean {
+        if (!date) return true;
+        if (typeof date === 'string') {
+            const parsedDate = new Date(date);
+            return !isNaN(parsedDate.getTime());
+        }
+        return date instanceof Date && !isNaN(date.getTime());
     }
 }
 
@@ -121,6 +131,18 @@ export class GameRegisterDto {
 
         if (!GameDto.validateStatus(this.status)) {
             errors.push('Status must be one of: playing, done, abandoned');
+        }
+
+        if (!GameDto.validateDate(this.acquisDate)) {
+            errors.push('Acquisition date is not valid');
+        }
+
+        if (!GameDto.validateDate(this.finishDate)) {
+            errors.push('Finish date is not valid');
+        }
+
+        if (!GameDto.validateDate(this.releaseDate)) {
+            errors.push('Release date is not valid');
         }
 
         return {
@@ -219,6 +241,18 @@ export class GameUpdateDto {
 
         if (this.status !== undefined && !GameDto.validateStatus(this.status)) {
             errors.push('Status must be one of: playing, done, abandoned');
+        }
+
+        if (this.acquisDate !== undefined && !GameDto.validateDate(this.acquisDate)) {
+            errors.push('Acquisition date is not valid');
+        }
+
+        if (this.finishDate !== undefined && !GameDto.validateDate(this.finishDate)) {
+            errors.push('Finish date is not valid');
+        }
+
+        if (this.releaseDate !== undefined && !GameDto.validateDate(this.releaseDate)) {
+            errors.push('Release date is not valid');
         }
 
         return {
