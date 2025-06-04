@@ -7,14 +7,14 @@ export default function NotFoundPage() {
   return (
     <Wrapper>
       <ErrorContainer>
-        <SadFace src={sadFace} alt="Sad face" />
+        <SadFace draggable={false} src={sadFace} alt="Sad face" />
       </ErrorContainer>
       <Message>Oops! Page not found</Message>
       <SubMessage>The page you’re looking for doesn’t exist or was moved.</SubMessage>
       <ButtonWrapper>
         <BackButton to="/">
           BACK TO HOME
-          <Icon src={signoutIcon} alt="Arrow icon" />
+          <Icon draggable={false} src={signoutIcon} alt="Arrow icon" />
         </BackButton>
       </ButtonWrapper>
     </Wrapper>
