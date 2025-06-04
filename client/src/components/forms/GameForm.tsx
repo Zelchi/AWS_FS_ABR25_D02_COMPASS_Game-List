@@ -1,9 +1,9 @@
 import { useState, FormEvent, useEffect, Dispatch, SetStateAction } from "react";
-import { IGameEntity } from "../../../../../server/src/Game/GameEntity";
-import { SelectionField } from "../Fields/SelectionField";
-import { FormField } from "../Fields/FormField";
-import API from "@/utils/API";
+import { IGameEntity } from "../../../../server/src/Game/GameEntity";
+import { SelectionField } from "./Fields/SelectionField";
+import { FormField } from "./Fields/FormField";
 import { useModal } from "@/contexts/modalContext";
+import API from "@/utils/API";
 
 export interface GameFormProps {
     initialData?: Partial<IGameEntity>;
@@ -83,17 +83,19 @@ export default function GameForm({
             platforms: Array.isArray(game.platforms) ? game.platforms.map(plat => ({ id: plat.id })) : []
         };
 
-        const response = type === "post"
-            ? await API.POST("/game", gameData)
-            : await API.PUT(`/game/${initialData?.id}`, gameData);
-        if (response && response.status === 201 || response.status === 200) {
-            setIsModalOpen(false);
-            setModalContent(null);
-        } else {
-            setError("Failed to save the game. Please try again.");
+        try {
+            const response = type === "post"
+                ? await API.POST("/game", gameData)
+                : await API.PUT(`/game/${initialData?.id}`, gameData);
+            if (response && response.status === 201 || response.status === 200) {
+                setIsModalOpen(false);
+                setModalContent(null);
+            }
+        } catch (e) {
+            setError("An error occurred while saving the game. Please try again.");
+        } finally {
+            setSubmitting(false);
         }
-
-        setSubmitting(false);
     };
 
     const handleCancel = () => {

@@ -155,19 +155,22 @@ const dicionary = {
     games: "game",
     categories: "category",
     platforms: "platform",
-}
+} as const;
+
+type DictionaryKey = keyof typeof dicionary;
 
 export default function Table<T extends Record<string, any>>({ data, header }: TableProps<T>) {
     const [isAnimating, setIsAnimating] = useState(false);
     const [visibleData, setVisibleData] = useState(data);
     const { sortBy, sortOrder, isLaptop, games, categories, platforms } = useGlobal();
     const location = useLocation().pathname;
+    const pathKey = location.substring(1) as DictionaryKey; // Remove the leading slash
     const sorted = [...visibleData].sort(sortItems<T>(sortBy, sortOrder));
     const { handleModalContent } = useModal();
     const maxSizeText = 30;
 
-    const handleEdit = async (item) => {
-        const response = await getItem(item && item.id, 'game')
+    const handleEdit = async (item: any) => {
+        const response = await getItem(item && item.id, dicionary[pathKey])
         handleModalContent(location, response);
     }
     

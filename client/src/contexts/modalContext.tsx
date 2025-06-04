@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useState, Dispatch, SetStateAction } from "react";
-import GameForm from "@/components/forms/GameForms/GameForm";
+import GameForm from "@/components/forms/GameForm";
 import CategoryForm from "@/components/forms/CategoryForm";
 import PlatformForm from "@/components/forms/PlatformForm";
 

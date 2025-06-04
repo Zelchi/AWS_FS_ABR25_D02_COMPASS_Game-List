@@ -14,7 +14,7 @@ class PlatformDto {
     }
 
     static validateImageUrl(imageUrl: string): boolean {
-        if (imageUrl === undefined) return true;
+        if (!imageUrl || imageUrl === undefined || imageUrl === null) return true;
 
         try {
             const url = new URL(imageUrl);
