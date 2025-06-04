@@ -87,15 +87,15 @@ export class GameRegisterDto {
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.acquisDate = acquisDate ? new Date(acquisDate) : undefined;
-        this.categories = categories;
-        this.platforms = platforms;
         this.status = status;
         this.favorite = favorite;
         this.rating = rating;
         this.price = price;
+        this.acquisDate = acquisDate ? new Date(acquisDate) : undefined;
         this.finishDate = finishDate ? new Date(finishDate) : undefined;
         this.releaseDate = releaseDate ? new Date(releaseDate) : undefined;
+        this.categories = categories;
+        this.platforms = platforms;
     }
 
     isValid(): ValidationResult {
