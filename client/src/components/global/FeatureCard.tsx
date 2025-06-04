@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useGlobal } from "@/contexts/globalContext";
 import PlusIcon from "@/assets/plus.svg?react";
 import { useMediaQuery } from "react-responsive";
+import { useModal } from "@/contexts/modalContext";
 
 const laptopL = 90;
 const laptopM = 84;
@@ -205,79 +206,92 @@ const Wrapper = styled.div`
 `;
 
 type FeatureCardProps = {
-  icon: React.JSX.Element;
-  title: string;
-  qty: number | undefined;
+    icon: React.JSX.Element;
+    title: string;
+    qty: number | undefined;
 };
 
 export default function FeatureCard({ icon, qty, title }: FeatureCardProps) {
-  const { isLaptop, isLaptopL, isMobile } = useGlobal();
-  const isLaptopM = useMediaQuery({ maxWidth: `${laptopM}em` });
+    const { isLaptop, isLaptopL, isMobile } = useGlobal();
+    const isLaptopM = useMediaQuery({ maxWidth: `${laptopM}em` });
+    const { handleModalContent } = useModal();
 
-  return (
-    <Card>
-      {isMobile ? (
-        <>
-          <Wrapper>
-            <Stat>{qty}</Stat>
-            <Icon>{icon}</Icon>
-          </Wrapper>
-          <AddButton>
-            <PlusIcon />
-          </AddButton>
-        </>
-      ) : isLaptop ? (
-        <>
-          <Wrapper>
-            <Icon>{icon}</Icon>
-            <Stat>{qty}</Stat>
-          </Wrapper>
-          <AddButton>
-            <span>
-              <PlusIcon /> Add
-            </span>{" "}
-            {title}
-          </AddButton>
-        </>
-      ) : isLaptopM ? (
-        <>
-          <Wrapper>
-            <Icon>{icon}</Icon>
-            <Title>{title}</Title>
-            <Stat>{qty}</Stat>
-          </Wrapper>
-          <AddButton>
-            <PlusIcon /> Add new
-          </AddButton>
-        </>
-      ) : isLaptopL ? (
-        <>
-          <Wrapper>
-            <Icon>{icon}</Icon>
-            <Title>{title}</Title>
-          </Wrapper>
-          <Stat>{qty}</Stat>
-          <AddButton>
-            <span>
-              <PlusIcon />
-            </span>
-            <span>
-              <span>Add</span> <span>new</span>
-            </span>
-          </AddButton>
-        </>
-      ) : (
-        <>
-          <Icon>{icon}</Icon>
-          <Stat>{qty}</Stat>
-          <Wrapper>
-            <Title>{title}</Title>
-            <AddButton>
-              <PlusIcon /> Add new
-            </AddButton>
-          </Wrapper>
-        </>
-      )}
-    </Card>
-  );
+    const handleClick = () => {
+        if (title === "Games") {
+            handleModalContent("/games");
+        }
+        if (title === "Categories") {
+            handleModalContent("/categories");
+        }
+        if (title === "Platforms") {
+            handleModalContent("/platforms");
+        }
+    }
+
+    return (
+        <Card>
+            {isMobile ? (
+                <>
+                    <Wrapper>
+                        <Stat>{qty}</Stat>
+                        <Icon>{icon}</Icon>
+                    </Wrapper>
+                    <AddButton onClick={handleClick}>
+                        <PlusIcon />
+                    </AddButton>
+                </>
+            ) : isLaptop ? (
+                <>
+                    <Wrapper>
+                        <Icon>{icon}</Icon>
+                        <Stat>{qty}</Stat>
+                    </Wrapper>
+                    <AddButton onClick={handleClick} >
+                        <span>
+                            <PlusIcon /> Add
+                        </span>{" "}
+                        {title}
+                    </AddButton>
+                </>
+            ) : isLaptopM ? (
+                <>
+                    <Wrapper>
+                        <Icon>{icon}</Icon>
+                        <Title>{title}</Title>
+                        <Stat>{qty}</Stat>
+                    </Wrapper>
+                    <AddButton onClick={handleClick}>
+                        <PlusIcon /> Add new
+                    </AddButton>
+                </>
+            ) : isLaptopL ? (
+                <>
+                    <Wrapper>
+                        <Icon>{icon}</Icon>
+                        <Title>{title}</Title>
+                    </Wrapper>
+                    <Stat>{qty}</Stat>
+                    <AddButton onClick={handleClick} >
+                        <span>
+                            <PlusIcon />
+                        </span>
+                        <span>
+                            <span>Add</span> <span>new</span>
+                        </span>
+                    </AddButton>
+                </>
+            ) : (
+                <>
+                    <Icon>{icon}</Icon>
+                    <Stat>{qty}</Stat>
+                    <Wrapper>
+                        <Title>{title}</Title>
+                        <AddButton onClick={handleClick} >
+                            <PlusIcon /> Add new
+                        </AddButton>
+                    </Wrapper>
+                </>
+            )}
+        </Card>
+    );
 }
