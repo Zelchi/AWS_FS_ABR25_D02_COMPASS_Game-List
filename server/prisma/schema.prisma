@@ -25,14 +25,15 @@ model Game {
   id          String     @id @default(uuid())
   userId      String
   name        String
-  description String
-  imageUrl    String
-  price       Int        @default(0)
-  rating      Int        @default(0)
-  status      String     @default("none")
-  favorite    Boolean    @default(false)
-  acquisDate  DateTime
+  description String?
+  imageUrl    String?
+  price       Int?       @default(0)
+  rating      Int?       @default(0)
+  status      String?    @default("none")
+  favorite    Boolean?   @default(false)
+  acquisDate  DateTime?
   finishDate  DateTime?
+  releaseDate DateTime?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   deletedAt   DateTime?
@@ -45,7 +46,7 @@ model Category {
   id          String    @id @default(uuid())
   userId      String
   name        String
-  description String
+  description String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
@@ -58,8 +59,8 @@ model Platform {
   userId     String
   name       String
   company    String
-  acquisDate DateTime
-  imageUrl   String
+  acquisDate DateTime?
+  imageUrl   String?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   deletedAt  DateTime?
@@ -68,19 +69,19 @@ model Platform {
 }
 
 model Dashboard {
-  id             String   @id @default(uuid())
-  userId         String   @unique
-  totalPrice     Float    @default(0)
-  topPlatform    String?
-  topCategory    String?
-  avgRating      Float    @default(0)
-  totalFavorites Int      @default(0)
-  totalAbandoned Int      @default(0)
-  totalDone      Int      @default(0)
-  totalPlaying   Int      @default(0)
-  totalGames     Int      @default(0)      
-  totalCategories Int     @default(0)     
-  totalPlatforms Int      @default(0)   
-  lastUpdated    DateTime @default(now())
-  user           User     @relation(fields: [userId], references: [id])
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  totalPrice      Float    @default(0)
+  topPlatform     String?
+  topCategory     String?
+  avgRating       Float    @default(0)
+  totalFavorites  Int      @default(0)
+  totalAbandoned  Int      @default(0)
+  totalDone       Int      @default(0)
+  totalPlaying    Int      @default(0)
+  totalGames      Int      @default(0)
+  totalCategories Int      @default(0)
+  totalPlatforms  Int      @default(0)
+  lastUpdated     DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id])
 }

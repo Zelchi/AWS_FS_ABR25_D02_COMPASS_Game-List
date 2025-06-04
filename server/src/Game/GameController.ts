@@ -37,21 +37,22 @@ export class GameController {
 
     async gamePost(req: Request, res: Response): Promise<void> {
         try {
-            const { userId, name, description, imageUrl, status, favorite, rating, acquisDate, finishDate, price, categories, platforms } = req.body;
+            const { userId, name, description, imageUrl, price, status, favorite, rating, acquisDate, finishDate, releaseDate, categories, platforms } = req.body;
 
             const gameDto = new GameRegisterDto(
                 userId,
                 name,
                 description,
                 imageUrl,
-                acquisDate,
-                categories,
-                platforms,
+                price,
                 status,
                 favorite,
                 rating,
-                price,
-                finishDate
+                acquisDate,
+                finishDate,
+                releaseDate,
+                categories,
+                platforms
             );
 
             const validationResult = gameDto.isValid();
@@ -77,7 +78,7 @@ export class GameController {
     async gameUpdate(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            const { name, description, imageUrl, status, favorite, acquisDate, finishDate, categories, platforms, rating, price } = req.body;
+            const { name, description, imageUrl, price, status, favorite, rating, acquisDate, finishDate, releaseDate, categories, platforms } = req.body;
 
             if (!id) {
                 res.status(400).json({ error: 'Game ID is required' });
@@ -88,14 +89,15 @@ export class GameController {
                 name,
                 description,
                 imageUrl,
+                price,
                 status,
                 favorite,
+                rating,
                 acquisDate,
                 finishDate,
+                releaseDate,
                 categories,
-                platforms,
-                rating,
-                price
+                platforms
             );
 
             const validationResult = gameDto.isValid();
