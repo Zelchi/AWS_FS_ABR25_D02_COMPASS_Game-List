@@ -74,13 +74,12 @@ export class PlatformController {
 
     async platformPost(req: Request, res: Response): Promise<void> {
         try {
-            const { userId, name, company, acquisDate, imageUrl } = req.body;
+            const { userId, name, company, imageUrl } = req.body;
 
             const platformDto = new PlatformRegisterDto(
                 userId,
                 name,
                 company,
-                acquisDate,
                 imageUrl
             );
 
@@ -112,7 +111,7 @@ export class PlatformController {
     async platformUpdate(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            const { userId, name, company, acquisDate, imageUrl } = req.body;
+            const { userId, name, company, imageUrl } = req.body;
 
             if (!id) {
                 res.status(400).json({ error: 'Platform ID is required' });
@@ -122,7 +121,6 @@ export class PlatformController {
             const platformDto = new PlatformUpdateDto(
                 name,
                 company,
-                acquisDate,
                 imageUrl
             );
 
@@ -191,7 +189,7 @@ export class PlatformController {
                 return;
             }
 
-            const validSortFields = ['name', 'company', 'acquisDate', 'updatedAt'];
+            const validSortFields = ['name', 'company', 'updatedAt'];
             if (!validSortFields.includes(sortBy)) {
                 res.status(400).json({
                     error: `Invalid sort field. Allowed values: ${validSortFields.join(', ')}`

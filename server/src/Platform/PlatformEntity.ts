@@ -3,7 +3,6 @@ export interface IPlatformEntity {
     userId: string;
     name: string;
     company: string;
-    acquisDate: Date;
     imageUrl: string;
     createdAt?: Date;
     updatedAt?: Date;
@@ -15,6 +14,5 @@ export interface IPlatformRegister {
     userId: string;
     name: string;
     company: string;
-    acquisDate: Date;
     imageUrl: string;
 }
