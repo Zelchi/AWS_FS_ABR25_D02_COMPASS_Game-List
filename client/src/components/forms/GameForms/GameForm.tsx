@@ -7,8 +7,6 @@ import { useModal } from "@/contexts/modalContext";
 
 export interface GameFormProps {
     initialData?: Partial<IGameEntity>;
-    userId?: string;
-    onSuccess?: () => void;
 }
 
 export interface ItemData {
@@ -18,8 +16,6 @@ export interface ItemData {
 
 export default function GameForm({
     initialData,
-    userId = "",
-    onSuccess,
 }: GameFormProps) {
 
     const [categories, setCategories] = useState<ItemData[]>([]);
@@ -27,32 +23,27 @@ export default function GameForm({
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [submitting, setSubmitting] = useState(false);
+    const [type] = useState(initialData ? "put" : "post");
     const { setIsModalOpen, setModalContent } = useModal();
-
     const [game, setGame] = useState<Partial<IGameEntity>>({
-        userId: userId,
-        name: "",
-        description: "",
-        imageUrl: "",
-        price: 0,
-        status: "playing",
-        favorite: false,
-        rating: 0,
-        acquisDate: new Date(),
-        finishDate: null,
-        categories: [],
-        platforms: [],
-        ...initialData
+        userId: "",
+        name: initialData?.name || "",
+        description: initialData?.description || "",
+        imageUrl: initialData?.imageUrl || "",
+        price: initialData?.price || 0,
+        status: initialData?.status || "playing",
+        favorite: initialData?.favorite || false,
+        rating: initialData?.rating || 0,
+        acquisDate: initialData?.acquisDate ? new Date(initialData.acquisDate) : null,
+        finishDate: initialData?.finishDate ? new Date(initialData.finishDate) : null,
+        categories: initialData?.categories || [],
+        platforms: initialData?.platforms || [],
     });
 
     const fetchItems = async (endpoint: string, setItems: Dispatch<SetStateAction<ItemData[]>>) => {
-        try {
-            const response = await API.GET(endpoint);
-            if (response && response.data) {
-                setItems(Array.isArray(response.data) ? response.data : []);
-            }
-        } catch (error) {
-            console.error(`Error fetching ${endpoint}:`, error);
+        const response = await API.GET(endpoint);
+        if (response && response.data) {
+            setItems(Array.isArray(response.data) ? response.data : []);
         }
     };
 
@@ -77,35 +68,32 @@ export default function GameForm({
         setError("");
         setSubmitting(true);
 
-        try {
-            const gameData = {
-                userId: game.userId,
-                name: game.name,
-                description: game.description,
-                imageUrl: game.imageUrl,
-                status: game.status,
-                favorite: game.favorite,
-                rating: game.rating,
-                price: game.price,
-                acquisDate: game.acquisDate instanceof Date ? game.acquisDate.toISOString() : game.acquisDate,
-                finishDate: game.finishDate instanceof Date ? game.finishDate.toISOString() : game.finishDate,
-                categories: Array.isArray(game.categories) ? game.categories.map(cat => ({ id: cat.id })) : [],
-                platforms: Array.isArray(game.platforms) ? game.platforms.map(plat => ({ id: plat.id })) : []
-            };
+        const gameData = {
+            userId: game.userId,
+            name: game.name,
+            description: game.description,
+            imageUrl: game.imageUrl,
+            status: game.status,
+            favorite: game.favorite,
+            rating: game.rating,
+            price: game.price,
+            acquisDate: game.acquisDate instanceof Date ? game.acquisDate.toISOString() : game.acquisDate,
+            finishDate: game.finishDate instanceof Date ? game.finishDate.toISOString() : game.finishDate,
+            categories: Array.isArray(game.categories) ? game.categories.map(cat => ({ id: cat.id })) : [],
+            platforms: Array.isArray(game.platforms) ? game.platforms.map(plat => ({ id: plat.id })) : []
+        };
 
-            const response = await API.POST("/game", gameData);
-            if (response && response.status === 201) {
-                setIsModalOpen(false);
-                setModalContent(null);
-            } else {
-                setError("Failed to save the game. Please try again.");
-            }
-        } catch (error) {
-            console.error("Error saving game:", error);
-            setError("Failed to save the game. Please check your connection and try again.");
-        } finally {
-            setSubmitting(false);
+        const response = type === "post"
+            ? await API.POST("/game", gameData)
+            : await API.PUT(`/game/${initialData?.id}`, gameData);
+        if (response && response.status === 201 || response.status === 200) {
+            setIsModalOpen(false);
+            setModalContent(null);
+        } else {
+            setError("Failed to save the game. Please try again.");
         }
+
+        setSubmitting(false);
     };
 
     const handleCancel = () => {
@@ -115,17 +103,12 @@ export default function GameForm({
 
     useEffect(() => {
         setLoading(true);
-
         Promise.all([
             fetchItems("/category", setCategories),
             fetchItems("/platform", setPlatforms)
-        ])
-            .catch(error => {
-                console.error("Error fetching form data:", error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+        ]).finally(() => {
+            setLoading(false);
+        });
     }, []);
 
     return (

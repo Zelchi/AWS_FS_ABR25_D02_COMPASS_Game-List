@@ -257,8 +257,6 @@ export function Remainder({ className }: { className?: string }) {
     await handleFinished(rating);
   };
 
-  console.log(game);
-
   return (
     <AnimatePresence mode="wait">
       {game ? (

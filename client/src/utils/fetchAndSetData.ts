@@ -13,17 +13,13 @@ export const fetchAndSetData = async <T>({
   setData,
   extractData,
 }: FetchAndSetType<T>): Promise<void> => {
-  try {
-    const trimmedSearch = search?.trim();
-    const finalPath = trimmedSearch ? `${path}&search=${trimmedSearch}` : path;
+  const trimmedSearch = search?.trim();
+  const finalPath = trimmedSearch ? `${path}&search=${trimmedSearch}` : path;
 
-    const response = await getAllItems<any>(finalPath);
-    const data = extractData(response);
+  const response = await getAllItems<any>(finalPath);
+  const data = extractData(response);
 
-    if (data) {
-      setData(data);
-    }
-  } catch (error) {
-    console.error("Error fetching data: ", error);
+  if (data) {
+    setData(data);
   }
 };

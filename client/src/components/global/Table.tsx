@@ -12,6 +12,8 @@ import { sortItems } from "@/utils/sortItems";
 import { useGlobal } from "@/contexts/globalContext";
 import { getLabel, isLabelKey } from "@/utils/labels";
 import PlatformImages from "@/components/global/PlatformImages";
+import { useModal } from "@/contexts/modalContext";
+import { getItem } from "@/utils/crudHandlers";
 
 const tableTransitionDuration = 600;
 
@@ -149,130 +151,142 @@ type TableProps<T> = {
     header: string[];
 };
 
+const dicionary = {
+    games: "game",
+    categories: "category",
+    platforms: "platform",
+}
+
 export default function Table<T extends Record<string, any>>({ data, header }: TableProps<T>) {
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [visibleData, setVisibleData] = useState(data);
-  const { sortBy, sortOrder, isLaptop, games, categories, platforms } = useGlobal();
-  const location = useLocation().pathname;
-  const sorted = [...visibleData].sort(sortItems<T>(sortBy, sortOrder));
-  const maxSizeText = 30;
+    const [isAnimating, setIsAnimating] = useState(false);
+    const [visibleData, setVisibleData] = useState(data);
+    const { sortBy, sortOrder, isLaptop, games, categories, platforms } = useGlobal();
+    const location = useLocation().pathname;
+    const sorted = [...visibleData].sort(sortItems<T>(sortBy, sortOrder));
+    const { handleModalContent } = useModal();
+    const maxSizeText = 30;
 
-  useEffect(() => {
-    setIsAnimating(true);
-    const timeout = setTimeout(() => {
-      setIsAnimating(false);
-    }, tableTransitionDuration);
+    const handleEdit = async (item) => {
+        const response = await getItem(item && item.id, 'game')
+        handleModalContent(location, response);
+    }
+    
+    useEffect(() => {
+        setIsAnimating(true);
+        const timeout = setTimeout(() => {
+            setIsAnimating(false);
+        }, tableTransitionDuration);
 
-    return () => clearTimeout(timeout);
-  }, [games, categories, platforms]);
+        return () => clearTimeout(timeout);
+    }, [games, categories, platforms]);
 
-  useEffect(() => {
-    setIsAnimating(true);
+    useEffect(() => {
+        setIsAnimating(true);
 
-    const timeout = setTimeout(() => {
-      setIsAnimating(false);
-      setVisibleData(data);
-    }, tableTransitionDuration);
+        const timeout = setTimeout(() => {
+            setIsAnimating(false);
+            setVisibleData(data);
+        }, tableTransitionDuration);
 
-    return () => clearTimeout(timeout);
-  }, [data]);
+        return () => clearTimeout(timeout);
+    }, [data]);
 
-  return (
-    <TableEL $isAnimating={isAnimating}>
-      {isLaptop ? (
-        ""
-      ) : (
-        <thead>
-          <tr role="option">
-            {location === "/games" && (
-              <>
-                <th>
-                  <SortButton head={"updatedAt"}>
-                    <LastUpdateIcon />
-                  </SortButton>
-                </th>
-                <th style={{ color: "white", textAlign: "left" }}></th>
-                <th style={{ color: "white", textAlign: "left" }}></th>
-              </>
-            )}
-            {header.map((head) =>
-              head === "name" ? (
-                <th key={head} style={{ paddingRight: "1.5rem", width: "30%" }}>
-                  <SortButton head={head}>{isLabelKey(head) ? getLabel(head) : ""}</SortButton>
-                </th>
-              ) : (
-                <th key={head} style={{ paddingRight: "1.5rem" }}>
-                  <SortButton head={head}>{isLabelKey(head) ? getLabel(head) : ""}</SortButton>
-                </th>
-              ),
-            )}
-            <th style={{ color: "white", textAlign: "left" }}></th>
-          </tr>
-        </thead>
-      )}
-
-      <tbody>
-        {sorted.map((item) => (
-          <TableRow key={item.id} $location={location} role="option" tabIndex={0}>
-            {"imageUrl" in item ? (
-              location === "/games" ? (
-                <>
-                  <td colSpan={2} style={{ width: "8%" }}>
-                    <GameImage
-                      src={(item as any)["imageUrl"] || defaultImage}
-                      fallback={defaultImage}
-                    />
-                  </td>
-                  <td style={{ width: "7rem" }}>
-                    <PlatformImages game={item as any} />
-                  </td>
-                </>
-              ) : (
+    return (
+        <TableEL $isAnimating={isAnimating}>
+            {isLaptop ? (
                 ""
-              )
             ) : (
-              ""
+                <thead>
+                    <tr role="option">
+                        {location === "/games" && (
+                            <>
+                                <th>
+                                    <SortButton head={"updatedAt"}>
+                                        <LastUpdateIcon />
+                                    </SortButton>
+                                </th>
+                                <th style={{ color: "white", textAlign: "left" }}></th>
+                                <th style={{ color: "white", textAlign: "left" }}></th>
+                            </>
+                        )}
+                        {header.map((head) =>
+                            head === "name" ? (
+                                <th key={head} style={{ paddingRight: "1.5rem", width: "30%" }}>
+                                    <SortButton head={head}>{isLabelKey(head) ? getLabel(head) : ""}</SortButton>
+                                </th>
+                            ) : (
+                                <th key={head} style={{ paddingRight: "1.5rem" }}>
+                                    <SortButton head={head}>{isLabelKey(head) ? getLabel(head) : ""}</SortButton>
+                                </th>
+                            ),
+                        )}
+                        <th style={{ color: "white", textAlign: "left" }}></th>
+                    </tr>
+                </thead>
             )}
-            {header.map((head) => (
-              <TableEl key={head} $width={head === "title"}>
-                <TableItem>
-                  {head === "name" ? (
-                    (item as any)[head].length > maxSizeText ? (
-                      (item as any)[head].slice(0, maxSizeText).trim() + "..."
-                    ) : (
-                      (item as any)[head]
-                    )
-                  ) : head === "rating" ? (
-                    <RatingField>
-                      <Rating
-                        color={"var(--color-aqua)"}
-                        bgColor={"var(--color-grey-light-05)"}
-                        rating={(item as any)[head]}
-                      />
-                    </RatingField>
-                  ) : head.includes("Date") || head.includes("At") ? (
-                    new Date((item as any)[head]).toLocaleDateString()
-                  ) : head === "price" ? (
-                    `$${(item as any)[head] / 100}`
-                  ) : (
-                    String((item as any)[head] ?? "")
-                  )}
-                </TableItem>
-              </TableEl>
-            ))}
-            <td style={{ width: "6.5rem", marginLeft: "auto" }}>
-              <span>
-                <button>
-                  <Edit />
-                </button>
-                <button>
-                  <Delete />
-                </button>
-              </span>
-            </td>
-          </TableRow>
-        ))}
-      </tbody>
-    </TableEL>
-  );
+
+            <tbody>
+                {sorted.map((item) => (
+                    <TableRow key={item.id} $location={location} role="option" tabIndex={0}>
+                        {"imageUrl" in item ? (
+                            location === "/games" ? (
+                                <>
+                                    <td colSpan={2} style={{ width: "8%" }}>
+                                        <GameImage
+                                            src={(item as any)["imageUrl"] || defaultImage}
+                                            fallback={defaultImage}
+                                        />
+                                    </td>
+                                    <td style={{ width: "7rem" }}>
+                                        <PlatformImages game={item as any} />
+                                    </td>
+                                </>
+                            ) : (
+                                ""
+                            )
+                        ) : (
+                            ""
+                        )}
+                        {header.map((head) => (
+                            <TableEl key={head} $width={head === "title"}>
+                                <TableItem>
+                                    {head === "name" ? (
+                                        (item as any)[head].length > maxSizeText ? (
+                                            (item as any)[head].slice(0, maxSizeText).trim() + "..."
+                                        ) : (
+                                            (item as any)[head]
+                                        )
+                                    ) : head === "rating" ? (
+                                        <RatingField>
+                                            <Rating
+                                                color={"var(--color-aqua)"}
+                                                bgColor={"var(--color-grey-light-05)"}
+                                                rating={(item as any)[head]}
+                                            />
+                                        </RatingField>
+                                    ) : head.includes("Date") || head.includes("At") ? (
+                                        new Date((item as any)[head]).toLocaleDateString()
+                                    ) : head === "price" ? (
+                                        `$${(item as any)[head] / 100}`
+                                    ) : (
+                                        String((item as any)[head] ?? "")
+                                    )}
+                                </TableItem>
+                            </TableEl>
+                        ))}
+                        <td style={{ width: "6.5rem", marginLeft: "auto" }}>
+                            <span>
+                                <button onClick={() => handleEdit(item)}>
+                                    <Edit />
+                                </button>
+                                <button>
+                                    <Delete />
+                                </button>
+                            </span>
+                        </td>
+                    </TableRow>
+                ))}
+            </tbody>
+        </TableEL>
+    );
 }

@@ -77,7 +77,7 @@ export class GameController {
     async gameUpdate(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            const { name, description, imageUrl, status, favorite, acquisDate, finishDate, categories, platforms } = req.body;
+            const { name, description, imageUrl, status, favorite, acquisDate, finishDate, categories, platforms, rating, price } = req.body;
 
             if (!id) {
                 res.status(400).json({ error: 'Game ID is required' });
@@ -93,7 +93,9 @@ export class GameController {
                 acquisDate,
                 finishDate,
                 categories,
-                platforms
+                platforms,
+                rating,
+                price
             );
 
             const validationResult = gameDto.isValid();

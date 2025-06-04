@@ -1,13 +1,9 @@
-import React from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import ToggleButton from "@/components/navigation/ToggleButton";
 import Button from "@/components/global/Button";
 import { useMediaQuery } from "react-responsive";
 import { useModal } from "@/contexts/modalContext";
-import GameForm from "../forms/GameForms/GameForm";
-import CategoryForm from "../forms/CategoryForm";
-import PlatformForm from "../forms/PlatformForm";
 
 export const routes = [
     {
@@ -76,23 +72,7 @@ const ButtonWrapper = styled.div`
 export default function SiteHeader({ isOpen, onOpen }: { isOpen: boolean; onOpen: () => void }) {
     const isMobile = useMediaQuery({ maxWidth: 30 * 16 });
     const path = useLocation().pathname;
-    const { setModalContent, setIsModalOpen } = useModal();
-
-    const handleButtonClick = () => {
-        setModalContent(() => {
-            switch (path) {
-                case "/games":
-                    return <GameForm />;
-                case "/categories":
-                    return <CategoryForm />;
-                case "/platforms":
-                    return <PlatformForm />;
-                default:
-                    return null;
-            }
-        });
-        setIsModalOpen(true);
-    };
+    const { handleModalContent } = useModal();
 
     return (
         <>
@@ -105,7 +85,7 @@ export default function SiteHeader({ isOpen, onOpen }: { isOpen: boolean; onOpen
                                 <Title>{routes.find((route) => route.path === path)?.label}</Title>
                                 {path !== "/" && <Separator />}
                                 <ButtonWrapper>
-                                    <Button size="medium" onClick={handleButtonClick}>
+                                    <Button size="medium" onClick={() => handleModalContent(path)}>
                                         Add new{" "}
                                         {path === "/games" ? "game" : path === "/categories" ? "category" : "platform"}
                                     </Button>
@@ -115,7 +95,7 @@ export default function SiteHeader({ isOpen, onOpen }: { isOpen: boolean; onOpen
                             <>
                                 <Title>{routes.find((route) => route.path === path)?.label}</Title>
                                 <ButtonWrapper>
-                                    <Button size="medium" onClick={handleButtonClick}>
+                                    <Button size="medium" onClick={() => handleModalContent(path)}>
                                         Add new{" "}
                                         {path === "/games" ? "game" : path === "/categories" ? "category" : "platform"}
                                     </Button>

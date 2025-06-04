@@ -153,17 +153,15 @@ export default function FilterBar({
   const [data, setData] = useState<{ id: string, name: string }[]>([]);
 
   const handleRequest = async () => {
-    try {
-      if (!filters) return setData([]);
 
-      const endpoint = filterDictionary[filters] || filters;
-      const response = await API.GET(`${endpoint}`);
-      if (response && response.data) {
-        setData(response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
+    if (!filters) return setData([]);
+
+    const endpoint = filterDictionary[filters] || filters;
+    const response = await API.GET(`${endpoint}`);
+    if (response && response.data) {
+      setData(response.data);
     }
+
   };
 
   useEffect(() => {
