@@ -1,10 +1,8 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
+import Modal from "@/components/modal/Modal";
 import styled from "styled-components";
 import SideBar from "@/components/navigation/SideBar";
 import SiteHeader from "@/components/global/SiteHeader";
-import Modal from "./Modal";
-import { useModal } from "@/contexts/modalContext";
-import GameForm from "@/components/forms/GameForm";
 
 const Container = styled.div<{ $isOpen: boolean }>`
   display: grid;
@@ -19,7 +17,7 @@ const Container = styled.div<{ $isOpen: boolean }>`
 
   @media (max-width: 48em) {
     grid-template-rows: ${({ $isOpen }) =>
-        $isOpen ? "12.08rem calc(100% - 12.08rem)" : "0% 100%"};
+    $isOpen ? "12.08rem calc(100% - 12.08rem)" : "0% 100%"};
     grid-template-columns: 100%;
   }
 
@@ -39,25 +37,20 @@ const MainContent = styled.main`
 `;
 
 export default function SiteLayout({ children }: { children: ReactNode }) {
-    const [isOpen, setIsOpen] = useState(true);
-    const { isModalOpen, setIsModalOpen, modalContent } = useModal();
+  const [isOpen, setIsOpen] = useState(true);
 
-    const handleOpen = () => {
-        setIsOpen((is) => !is);
-    };
+  const handleOpen = () => {
+    setIsOpen((is) => !is);
+  };
 
-    const handleModalClose = () => {
-        setIsModalOpen(false);
-    };
-
-    return (
-        <Container $isOpen={isOpen}>
-            <SideBar />
-            <Modal isOpen={isModalOpen} onClose={handleModalClose}>{modalContent}</Modal>
-            <MainContent>
-                <SiteHeader isOpen={isOpen} onOpen={handleOpen} />
-                <section>{children}</section>
-            </MainContent>
-        </Container>
-    );
+  return (
+    <Container $isOpen={isOpen}>
+      <SideBar />
+      <MainContent>
+        <Modal />
+        <SiteHeader isOpen={isOpen} onOpen={handleOpen} />
+        <section>{children}</section>
+      </MainContent>
+    </Container>
+  );
 }

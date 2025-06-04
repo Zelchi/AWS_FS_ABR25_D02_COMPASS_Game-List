@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Modal from "../components/global/Modal";
+import Modal from "../components/modal/ModalLayout";
 
 export default function NotFound() {
   const [isOpen, setIsOpen] = useState(false);

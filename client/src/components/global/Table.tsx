@@ -16,98 +16,99 @@ import { getLabel, isLabelKey } from "@/utils/labels";
 import PlatformImages from "@/components/global/PlatformImages";
 
 const TableEL = styled.table`
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 1.5rem;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 1.5rem;
 `;
 
 const TableRow = styled.tr<{ $location: string }>`
-  cursor: pointer;
-  border-radius: 20px;
-  transition: var(--transition);
+    cursor: pointer;
+    border-radius: 20px;
+    transition: var(--transition);
 
-  &:hover,
-  &:focus {
-    transform: scale(1.02);
-  }
-
-  > td {
-    background-color: var(--color-white);
-    padding: 1.5rem 0;
-    padding-right: 1.5rem;
-    font-weight: 400;
-    font-size: 1.4rem;
-    font-family: var(--font-primary);
-
-    @media (max-width: 30em) {
-      padding: 1rem 0;
-      padding-right: 1rem;
+    &:hover,
+    &:focus {
+        transform: scale(1.02);
     }
 
-    &:first-child {
-      border-radius: ${({ $location }) => ($location === "/games" ? "0" : "0.8rem 0 0 0.8rem")};
-      background-color: ${({ $location }) =>
-        $location === "/games" ? "transparent" : "var(--color-white)"};
-      padding-left: ${({ $location }) => ($location === "/games" ? "0" : "1.5rem")};
-    }
-
-    &:nth-child(2) {
-      border-radius: ${({ $location }) => ($location === "/games" ? "0.8rem 0 0 0.8rem" : "0")};
-      padding-left: ${({ $location }) => ($location === "/games" ? "1.5rem" : "0")};
-    }
-
-    &:last-child {
-      border-radius: 0 0.8rem 0.8rem 0;
-
-      span {
-        display: flex;
-        flex-wrap: nowrap;
-          justify-content: flex-end;
-        gap: 2.6rem;
+    > td {
+        background-color: var(--color-white);
+        padding: 1.5rem 0;
+        padding-right: 1.5rem;
+        font-weight: 400;
+        font-size: 1.4rem;
+        font-family: var(--font-primary);
 
         @media (max-width: 30em) {
-          flex-direction: ${({ $location }) => ($location === "/games" ? "column" : "row")};
-          justify-content: ${({ $location }) => ($location === "/games" ? "center" : "flex-end")};
-          align-items: ${({ $location }) => ($location === "/games" ? "flex-end" : "center")};
-          gap: 1rem;
+        padding: 1rem 0;
+        padding-right: 1rem;
         }
 
-        button {
-          cursor: pointer;
-          border: none;
-          background-color: transparent;
-          width: 1.9rem;
-          height: 1.9rem;
-          fill: var(--color-aqua);
-          transition: var(--transition);
-
-          &:hover,
-          &:focus {
-            fill: var(--color-aqua-dark);
-          }
+        &:first-child {
+        border-radius: ${({ $location }) => ($location === "/games" ? "0" : "0.8rem 0 0 0.8rem")};
+        background-color: ${({ $location }) =>
+            $location === "/games" ? "transparent" : "var(--color-white)"};
+        padding-left: ${({ $location }) => ($location === "/games" ? "0" : "1.5rem")};
         }
-      }
-    }
 
-    @media (max-width: 67em) {
-      &:first-child {
-        border-radius: 0.8rem 0 0 0.8rem;
-        background-color: var(--color-white);
-        padding-left: 1.5rem;
-      }
+        &:nth-child(2) {
+        border-radius: ${({ $location }) => ($location === "/games" ? "0.8rem 0 0 0.8rem" : "0")};
+        padding-left: ${({ $location }) => ($location === "/games" ? "1.5rem" : "0")};
+        }
 
-      &:nth-child(2) {
-        border-radius: ${({ $location }) =>
-        $location === "/categories" ? "0 0.8rem 0.8rem 0" : "0"};
-        padding-left: 0;
-      }
-    }
+        &:last-child {
+            border-radius: 0 0.8rem 0.8rem 0;
 
-      @media (max-width: 30em) {
-          &:first-child {
-              padding-left: 1rem;
-          }
-  }
+            span {
+                    display: flex;
+                    flex-wrap: nowrap;
+                    justify-content: flex-end;
+                    gap: 2.6rem;
+
+                    @media (max-width: 30em) {
+                        flex-direction: ${({ $location }) => ($location === "/games" ? "column" : "row")};
+                        justify-content: ${({ $location }) => ($location === "/games" ? "center" : "flex-end")};
+                        align-items: ${({ $location }) => ($location === "/games" ? "flex-end" : "center")};
+                        gap: 1rem;
+                    }
+
+                    button {
+                        cursor: pointer;
+                        border: none;
+                        background-color: transparent;
+                        width: 1.9rem;
+                        height: 1.9rem;
+                        fill: var(--color-aqua);
+                        transition: var(--transition);
+
+                        &:hover,
+                        &:focus {
+                            fill: var(--color-aqua-dark);
+                        }
+                    }
+                }
+            }
+
+            @media (max-width: 67em) {
+                &:first-child {
+                    border-radius: 0.8rem 0 0 0.8rem;
+                    background-color: var(--color-white);
+                    padding-left: 1.5rem;
+                }
+
+                &:nth-child(2) {
+                    border-radius: ${({ $location }) =>
+                $location === "/categories" ? "0 0.8rem 0.8rem 0" : "0"};
+                    padding-left: 0;
+                }
+            }
+
+            @media (max-width: 30em) {
+            &:first-child {
+                    padding-left: 1rem;
+                }
+            }
+        }
 `;
 
 const TableItem = styled.span`

@@ -4,28 +4,32 @@ import styled from "styled-components";
 import ToggleButton from "@/components/navigation/ToggleButton";
 import Button from "@/components/global/Button";
 import { useMediaQuery } from "react-responsive";
+import { useModal } from "@/contexts/modalContext";
+import GameForm from "../forms/GameForms/GameForm";
+import CategoryForm from "../forms/CategoryForm";
+import PlatformForm from "../forms/PlatformForm";
 
 export const routes = [
-  {
-    path: "/",
-    label: "Home",
-  },
-  {
-    path: "/games",
-    label: "Games",
-  },
-  {
-    path: "/categories",
-    label: "Categories",
-  },
-  {
-    path: "/platforms",
-    label: "Platforms",
-  },
-  {
-    path: "/login",
-    label: "Logout",
-  },
+    {
+        path: "/",
+        label: "Home",
+    },
+    {
+        path: "/games",
+        label: "Games",
+    },
+    {
+        path: "/categories",
+        label: "Categories",
+    },
+    {
+        path: "/platforms",
+        label: "Platforms",
+    },
+    {
+        path: "/login",
+        label: "Logout",
+    },
 ];
 const Header = styled.header`
   display: flex;
@@ -70,41 +74,58 @@ const ButtonWrapper = styled.div`
 `;
 
 export default function SiteHeader({ isOpen, onOpen }: { isOpen: boolean; onOpen: () => void }) {
-  const isMobile = useMediaQuery({ maxWidth: 30 * 16 });
-  const path = useLocation().pathname;
+    const isMobile = useMediaQuery({ maxWidth: 30 * 16 });
+    const path = useLocation().pathname;
+    const { setModalContent, setIsModalOpen } = useModal();
 
-  return (
-    <>
-      <Header>
-        <ToggleButton isOpen={isOpen} onOpen={onOpen} />
-        {path !== "/" && (
-          <>
-            {isMobile ? (
-              <>
-                <Title>{routes.find((route) => route.path === path)?.label}</Title>
-                {path !== "/" && <Separator />}
-                <ButtonWrapper>
-                  <Button size="medium">
-                    Add new{" "}
-                    {path === "/games" ? "game" : path === "/categories" ? "category" : "platform"}
-                  </Button>
-                </ButtonWrapper>
-              </>
-            ) : (
-              <>
-                <Title>{routes.find((route) => route.path === path)?.label}</Title>
-                <ButtonWrapper>
-                  <Button size="medium">
-                    Add new{" "}
-                    {path === "/games" ? "game" : path === "/categories" ? "category" : "platform"}
-                  </Button>
-                </ButtonWrapper>
-              </>
-            )}
-          </>
-        )}
-      </Header>
-      {path !== "/" && !isMobile && <Separator />}
-    </>
-  );
+    const handleButtonClick = () => {
+        setModalContent(() => {
+            switch (path) {
+                case "/games":
+                    return <GameForm />;
+                case "/categories":
+                    return <CategoryForm />;
+                case "/platforms":
+                    return <PlatformForm />;
+                default:
+                    return null;
+            }
+        });
+        setIsModalOpen(true);
+    };
+
+    return (
+        <>
+            <Header>
+                <ToggleButton isOpen={isOpen} onOpen={onOpen} />
+                {path !== "/" && (
+                    <>
+                        {isMobile ? (
+                            <>
+                                <Title>{routes.find((route) => route.path === path)?.label}</Title>
+                                {path !== "/" && <Separator />}
+                                <ButtonWrapper>
+                                    <Button size="medium" onClick={handleButtonClick}>
+                                        Add new{" "}
+                                        {path === "/games" ? "game" : path === "/categories" ? "category" : "platform"}
+                                    </Button>
+                                </ButtonWrapper>
+                            </>
+                        ) : (
+                            <>
+                                <Title>{routes.find((route) => route.path === path)?.label}</Title>
+                                <ButtonWrapper>
+                                    <Button size="medium" onClick={handleButtonClick}>
+                                        Add new{" "}
+                                        {path === "/games" ? "game" : path === "/categories" ? "category" : "platform"}
+                                    </Button>
+                                </ButtonWrapper>
+                            </>
+                        )}
+                    </>
+                )}
+            </Header>
+            {path !== "/" && !isMobile && <Separator />}
+        </>
+    );
 }

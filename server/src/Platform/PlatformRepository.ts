@@ -3,7 +3,7 @@ import { IPlatformEntity, IPlatformRegister } from './PlatformEntity';
 
 class PlatformRepository {
 
-    async findAllNames(userId: string): Promise<string[]> {
+    async findAllNames(userId: string): Promise<{ id: string, name: string }[]> {
         try {
             const platforms = await prisma.platform.findMany({
                 where: {
@@ -11,13 +11,14 @@ class PlatformRepository {
                     deletedAt: null
                 },
                 select: {
+                    id: true,
                     name: true
                 },
                 orderBy: {
                     name: 'asc'
                 }
             });
-            return platforms.map(platform => platform.name);
+            return platforms;
         } catch (error) {
             throw new Error('Failed to fetch platform names from database');
         }

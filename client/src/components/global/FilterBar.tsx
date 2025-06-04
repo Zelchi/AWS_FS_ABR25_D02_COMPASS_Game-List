@@ -150,7 +150,7 @@ export default function FilterBar({
     isLaptop,
   } = useGlobal();
 
-  const [data, setData] = useState<string[]>([]);
+  const [data, setData] = useState<{ id: string, name: string }[]>([]);
 
   const handleRequest = async () => {
     try {
@@ -168,7 +168,11 @@ export default function FilterBar({
 
   useEffect(() => {
     if (filters !== "statusBy") handleRequest();
-    if (filters === "statusBy") setData(["Playing", "Done", "Abandoned"]);
+    if (filters === "statusBy") setData([
+      { id: "playing", name: "Playing" },
+      { id: "done", name: "Done" },
+      { id: "abandoned", name: "Abandoned" },
+    ]);
 
     handleSelectedFilter({
       target: { value: "" },
@@ -196,8 +200,8 @@ export default function FilterBar({
                   Choose an option
                 </option>
                 {data.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
+                  <option key={item.id} value={item.name}>
+                    {item.name}
                   </option>
                 ))}
               </SelectInput>
@@ -252,8 +256,8 @@ export default function FilterBar({
                     Choose an option
                   </option>
                   {data.map((item) => (
-                    <option key={item} value={item}>
-                      {item}
+                    <option key={item.id} value={item.name}>
+                      {item.name}
                     </option>
                   ))}
                 </SelectInput>
@@ -310,8 +314,8 @@ export default function FilterBar({
                   Choose an option
                 </option>
                 {data.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
+                  <option key={item.id} value={item.name}>
+                    {item.name}
                   </option>
                 ))}
               </SelectInput>
