@@ -27,6 +27,7 @@ const GlobalStyle = createGlobalStyle`
         --color-aqua: #42D9C8;
         --color-aqua-light: #6cf6e7;
         --color-aqua-dark: #1c9589;
+        --color-yellow-light: #fef2d9;
         --font-primary: "Montserrat", sans-serif;
         --font-secodary: "Inter", sans-serif;
         --main-max-width: 110rem;
