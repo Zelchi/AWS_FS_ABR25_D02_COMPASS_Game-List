@@ -66,7 +66,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [filters, setFilters] = useState<string>("");
   const [selectedFilter, setSelectedFilter] = useState("");
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-
+  
   const limit = 10;
   const isMobile = useMediaQuery({ maxWidth: 30 * 16 });
   const isLaptop = useMediaQuery({ maxWidth: 67 * 16 });

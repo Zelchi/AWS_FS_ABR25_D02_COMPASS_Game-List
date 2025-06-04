@@ -1,4 +1,5 @@
-import React, { ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
+import Modal from "@/components/modal/Modal";
 import styled from "styled-components";
 import SideBar from "@/components/navigation/SideBar";
 import SiteHeader from "@/components/global/SiteHeader";
@@ -16,7 +17,7 @@ const Container = styled.div<{ $isOpen: boolean }>`
 
   @media (max-width: 48em) {
     grid-template-rows: ${({ $isOpen }) =>
-      $isOpen ? "12.08rem calc(100% - 12.08rem)" : "0% 100%"};
+    $isOpen ? "12.08rem calc(100% - 12.08rem)" : "0% 100%"};
     grid-template-columns: 100%;
   }
 
@@ -47,6 +48,7 @@ export default function SiteLayout({ children, className }: React.HTMLAttributes
     <Container $isOpen={isOpen}>
       <SideBar />
       <MainContent>
+        <Modal />
         <SiteHeader isOpen={isOpen} onOpen={handleOpen} />
         <section className={className}>{children}</section>
       </MainContent>

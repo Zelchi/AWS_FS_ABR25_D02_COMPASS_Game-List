@@ -3,7 +3,7 @@ import { categoryRepository } from './CategoryRepository';
 
 class CategoryService {
 
-    async getAllCategories(userId: string): Promise<string[]> {
+    async getAllCategories(userId: string): Promise<{ id: string, name: string }[]> {
         try {
             return await categoryRepository.findAllNames(userId);
         } catch (error) {

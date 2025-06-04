@@ -3,7 +3,7 @@ import { platformRepository } from './PlatformRepository';
 
 class PlatformService {
 
-    async getAllPlatforms(userId: string): Promise<string[]> {
+    async getAllPlatforms(userId: string): Promise<{ id: string, name: string }[]> {
         try {
             const platforms = await platformRepository.findAllNames(userId);
             if (!platforms || platforms.length === 0) {

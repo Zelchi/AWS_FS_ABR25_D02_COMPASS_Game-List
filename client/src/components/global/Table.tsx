@@ -30,65 +30,65 @@ const TableEL = styled.table<{ $isAnimating: boolean }>`
 `;
 
 const TableRow = styled.tr<{ $location: string }>`
-  cursor: pointer;
-  border-radius: 20px;
-  transition: var(--transition);
+    cursor: pointer;
+    border-radius: 20px;
+    transition: var(--transition);
 
   &:hover,
   &:focus {
       box-shadow: 0 0.2rem 1.2rem var(--color-aqua);
   }
 
-  > td {
-    background-color: var(--color-white);
-    padding: 1.5rem 0;
-    padding-right: 1.5rem;
-    font-weight: 400;
-    font-size: 1.4rem;
-    font-family: var(--font-primary);
+    > td {
+        background-color: var(--color-white);
+        padding: 1.5rem 0;
+        padding-right: 1.5rem;
+        font-weight: 400;
+        font-size: 1.4rem;
+        font-family: var(--font-primary);
 
-    @media (max-width: 30em) {
-      padding: 1rem 0;
-      padding-right: 1rem;
-    }
+        @media (max-width: 30em) {
+        padding: 1rem 0;
+        padding-right: 1rem;
+        }
 
     &:first-child {
       border-radius: 0.8rem 0 0 0.8rem;      
       padding-left: 1.5rem;
     }
 
-    &:last-child {
-      border-radius: 0 0.8rem 0.8rem 0;
+        &:last-child {
+            border-radius: 0 0.8rem 0.8rem 0;
 
-      span {
-        display: flex;
-        flex-wrap: nowrap;
-          justify-content: flex-end;
-        gap: 2.6rem;
+            span {
+                    display: flex;
+                    flex-wrap: nowrap;
+                    justify-content: flex-end;
+                    gap: 2.6rem;
 
-        @media (max-width: 30em) {
-          flex-direction: ${({ $location }) => ($location === "/games" ? "column" : "row")};
-          justify-content: ${({ $location }) => ($location === "/games" ? "center" : "flex-end")};
-          align-items: ${({ $location }) => ($location === "/games" ? "flex-end" : "center")};
-          gap: 1rem;
-        }
+                    @media (max-width: 30em) {
+                        flex-direction: ${({ $location }) => ($location === "/games" ? "column" : "row")};
+                        justify-content: ${({ $location }) => ($location === "/games" ? "center" : "flex-end")};
+                        align-items: ${({ $location }) => ($location === "/games" ? "flex-end" : "center")};
+                        gap: 1rem;
+                    }
 
-        button {
-          cursor: pointer;
-          border: none;
-          background-color: transparent;
-          width: 1.9rem;
-          height: 1.9rem;
-          fill: var(--color-aqua);
-          transition: var(--transition);
+                    button {
+                        cursor: pointer;
+                        border: none;
+                        background-color: transparent;
+                        width: 1.9rem;
+                        height: 1.9rem;
+                        fill: var(--color-aqua);
+                        transition: var(--transition);
 
-          &:hover,
-          &:focus {
-            fill: var(--color-aqua-dark);
-          }
-        }
-      }
-    }
+                        &:hover,
+                        &:focus {
+                            fill: var(--color-aqua-dark);
+                        }
+                    }
+                }
+            }
 
     @media (max-width: 67em) {
       &:first-child {
@@ -98,11 +98,12 @@ const TableRow = styled.tr<{ $location: string }>`
       }
     }
 
-      @media (max-width: 30em) {
-          &:first-child {
-              padding-left: 1rem;
-          }
-  }
+            @media (max-width: 30em) {
+            &:first-child {
+                    padding-left: 1rem;
+                }
+            }
+        }
 `;
 
 const TableItem = styled.span`
@@ -144,8 +145,8 @@ const LastUpdateIcon = styled(LastUpdate)`
 `;
 
 type TableProps<T> = {
-  data: T[];
-  header: string[];
+    data: T[];
+    header: string[];
 };
 
 export default function Table<T extends Record<string, any>>({ data, header }: TableProps<T>) {
