@@ -46,15 +46,15 @@ export class GameRegisterDto {
     private name: string;
     private description: string | undefined;
     private imageUrl: string | undefined;
-    private acquisDate: Date | undefined;
-    private categories: { id: string }[] | undefined;
-    private platforms: { id: string }[] | undefined;
     private status: string | undefined;
     private favorite: boolean | undefined;
     private rating: number | undefined;
     private price: number | undefined;
+    private acquisDate: Date | undefined;
     private finishDate: Date | undefined;
     private releaseDate: Date | undefined;
+    private categories: { id: string }[] | undefined;
+    private platforms: { id: string }[] | undefined;
 
     constructor(
         userId: string,
@@ -179,13 +179,13 @@ export class GameUpdateDto {
         this.imageUrl = imageUrl;
         this.status = status;
         this.favorite = favorite;
-        this.acquisDate = acquisDate ? new Date(acquisDate) : undefined;
-        this.finishDate = finishDate ? new Date(finishDate) : undefined;
-        this.categories = categories;
-        this.platforms = platforms;
         this.rating = rating;
         this.price = price;
+        this.acquisDate = acquisDate ? new Date(acquisDate) : undefined;
+        this.finishDate = finishDate ? new Date(finishDate) : undefined;
         this.releaseDate = releaseDate ? new Date(releaseDate) : undefined;
+        this.categories = categories;
+        this.platforms = platforms;
     }
 
     isValid(): ValidationResult {

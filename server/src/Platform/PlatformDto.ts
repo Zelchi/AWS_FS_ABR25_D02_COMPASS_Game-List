@@ -14,7 +14,14 @@ class PlatformDto {
     }
 
     static validateImageUrl(imageUrl: string): boolean {
-        return typeof imageUrl === 'string' && /^https?:\/\/.+\.(jpg|jpeg|png|gif)$/i.test(imageUrl);
+        if (imageUrl === undefined) return true;
+
+        try {
+            const url = new URL(imageUrl);
+            return url.protocol === 'http:' || url.protocol === 'https:';
+        } catch (e) {
+            return false;
+        }
     }
 }
 
@@ -83,7 +90,6 @@ export class PlatformUpdateDto implements Partial<IPlatformEntity> {
     ) {
         if (name !== undefined) this.name = name;
         if (company !== undefined) this.company = company;
-
         if (imageUrl !== undefined) this.imageUrl = imageUrl;
     }
 
@@ -98,7 +104,6 @@ export class PlatformUpdateDto implements Partial<IPlatformEntity> {
             errors.push('Invalid company name');
         }
 
-
         if (this.imageUrl !== undefined && !PlatformDto.validateImageUrl(this.imageUrl)) {
             errors.push('Invalid image URL format');
         }
@@ -111,11 +116,11 @@ export class PlatformUpdateDto implements Partial<IPlatformEntity> {
 
     public data() {
         const result: Partial<IPlatformEntity> = {};
-        
+
         if (this.name !== undefined) result.name = this.name;
         if (this.company !== undefined) result.company = this.company;
         if (this.imageUrl !== undefined) result.imageUrl = this.imageUrl;
-        
+
         return result;
     }
 }

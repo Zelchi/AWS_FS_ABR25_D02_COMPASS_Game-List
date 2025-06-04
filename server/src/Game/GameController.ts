@@ -48,15 +48,15 @@ export class GameController {
                 name,
                 description,
                 imageUrl,
-                acquisDate,
-                categories,
-                platforms,
                 status,
                 favorite,
                 rating,
                 price,
+                acquisDate,
                 finishDate,
-                releaseDate 
+                releaseDate,
+                categories,
+                platforms,
             );
 
             const validationResult = gameDto.isValid();
