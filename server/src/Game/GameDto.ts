@@ -37,7 +37,9 @@ class GameDto {
     }
 
     static validateStatus(status?: string): boolean {
-        return status === undefined || ['playing', 'done', 'abandoned'].includes(status.toLowerCase());
+        console.log('Validating status:', status);
+        const lowerStatus = typeof status === 'string' ? status.toLowerCase() : '';
+        return ['playing', 'done', 'abandoned'].includes(lowerStatus);
     }
 }
 
@@ -61,15 +63,15 @@ export class GameRegisterDto {
         name: string,
         description?: string,
         imageUrl?: string,
-        acquisDate?: string | Date,
-        categories?: Array<{ id: string }>,
-        platforms?: Array<{ id: string }>,
         status?: string,
         favorite?: boolean,
         rating?: number,
         price?: number,
+        acquisDate?: string | Date,
         finishDate?: string | Date,
-        releaseDate?: string | Date
+        releaseDate?: string | Date,
+        categories?: Array<{ id: string }>,
+        platforms?: Array<{ id: string }>,
     ) {
         this.userId = userId;
         this.name = name;
@@ -166,13 +168,13 @@ export class GameUpdateDto {
         imageUrl?: string,
         status?: string,
         favorite?: boolean,
-        acquisDate?: string | Date,
-        finishDate?: string | Date,
-        categories?: Array<{ id: string }>,
-        platforms?: Array<{ id: string }>,
         rating?: number,
         price?: number,
-        releaseDate?: string | Date
+        acquisDate?: string | Date,
+        finishDate?: string | Date,
+        releaseDate?: string | Date,
+        categories?: Array<{ id: string }>,
+        platforms?: Array<{ id: string }>,
     ) {
         this.name = name;
         this.description = description;

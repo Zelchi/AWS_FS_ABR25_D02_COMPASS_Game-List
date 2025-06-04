@@ -37,10 +37,10 @@ export class GameController {
 
     async gamePost(req: Request, res: Response): Promise<void> {
         try {
-            const { 
-                userId, name, description, imageUrl, status, favorite, 
-                rating, acquisDate, finishDate, releaseDate, price, 
-                categories, platforms 
+            const {
+                userId, name, description, imageUrl, status, favorite,
+                rating, acquisDate, finishDate, releaseDate, price,
+                categories, platforms
             } = req.body;
 
             const gameDto = new GameRegisterDto(
@@ -82,10 +82,10 @@ export class GameController {
     async gameUpdate(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            const { 
-                name, description, imageUrl, status, favorite, 
-                acquisDate, finishDate, releaseDate, categories, 
-                platforms, rating, price 
+            const {
+                name, description, imageUrl, status, favorite,
+                acquisDate, finishDate, releaseDate, categories,
+                platforms, rating, price
             } = req.body;
 
             if (!id) {
@@ -99,13 +99,13 @@ export class GameController {
                 imageUrl,
                 status,
                 favorite,
-                acquisDate,
-                finishDate,
-                categories,
-                platforms,
                 rating,
                 price,
-                releaseDate
+                acquisDate,
+                finishDate,
+                releaseDate,
+                categories,
+                platforms,
             );
 
             const validationResult = gameDto.isValid();
