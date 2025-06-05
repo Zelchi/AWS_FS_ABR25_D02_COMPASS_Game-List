@@ -13,15 +13,15 @@ class PlatformDto {
         return typeof userId === 'string' && userId.trim() !== '';
     }
 
-    static validateAcquisDate(acquisDate: Date | string): boolean {
-        if (typeof acquisDate === 'string') {
-            acquisDate = new Date(acquisDate);
-        }
-        return acquisDate instanceof Date && !isNaN(acquisDate.getTime());
-    }
-
     static validateImageUrl(imageUrl: string): boolean {
-        return typeof imageUrl === 'string' && /^https?:\/\/.+\.(jpg|jpeg|png|gif)$/i.test(imageUrl);
+        if (!imageUrl || imageUrl === undefined || imageUrl === null) return true;
+
+        try {
+            const url = new URL(imageUrl);
+            return url.protocol === 'http:' || url.protocol === 'https:';
+        } catch (e) {
+            return false;
+        }
     }
 }
 
@@ -29,20 +29,17 @@ export class PlatformRegisterDto implements IPlatformEntity {
     userId: string;
     name: string;
     company: string;
-    acquisDate: Date;
     imageUrl: string;
 
     constructor(
         userId: string,
         name: string,
         company: string,
-        acquisDate: Date | string,
         imageUrl: string
     ) {
         this.userId = userId;
         this.name = name;
         this.company = company;
-        this.acquisDate = typeof acquisDate === 'string' ? new Date(acquisDate) : acquisDate;
         this.imageUrl = imageUrl;
     }
 
@@ -61,10 +58,6 @@ export class PlatformRegisterDto implements IPlatformEntity {
             errors.push('Invalid company name');
         }
 
-        if (!PlatformDto.validateAcquisDate(this.acquisDate)) {
-            errors.push('Invalid acquisition date');
-        }
-
         if (!PlatformDto.validateImageUrl(this.imageUrl)) {
             errors.push('Invalid image URL format');
         }
@@ -80,7 +73,6 @@ export class PlatformRegisterDto implements IPlatformEntity {
             userId: this.userId,
             name: this.name,
             company: this.company,
-            acquisDate: this.acquisDate,
             imageUrl: this.imageUrl
         };
     }
@@ -89,20 +81,15 @@ export class PlatformRegisterDto implements IPlatformEntity {
 export class PlatformUpdateDto implements Partial<IPlatformEntity> {
     name?: string;
     company?: string;
-    acquisDate?: Date;
     imageUrl?: string;
 
     constructor(
         name?: string,
         company?: string,
-        acquisDate?: Date | string,
         imageUrl?: string
     ) {
         if (name !== undefined) this.name = name;
         if (company !== undefined) this.company = company;
-        if (acquisDate !== undefined) {
-            this.acquisDate = typeof acquisDate === 'string' ? new Date(acquisDate) : acquisDate;
-        }
         if (imageUrl !== undefined) this.imageUrl = imageUrl;
     }
 
@@ -117,10 +104,6 @@ export class PlatformUpdateDto implements Partial<IPlatformEntity> {
             errors.push('Invalid company name');
         }
 
-        if (this.acquisDate !== undefined && !PlatformDto.validateAcquisDate(this.acquisDate)) {
-            errors.push('Invalid acquisition date');
-        }
-
         if (this.imageUrl !== undefined && !PlatformDto.validateImageUrl(this.imageUrl)) {
             errors.push('Invalid image URL format');
         }
@@ -133,12 +116,11 @@ export class PlatformUpdateDto implements Partial<IPlatformEntity> {
 
     public data() {
         const result: Partial<IPlatformEntity> = {};
-        
+
         if (this.name !== undefined) result.name = this.name;
         if (this.company !== undefined) result.company = this.company;
-        if (this.acquisDate !== undefined) result.acquisDate = this.acquisDate;
         if (this.imageUrl !== undefined) result.imageUrl = this.imageUrl;
-        
+
         return result;
     }
 }

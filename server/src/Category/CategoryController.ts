@@ -82,9 +82,9 @@ class CategoryController {
 
     async categoryPost(req: Request, res: Response): Promise<void> {
         try {
-            const { name, description, userId } = req.body;
+            const { name, userId } = req.body;
 
-            const categoryDto = new CategoryRegisterDto(name, description, userId);
+            const categoryDto = new CategoryRegisterDto(name, userId);
             const validationResult = categoryDto.isValid();
 
             const searchByName = await categoryService.getCategoriesByName(name, userId);
@@ -114,9 +114,9 @@ class CategoryController {
     async categoryUpdate(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            const { name, description, userId } = req.body;
+            const { name, userId } = req.body;
 
-            const categoryDto = new CategoryUpdateDto(name, description);
+            const categoryDto = new CategoryUpdateDto(name);
             const validationResult = categoryDto.isValid();
 
             if (!validationResult.valid) {
@@ -181,7 +181,7 @@ class CategoryController {
                 return;
             }
 
-            const validSortFields = ['name', 'updatedAt', 'description'];
+            const validSortFields = ['name', 'updatedAt'];
             if (!validSortFields.includes(sortBy)) {
                 res.status(400).json({
                     error: `Invalid sort field. Allowed values: ${validSortFields.join(', ')}`

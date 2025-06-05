@@ -33,56 +33,48 @@ async function main() {
       data: {
         userId: user1.id,
         name: 'RPG',
-        description: 'Role-playing games with character development'
       }
     }),
     prisma.category.create({
       data: {
         userId: user1.id,
         name: 'Action',
-        description: 'Fast-paced games focused on combat and movement'
       }
     }),
     prisma.category.create({
       data: {
         userId: user1.id,
         name: 'Adventure',
-        description: 'Story-driven exploration games'
       }
     }),
     prisma.category.create({
       data: {
         userId: user1.id,
         name: 'Strategy',
-        description: 'Games that emphasize tactical decision-making'
       }
     }),
     prisma.category.create({
       data: {
         userId: user1.id,
         name: 'Simulation',
-        description: 'Games that simulate real-world activities'
       }
     }),
     prisma.category.create({
       data: {
         userId: user1.id,
         name: 'Racing',
-        description: 'Vehicle racing and driving games'
       }
     }),
     prisma.category.create({
       data: {
         userId: user1.id,
         name: 'Open World',
-        description: 'Games with extensive explorable environments'
       }
     }),
     prisma.category.create({
       data: {
         userId: user1.id,
         name: 'Shooter',
-        description: 'Games focused on shooting mechanics'
       }
     })
   ]);
@@ -95,7 +87,6 @@ async function main() {
         userId: user1.id,
         name: 'PlayStation 5',
         company: 'Sony',
-        acquisDate: new Date('2022-01-15'),
         imageUrl: 'https://i.pinimg.com/736x/37/9b/fc/379bfc00de26978b06ea6ef72584908f.jpg'
       }
     }),
@@ -104,7 +95,6 @@ async function main() {
         userId: user1.id,
         name: 'Nintendo Switch',
         company: 'Nintendo',
-        acquisDate: new Date('2021-03-10'),
         imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/38/Nintendo_switch_logo.png'
       }
     }),
@@ -113,7 +103,6 @@ async function main() {
         userId: user1.id,
         name: 'Xbox Series X',
         company: 'Microsoft',
-        acquisDate: new Date('2022-02-20'),
         imageUrl: 'asdasdasdasdasdasdasda'
       }
     }),
@@ -122,7 +111,6 @@ async function main() {
         userId: user1.id,
         name: 'Steam',
         company: 'Valve',
-        acquisDate: new Date('2021-11-05'),
         imageUrl: 'https://b.thumbs.redditmedia.com/xvwxkNXOkvdu9d6S67odp1gCPfhB1A3qKDs7kdwO5ts.png'
       }
     }),
@@ -131,7 +119,6 @@ async function main() {
         userId: user1.id,
         name: 'Epic Games Store',
         company: 'Epic Games',
-        acquisDate: new Date('2021-12-01'),
         imageUrl: 'https://www.flowgames.gg/wp-content/uploads/2023/11/Epic-Games-Emblem-scaled.jpg'
       }
     }),
@@ -140,7 +127,6 @@ async function main() {
         userId: user1.id,
         name: 'GOG',
         company: 'CD Projekt',
-        acquisDate: new Date('2021-10-15'),
         imageUrl: 'https://www.notebookcheck.info/fileadmin/_processed_/b/1/csm_Notebookcheck128_096ff4d4f0.jpg'
       }
     }),
@@ -149,7 +135,6 @@ async function main() {
         userId: user1.id,
         name: 'Origin',
         company: 'EA Games',
-        acquisDate: new Date('2021-08-20'),
         imageUrl: ''
       }
     }),
@@ -158,7 +143,6 @@ async function main() {
         userId: user1.id,
         name: 'Battle.net',
         company: 'Blizzard Entertainment',
-        acquisDate: new Date('2021-08-20'),
         imageUrl: 'https://platform.polygon.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/7141739/battle_net.jpg?quality=90&strip=all&crop=7.8125,0,84.375,100'
       }
     }),
@@ -167,7 +151,6 @@ async function main() {
         userId: user1.id,
         name: 'Apple Arcade',
         company: 'Apple Inc.',
-        acquisDate: new Date('2021-07-15'),
         imageUrl: 'https://pbs.twimg.com/profile_images/1604907734377168897/xxhy8MZr_400x400.jpg'
       }
     }),
@@ -176,7 +159,6 @@ async function main() {
         userId: user1.id,
         name: 'Google Play Games',
         company: 'Google',
-        acquisDate: new Date('2021-06-10'),
         imageUrl: 'https://logowik.com/content/uploads/images/google-play-store4701.jpg'
       }
     })
