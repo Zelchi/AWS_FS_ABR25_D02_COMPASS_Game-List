@@ -1,7 +1,7 @@
 import React, { createContext, ReactNode, useContext } from "react";
 import { IGameEntity } from "@/../../server/src/Game/GameEntity";
-import { useGlobal } from "@/contexts/globalContext";
 import { fetchAndSetData } from "@/utils/fetchAndSetData";
+import { useGlobal } from "@/contexts/globalContext";
 
 type GameContextType = {
   header: string[];

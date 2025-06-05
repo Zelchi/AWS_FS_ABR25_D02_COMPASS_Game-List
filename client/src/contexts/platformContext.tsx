@@ -1,7 +1,7 @@
 import React, { createContext, ReactNode, useContext } from "react";
 import { IPlatformEntity } from "@/../../server/src/Platform/PlatformEntity";
-import { useGlobal } from "@/contexts/globalContext";
 import { fetchAndSetData } from "@/utils/fetchAndSetData";
+import { useGlobal } from "@/contexts/globalContext";
 
 type PlatformContextType = {
   header: string[];

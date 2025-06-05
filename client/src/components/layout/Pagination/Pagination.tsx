@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import ArrowIcon from "../../assets/icons/arrow.svg?react";
+import ArrowIcon from "../../../assets/icons/arrow.svg?react";
 
 const PaginationWrapper = styled.div`
   width: 100%;

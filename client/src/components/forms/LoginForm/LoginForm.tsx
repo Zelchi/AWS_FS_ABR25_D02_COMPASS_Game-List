@@ -1,32 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { FormInputField } from "@/components/forms/FormInputField";
-import Button from "@/components/global/Button";
+import Button from "@/components/button/Button";
+import { InputField } from "@/components/forms/Fields/InputField";
+import { Form, InvalidMessage } from "@/components/forms/styles";
 import API from "@/utils/API";
-
-const Form = styled.form`
-  width: 41.5rem;
-  margin-bottom: 2.8rem;
-  display: grid;
-  row-gap: 1.5rem;
-
-  @media (max-width: 48em) {
-    width: 100%;
-  }
-`;
-
-const Invalid = styled.p`
-  font-family: var(--font-primary);
-  text-align: right;
-  font-size: 1.4rem;
-  color: var(--color-red);
-`;
-
-const ButtonContainer = styled.div`
-  width: 100%;
-  margin-top: 2.4rem;
-`;
 
 type LoginFormType = {
   isRegistered: boolean;
@@ -88,57 +65,58 @@ export function LoginForm({ isRegistered, onRegister }: LoginFormType): React.JS
   return (
     <Form onSubmit={isRegistered ? handleLogin : handleRegister}>
       {!isRegistered && (
-        <FormInputField
+        <InputField
           type="text"
           name="name"
           value={name}
-          onChange={setName}
+          onChange={(e) => setName(e.target.value)}
           placeholder="Juan Gustavo"
+          required
         >
           Full Name
-        </FormInputField>
+        </InputField>
       )}
-
-      <FormInputField
+      <InputField
         type="email"
         name="email"
         value={email}
-        onChange={setEmail}
+        onChange={(e) => setEmail(e.target.value)}
         placeholder={isRegistered ? "Enter your email" : "email@email.com"}
+        required
       >
         Email
-      </FormInputField>
-      <FormInputField
+      </InputField>
+      <InputField
         type="password"
         name="password"
         value={password}
-        onChange={setPassword}
+        onChange={(e) => setPassword(e.target.value)}
         placeholder="Enter your password"
+        required
       >
         Password
-      </FormInputField>
+      </InputField>
 
       {!isRegistered && (
         <>
-          <FormInputField
+          <InputField
             type="password"
             name="password-confirmation"
             value={passwordConfirmation}
-            onChange={setPasswordConfirmation}
+            onChange={(e) => setPasswordConfirmation(e.target.value)}
             placeholder="Enter your password"
+            required
           >
             Confirm Password
-          </FormInputField>
+          </InputField>
           {passwordConfirmation && passwordConfirmation !== password && (
-            <Invalid>Passwords do not match!</Invalid>
+            <InvalidMessage>Passwords do not match!</InvalidMessage>
           )}
         </>
       )}
-      <ButtonContainer>
-        <Button type="submit" size="large">
-          {isRegistered ? "Login" : "Sign Up"}
-        </Button>
-      </ButtonContainer>
+      <Button type="submit" size="large" full upper>
+        {isRegistered ? "Login" : "Sign Up"}
+      </Button>
     </Form>
   );
 }

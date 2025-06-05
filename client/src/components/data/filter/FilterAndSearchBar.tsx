@@ -1,24 +1,9 @@
-import styled from "styled-components";
 import React from "react";
-import FilterBar from "@/components/data/FilterBar";
-import SearchBar from "@/components/data/SearchBar";
-import ClearButton from "@/components/data/ClearButton";
-import { useMediaQuery } from "react-responsive";
+import ClearButton from "@/components/data/clear/ClearButton";
+import SearchBar from "@/components/data/search/SearchBar";
+import { FilterAndSearchBarContainer as Container } from "@/components/data/filter/styles";
 import { useGlobal } from "@/contexts/globalContext";
-
-const Container = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 2.5rem;
-
-  @media (max-width: 67em) {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  @media (max-width: 30em) {
-    gap: 2rem;
-  }
-`;
+import FilterBar from "@/components/data/filter/FilterBar";
 
 export default function FilterAndSearchBar({
   header,
@@ -31,18 +16,9 @@ export default function FilterAndSearchBar({
 
   return (
     <Container>
-      {isLaptop ? (
-        <>
-          <SearchBar onLoadItems={onLoadItems} />
-          <FilterBar header={header} onLoadItems={onLoadItems} />
-        </>
-      ) : (
-        <>
-          <FilterBar header={header} onLoadItems={onLoadItems} />
-          <SearchBar onLoadItems={onLoadItems} />
-          <ClearButton onLoadItems={onLoadItems} />
-        </>
-      )}
+      <FilterBar header={header} onLoadItems={onLoadItems} />
+      <SearchBar onLoadItems={onLoadItems} />
+      {!isLaptop && <ClearButton onLoadItems={onLoadItems} />}
     </Container>
   );
 }

@@ -1,37 +1,16 @@
-import React, { Dispatch } from "react";
-import styled from "styled-components";
-import SearchBar from "@/components/data/SearchBar";
-import ClearButton from "@/components/data/ClearButton";
-import { useMediaQuery } from "react-responsive";
-
-const SearchContainerEl = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  @media (max-width: 30em) {
-    margin-bottom: 2rem;
-
-    div {
-      flex-direction: column;
-    }
-  }
-`;
+import React from "react";
+import ClearButton from "@/components/data/clear/ClearButton";
+import SearchBar from "@/components/data/search/SearchBar";
+import { Container } from "@/components/data/search/styles";
+import { useGlobal } from "@/contexts/globalContext";
 
 export default function SearchContainer({ onLoadItems }: { onLoadItems: () => Promise<void> }) {
-  const isMobile = useMediaQuery({ maxWidth: 30 * 16 });
+  const { isMobile } = useGlobal();
 
   return (
-    <>
-      {isMobile ? (
-        <SearchContainerEl>
-          <SearchBar onLoadItems={onLoadItems} />
-        </SearchContainerEl>
-      ) : (
-        <SearchContainerEl>
-          <SearchBar onLoadItems={onLoadItems} />
-          <ClearButton onLoadItems={onLoadItems} />
-        </SearchContainerEl>
-      )}
-    </>
+    <Container>
+      <SearchBar onLoadItems={onLoadItems} />
+      {!isMobile && <ClearButton onLoadItems={onLoadItems} />}
+    </Container>
   );
 }

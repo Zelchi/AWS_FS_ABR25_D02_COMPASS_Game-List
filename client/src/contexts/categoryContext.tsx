@@ -1,7 +1,7 @@
 import React, { createContext, ReactNode, useContext } from "react";
 import { ICategoryEntity } from "@/../../server/src/Category/CategoryEntity";
-import { useGlobal } from "@/contexts/globalContext";
 import { fetchAndSetData } from "@/utils/fetchAndSetData";
+import { useGlobal } from "@/contexts/globalContext";
 
 type CategoryContextType = {
   header: string[];

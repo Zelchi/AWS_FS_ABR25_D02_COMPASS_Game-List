@@ -1,28 +1,11 @@
-import { IGameEntity } from "../../../../server/src/Game/GameEntity";
-import { IPlatformEntity } from "../../../../server/src/Platform/PlatformEntity";
-import styled from "styled-components";
+import { IGameEntity } from "@/../../server/src/Game/GameEntity";
+import { IPlatformEntity } from "@/../../server/src/Platform/PlatformEntity";
 import { useModal } from "@/contexts/modalContext";
 import { useGlobal } from "@/contexts/globalContext";
 import Icon from "@/components/image/Icon/Icon";
-import SmartImage from "./SmartImage";
+import MoreIcon from "@/assets/icons/dots.svg?react";
 import { useState } from "react";
-
-const Container = styled.span`
-  max-width: 8rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-`;
-
-const Image = styled(SmartImage)`
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  background-size: cover;
-  background-position: center;
-`;
+import { Container, Image, StyledIcon } from "@/components/image/PlatformImages/styles";
 
 export default function PlatformImages({ game }: { game: IGameEntity }) {
   const { isModalOpen } = useModal();
@@ -59,7 +42,7 @@ export default function PlatformImages({ game }: { game: IGameEntity }) {
         <Image key={platform.id} src={platform.imageUrl} onValid={handleValidImage} />
       ))}
 
-      {(platforms.length > maxNPlatforms || validCount === 0) && <Icon />}
+      {(platforms.length > maxNPlatforms || validCount === 0) && <StyledIcon icon={MoreIcon} />}
     </Container>
   );
 }

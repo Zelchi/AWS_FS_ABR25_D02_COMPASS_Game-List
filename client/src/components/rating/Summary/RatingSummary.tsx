@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { Container } from "@/components/rating/Summary/styles";
 
 const ratingLabels: Record<number, string> = {
   1: "Poor",
@@ -8,14 +8,14 @@ const ratingLabels: Record<number, string> = {
   5: "Excellent",
 };
 
-export function normalizeRating(value: number, maxValue: number): number {
+const normalizeRating = (value: number, maxValue: number): number => {
   if (maxValue <= 0) return 1;
 
   const ratio = value / maxValue;
   const scaled = ratio * 4 + 1;
 
   return Math.round(Math.min(5, Math.max(1, scaled)));
-}
+};
 
 type RatingSummaryProps = {
   className?: string;
@@ -35,7 +35,7 @@ export default function RatingSummary({
   label = true,
 }: RatingSummaryProps) {
   return (
-    <>
+    <Container>
       <svg className={className} viewBox="0 0 44 42" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="halfFill" x1="0" y1="0" x2="44" y2="0" gradientUnits="userSpaceOnUse">
@@ -53,6 +53,6 @@ export default function RatingSummary({
       {label && maxRating > 5
         ? ratingLabels[normalizeRating(rating, maxRating)]
         : ratingLabels[rating]}
-    </>
+    </Container>
   );
 }

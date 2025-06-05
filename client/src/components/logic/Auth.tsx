@@ -1,9 +1,9 @@
 import { useEffect, JSX, ReactNode } from "react";
-import { useQuery } from "@tanstack/react-query";
-import API from "../../utils/API";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useQuery } from "@tanstack/react-query";
+import API from "@/utils/API";
 
 export function Auth({ children }: { children: ReactNode }): JSX.Element {
   const navigate = useNavigate();
@@ -20,14 +20,14 @@ export function Auth({ children }: { children: ReactNode }): JSX.Element {
 
     const isAuth = Boolean(isAuthenticated);
 
-    if (!isAuth && window.location.pathname !== "/login") {
+    if (!isAuth && window.location.pathname !== "/Login") {
       toast.error("You need to be logged in to access this page!");
       setTimeout(() => {
         navigate("/login");
       }, 10);
     }
 
-    if (isAuth && window.location.pathname === "/login") {
+    if (isAuth && window.location.pathname === "/Login") {
       toast.success("You are already logged in!");
       setTimeout(() => {
         navigate("/");

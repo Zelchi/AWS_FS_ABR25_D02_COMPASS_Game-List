@@ -1,11 +1,10 @@
-import SiteLayout from "@/components/global/SiteLayout";
 import { useEffect } from "react";
 import { IGameEntity } from "@/../../server/src/Game/GameEntity";
-import Table from "@/components/global/Table";
-import FilterAndSearchBar from "@/components/global/FilterAndSearchBar";
-import { useGlobal } from "@/contexts/globalContext";
+import FilterAndSearchBar from "@/components/data/filter/FilterAndSearchBar";
+import SiteLayout from "@/components/layout/SiteLayout/SiteLayout";
+import Table from "@/components/table/Table";
 import { useGame } from "@/contexts/gameContext";
-import { useModal } from "@/contexts/modalContext";
+import { useGlobal } from "@/contexts/globalContext";
 
 export default function GamesContent() {
   const { games, page, limit, sortBy, sortOrder, selectedFilter, isFavorite, isLaptop } =

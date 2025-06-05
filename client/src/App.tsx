@@ -1,14 +1,14 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Login from "./pages/Login";
-import Home from "./pages/Home";
-import Games from "./pages/Games";
-import Categories from "./pages/Categories";
-import Platforms from "./pages/Platforms";
-import NotFound from "./pages/NotFound";
-import { Auth } from "@/components/global/Auth";
-import ProtectedRoutes from "@/components/global/routes/ProtectedRoutes";
-import UnprotectedRoutes from "@/components/global/routes/UnprotectedRoutes";
+import Login from "@/pages/Login/Login";
+import Home from "@/pages/Home/Home";
+import Games from "@/pages/Games/Games";
+import Categories from "@/pages/Categories/Categories";
+import Platforms from "@/pages/Platforms/Platforms";
+import NotFound from "@/pages/NotFound/NotFound";
+import { Auth } from "@/components/logic/Auth";
+import ProtectedRoutes from "@/routes/ProtectedRoutes";
+import UnprotectedRoutes from "@/routes/UnprotectedRoutes";
 
 export default function App(): React.JSX.Element {
   return (
@@ -19,9 +19,9 @@ export default function App(): React.JSX.Element {
         </Route>
         <Route element={<ProtectedRoutes />}>
           <Route path="/" element={<Home />} />
-          <Route path="/games" element={<Games />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/platforms" element={<Platforms />} />
+          <Route path="/Games" element={<Games />} />
+          <Route path="/Categories" element={<Categories />} />
+          <Route path="/Platforms" element={<Platforms />} />
         </Route>
         <Route path="/*" element={<NotFound />} />
       </Routes>

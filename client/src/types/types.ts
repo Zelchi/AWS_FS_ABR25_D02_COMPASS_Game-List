@@ -1,4 +1,4 @@
-export type SortOrder = "asc" | "desc";
+export type EntityWithId = { id: string };
 
 export type IStatistics = {
   id: string;
@@ -17,4 +17,6 @@ export type IStatistics = {
   lastUpdated: Date;
 };
 
-export type EntityWithId = { id: string };
+export type TStatistics = IStatistics | undefined;
+
+export type SortOrder = "asc" | "desc";

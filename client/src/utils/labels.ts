@@ -15,5 +15,4 @@ const labels = {
 };
 
 export const getLabel = <T extends keyof typeof labels>(key: T) => labels[key];
-
 export const isLabelKey = (key: string): key is keyof typeof labels => key in labels;

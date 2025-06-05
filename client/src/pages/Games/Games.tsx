@@ -1,5 +1,5 @@
 import { GameProvider } from "@/contexts/gameContext";
-import GamesContent from "@/components/content/GamesContent";
+import GamesContent from "@/pages/Games/GamesContent";
 
 export default function Games() {
   return (

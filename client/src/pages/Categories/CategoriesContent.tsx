@@ -1,10 +1,10 @@
-import SiteLayout from "@/components/global/SiteLayout";
 import React, { useEffect } from "react";
-import Table from "@/components/global/Table";
-import SearchContainer from "@/components/global/SearchContainer";
-import { useGlobal } from "@/contexts/globalContext";
-import { useCategory } from "@/contexts/categoryContext";
 import { ICategoryEntity } from "@/../../server/src/Category/CategoryEntity";
+import SearchContainer from "@/components/data/search/SearchContainer";
+import SiteLayout from "@/components/layout/SiteLayout/SiteLayout";
+import Table from "@/components/table/Table";
+import { useCategory } from "@/contexts/categoryContext";
+import { useGlobal } from "@/contexts/globalContext";
 
 export default function CategoriesContent() {
   const { categories, page, limit, sortOrder } = useGlobal();
@@ -18,7 +18,6 @@ export default function CategoriesContent() {
     <SiteLayout>
       <SearchContainer onLoadItems={loadCategories} />
       <Table<ICategoryEntity> data={categories} header={header} />
-      {/*Pagination*/}
     </SiteLayout>
   );
 }

@@ -1,107 +1,11 @@
-import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
-import { MouseEvent, JSX } from "react";
-
-const NavItemEl = styled.li<{ $active: boolean }>`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  &:last-child {
-    margin-top: auto;
-    margin-bottom: 3.2rem;
-
-    @media (max-width: 48em) {
-      margin: auto;
-      width: fit-content;
-    }
-
-    @media (max-width: 30em) {
-      margin: 0;
-      margin-top: 30%;
-      width: 100%;
-    }
-  }
-`;
-
-const NavLink = styled.a<{ $filled: boolean; $active: boolean }>`
-  width: 100%;
-  padding: 1.2rem;
-  padding-left: 4rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 1.5rem;
-  border-radius: 0.4rem;
-  font-weight: 500;
-  font-size: 1.4rem;
-  line-height: 1;
-  font-family: var(--font-primary);
-  text-decoration: none;
-  transition: var(--transition);
-
-  span {
-    display: inline-block;
-    flex-shrink: 0;
-    stroke: ${({ $filled, $active }) =>
-      $filled ? "none" : $active ? "var(--color-black)" : "var(--color-white)"};
-    fill: ${({ $filled, $active }) =>
-      !$filled ? "none" : $active ? "var(--color-black)" : "var(--color-white)"};
-    transition: var(--transition);
-    width: 1.8rem;
-
-    @media (max-width: 48em) {
-      display: none;
-      font-size: 1.2rem;
-    }
-
-    @media (max-width: 30em) {
-      display: block;
-      font-size: 1.4rem;
-    }
-  }
-
-  &:visited,
-  &:link {
-    background-color: ${({ $active }) => ($active ? "var(--color-aqua)" : "transparent")};
-    color: ${({ $active }) => ($active ? "var(--color-black)" : "var(--color-white)")};
-  }
-
-  &:hover,
-  &:focus {
-    background-color: ${({ $active }) => ($active ? "var(--color-aqua-light)" : "transparent")};
-    color: ${({ $active }) => ($active ? "var(--color-black)" : "var(--color-aqua)")};
-
-    span {
-      stroke: ${({ $filled, $active }) =>
-        $filled ? "none" : $active ? "var(--color-black)" : "var(--color-aqua)"};
-      fill: ${({ $filled, $active }) =>
-        !$filled ? "none" : $active ? "var(--color-black)" : "var(--color-aqua)"};
-    }
-  }
-
-  @media (max-width: 64em) {
-    padding: 1.2rem;
-    padding-left: 1.5rem;
-  }
-
-  @media (max-width: 48em) {
-    padding: 0.8rem;
-    width: fit-content;
-  }
-
-  @media (max-width: 30em) {
-    justify-content: center;
-    padding: 1.2rem;
-    width: 100%;
-  }
-`;
+import React, { MouseEvent } from "react";
+import { ListItem, Link, StyledIcon } from "@/components/navigation/NavItem/styles";
 
 type NavItemProps = {
   path: string;
   label: string;
-  icon: JSX.Element;
+  icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 };
 
 export function NavItem({ path, label, icon }: NavItemProps) {
@@ -125,27 +29,11 @@ export function NavItem({ path, label, icon }: NavItemProps) {
   };
 
   return (
-    <NavItemEl $active={isActive}>
-      <NavLink
-        href={path}
-        onClick={handleNavigation}
-        $active={isActive}
-        $filled={label === "Home" || label === "Logout"}
-      >
-        {label === "Logout" ? (
-          <>
-            <p style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}>
-              {label}
-            </p>
-            <span>{icon}</span>
-          </>
-        ) : (
-          <>
-            <span>{icon}</span>
-            {label}
-          </>
-        )}
-      </NavLink>
-    </NavItemEl>
+    <ListItem $active={isActive}>
+      <Link href={path} onClick={handleNavigation} $active={isActive} $label={label}>
+        <StyledIcon icon={icon} $active={isActive} />
+        <span>{label}</span>
+      </Link>
+    </ListItem>
   );
 }

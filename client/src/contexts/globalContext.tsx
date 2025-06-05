@@ -7,11 +7,12 @@ import React, {
   MouseEvent,
   useCallback,
 } from "react";
-import { IGameEntity } from "@/../../server/src/Game/GameEntity";
-import { ICategoryEntity } from "@/../../server/src/Category/CategoryEntity";
-import { IPlatformEntity } from "@/../../server/src/Platform/PlatformEntity";
-import { IStatistics, SortOrder } from "@/types/types";
 import { useMediaQuery } from "react-responsive";
+import { ICategoryEntity } from "@/../../server/src/Category/CategoryEntity";
+import { IGameEntity } from "@/../../server/src/Game/GameEntity";
+import { IPlatformEntity } from "@/../../server/src/Platform/PlatformEntity";
+import { SortOrder } from "@/types/types";
+import { breakpoints } from "@/utils/breakpoints";
 import API from "@/utils/API";
 
 type GlobalContextType = {
@@ -46,10 +47,11 @@ type GlobalContextType = {
   handleSelectedFilter: (e: ChangeEvent<HTMLSelectElement>) => void;
   handleIsFavorite: () => void;
   handleClear: () => void;
-  limit: number;
   isMobile: boolean;
+  isTablet: boolean;
   isLaptop: boolean;
-  isLaptopL: boolean;
+  isDesktop: boolean;
+  limit: number;
 };
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -66,11 +68,13 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [filters, setFilters] = useState<string>("");
   const [selectedFilter, setSelectedFilter] = useState("");
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  
+  const { mobile, tablet, laptop, desktop } = breakpoints;
+
+  const isMobile = useMediaQuery({ maxWidth: mobile * 16 });
+  const isTablet = useMediaQuery({ maxWidth: mobile * 16 });
+  const isLaptop = useMediaQuery({ maxWidth: laptop * 16 });
+  const isDesktop = useMediaQuery({ maxWidth: desktop * 16 });
   const limit = 10;
-  const isMobile = useMediaQuery({ maxWidth: 30 * 16 });
-  const isLaptop = useMediaQuery({ maxWidth: 67 * 16 });
-  const isLaptopL = useMediaQuery({ maxWidth: 90 * 16 });
 
   const handleUserName = useCallback(async () => {
     const res = await API.GET("account/");
@@ -166,10 +170,11 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         handleFilters,
         handleSelectedFilter,
         handleIsFavorite,
-        limit,
         isMobile,
+        isTablet,
         isLaptop,
-        isLaptopL,
+        isDesktop,
+        limit,
       }}
     >
       {children}

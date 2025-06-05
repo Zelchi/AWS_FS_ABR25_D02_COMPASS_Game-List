@@ -1,9 +1,12 @@
 import { useState, FormEvent, useEffect, Dispatch, SetStateAction } from "react";
-import { IGameEntity } from "../../../../../server/src/Game/GameEntity";
-import { SelectionField } from "../Fields/SelectionField";
-import { FormField } from "../Fields/FormField";
-import API from "@/utils/API";
+import { IGameEntity } from "@/../../server/src/Game/GameEntity";
+import { SelectionField } from "@/components/forms/Fields/SelectionField";
+import { InputField } from "@/components/forms/Fields/InputField";
 import { useModal } from "@/contexts/modalContext";
+import API from "@/utils/API";
+import { Form, InvalidMessage } from "@/components/forms/styles";
+import { Container, Input, Label, Select } from "@/components/forms/Fields/styles";
+import Button from "@/components/button/Button";
 
 export interface GameFormProps {
   initialData?: Partial<IGameEntity>;
@@ -127,33 +130,35 @@ export default function GameForm({ initialData, userId = "", onSuccess }: GameFo
   }, []);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <FormField
-        id="name"
-        label="Game Name"
+    <Form onSubmit={handleSubmit}>
+      <InputField
+        name="name"
         value={game.name || ""}
         onChange={(e) => setGame((prev) => ({ ...prev, name: e.target.value }))}
-      />
+      >
+        Game Name
+      </InputField>
 
-      <FormField
-        id="description"
-        label="Description"
+      <InputField
+        name="description"
         type="textarea"
         value={game.description || ""}
         onChange={(e) => setGame((prev) => ({ ...prev, description: e.target.value }))}
-      />
+      >
+        Description
+      </InputField>
 
-      <FormField
-        id="imageUrl"
-        label="Image URL"
+      <InputField
+        name="imageUrl"
         type="url"
         value={game.imageUrl || ""}
         onChange={(e) => setGame((prev) => ({ ...prev, imageUrl: e.target.value }))}
-      />
+      >
+        Image URL
+      </InputField>
 
-      <FormField
-        id="price"
-        label="Price"
+      <InputField
+        name="price"
         type="number"
         min={0}
         step="0.01"
@@ -164,42 +169,44 @@ export default function GameForm({ initialData, userId = "", onSuccess }: GameFo
             price: Math.round(Number(e.target.value) * 100),
           }))
         }
-      />
+      >
+        Price
+      </InputField>
 
-      <div>
-        <label htmlFor="status">Status</label>
-        <select
-          id="status"
+      <Container>
+        <Label htmlFor="status">Status</Label>
+        <Select
+          name="status"
           value={game.status || "playing"}
           onChange={(e) => setGame((prev) => ({ ...prev, status: e.target.value }))}
         >
           <option value="playing">Playing</option>
           <option value="done">Done</option>
           <option value="abandoned">Abandoned</option>
-        </select>
-      </div>
+        </Select>
+      </Container>
 
-      <div>
-        <input
-          id="favorite"
+      <Container>
+        <Input
+          name="favorite"
           type="checkbox"
           checked={game.favorite || false}
           onChange={(e) => setGame((prev) => ({ ...prev, favorite: e.target.checked }))}
         />
-        <label htmlFor="favorite">Favorite</label>
-      </div>
+        <Label htmlFor="favorite">Favorite</Label>
+      </Container>
 
-      <FormField
-        id="acquisDate"
-        label="Acquisition Date"
+      <InputField
+        name="acquisDate"
         type="date"
         value={formatDateForInput(game.acquisDate as Date)}
         onChange={(e) => setGame((prev) => ({ ...prev, acquisDate: new Date(e.target.value) }))}
-      />
+      >
+        Acquisition Date
+      </InputField>
 
-      <FormField
-        id="finishDate"
-        label="Completion Date"
+      <InputField
+        name="finishDate"
         type="date"
         value={formatDateForInput(game.finishDate as Date)}
         onChange={(e) =>
@@ -208,7 +215,9 @@ export default function GameForm({ initialData, userId = "", onSuccess }: GameFo
             finishDate: e.target.value ? new Date(e.target.value) : null,
           }))
         }
-      />
+      >
+        ACompletion Date
+      </InputField>
 
       <SelectionField
         label="Categories"
@@ -228,18 +237,16 @@ export default function GameForm({ initialData, userId = "", onSuccess }: GameFo
         onConfirm={handleModalConfirm("platforms")}
       />
 
-      {error && <p>{error}</p>}
+      {error && <InvalidMessage>{error}</InvalidMessage>}
 
-      <div>
-        <button type="button" onClick={handleCancel} disabled={submitting}>
-          {" "}
-          Cancel{" "}
-        </button>
-        <button type="submit" disabled={submitting}>
-          {" "}
-          {submitting ? "Saving..." : "Save"}{" "}
-        </button>
-      </div>
-    </form>
+      <Container>
+        <Button type="button" variant="danger" onClick={handleCancel} disabled={submitting}>
+          Cancel
+        </Button>
+        <Button type="submit" disabled={submitting}>
+          {submitting ? "Saving..." : "Save"}
+        </Button>
+      </Container>
+    </Form>
   );
 }

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { SelectionModal } from "./SelectionModal";
+import { Form } from "@/components/forms/styles";
+import Button from "@/components/button/Button";
 
 export interface SelectionFieldProps {
   label: string;
@@ -16,7 +18,7 @@ export function SelectionField({
   items,
   selectedItemIds,
   loading,
-  onConfirm
+  onConfirm,
 }: SelectionFieldProps) {
   const [showModal, setShowModal] = useState(false);
 
@@ -26,7 +28,7 @@ export function SelectionField({
   };
 
   return (
-    <form>
+    <Form>
       <div>
         {loading ? (
           <div>Loading...</div>
@@ -37,12 +39,9 @@ export function SelectionField({
                 ? `${selectedItemIds.length} item(s) selected`
                 : "No items selected"}
             </div>
-            <button
-              type="button"
-              onClick={() => setShowModal(true)}
-            >
+            <Button type="button" onClick={() => setShowModal(true)}>
               {`Select ${label}`}
-            </button>
+            </Button>
           </>
         )}
       </div>
@@ -56,6 +55,6 @@ export function SelectionField({
           onCancel={() => setShowModal(false)}
         />
       )}
-    </form>
+    </Form>
   );
 }

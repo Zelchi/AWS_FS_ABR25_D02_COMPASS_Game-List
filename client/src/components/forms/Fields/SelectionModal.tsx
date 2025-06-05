@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import Button from "@/components/button/Button";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -95,12 +96,12 @@ export function SelectionModal({
           )}
         </ModalList>
         <ModalFooter>
-          <button type="button" onClick={handleCancel}>
+          <Button type="button" variant="danger" onClick={handleCancel}>
             Cancel
-          </button>
-          <button type="button" onClick={() => onConfirm(localSelectedIds)}>
+          </Button>
+          <Button type="button" onClick={() => onConfirm(localSelectedIds)}>
             Confirm
-          </button>
+          </Button>
         </ModalFooter>
       </ModalContent>
     </ModalOverlay>

@@ -7,9 +7,9 @@ import ShortcutTablet from "./medias/ShortcutTablet";
 import ShortcutLaptop from "./medias/ShortcutLaptop";
 import ShortcutDesktop from "./medias/ShortcutDesktop";
 import ShortcutFallback from "./medias/ShortcutFallback";
-import ResponsiveLayout from "@/components/layout/ResponsiveLayout";
+import ResponsiveLayout from "@/components/layout/ResponsiveLayout/ResponsiveLayout";
 
-export default function Shortcut({ icon, qty, title }: ShortcutProps) {
+export default function ShortcutItem({ icon, qty, title }: ShortcutProps) {
   return (
     <Container>
       <ResponsiveLayout

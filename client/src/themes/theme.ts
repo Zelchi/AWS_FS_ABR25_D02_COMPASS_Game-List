@@ -1,0 +1,36 @@
+export const theme = {
+  colors: {
+    black: "#000000",
+    white: "#FFFFFF",
+    greyLight01: "#E5E5E5",
+    greyLight02: "#CDCDCD",
+    greyLight03: "#E8FEFF",
+    greyLight04: "#F8FAFC",
+    greyLight05: "#C4C4C4",
+    grey01: "#BCBCBC",
+    grey02: "#6C6C6C",
+    grey03: "#ACACAC",
+    grey04: "#747474",
+    grey05: "#717171",
+    grey06: "#898989",
+    grey07: "#575757",
+    grey08: "#9D9D9D",
+    greyDark01: "#18181B",
+    greyDark02: "#0C0A09",
+    greyDark03: "#2C2C2C",
+    pink: "#FD4760",
+    red: "#FF0000",
+    aqua: "#42D9C8",
+  },
+  fonts: {
+    primary: '"Montserrat", sans-serif',
+    secondary: '"Inter", sans-serif',
+  },
+  sizes: {
+    mainMaxWidth: "110rem",
+    menuMaxWidth: "3.8rem",
+  },
+  transitions: {
+    fastInOut: "0.2s ease-in-out",
+  },
+};
