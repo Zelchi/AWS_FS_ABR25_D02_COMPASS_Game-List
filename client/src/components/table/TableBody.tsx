@@ -22,14 +22,14 @@ type TableProps = {
 
 export default function TableBody({ data, header, isAnimating, transitionDuration }: TableProps) {
   const location = useLocation().pathname;
-  const { handleModalContent, handleModalDeleteConfirm, PrewviewModal } = useModal();
+  const { handleModalContent, handleModalDeleteConfirm, HandlePreviewModal } = useModal();
 
   const handlePreview = async (item: any) => {
     const response = await getItem(
       item && item.id,
       routes.find((route) => route.path === location)!.singular,
     );
-    PreviewModal(location, response);
+    HandlePreviewModal(location, response);
   };
 
   const handleEdit = async (item: any) => {
@@ -54,7 +54,7 @@ export default function TableBody({ data, header, isAnimating, transitionDuratio
           tabIndex={0}
           onClick={() => handlePreview(item)}
         >
-          {location === "/Games" && <TableImages item={item} />}
+          {location === "/games" && <TableImages item={item} />}
           {header.map((head) => (
             <TBCell key={head} $width={head === "title"}>
               <ColumnMap

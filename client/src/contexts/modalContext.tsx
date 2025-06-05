@@ -12,7 +12,7 @@ type ModalContextType = {
   setModalContent: Dispatch<SetStateAction<ReactNode | null>>;
   handleModalContent: (path: string, initialData: any) => void;
   handleModalDeleteConfirm: (path: string, initialData: any) => void;
-  PreviewModal: (path: string, initialData: any) => void;
+  HandlePreviewModal: (path: string, initialData: any) => void;
 };
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
@@ -42,7 +42,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     setIsModalOpen(true);
   };
 
-  const PreviewModal = (path: string, initialData: any) => {
+  const HandlePreviewModal = (path: string, initialData: any) => {
     setModalContent(() => <PreviewModal path={path} initialData={initialData} />);
     setIsModalOpen(true);
   };
@@ -56,7 +56,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         setModalContent,
         handleModalContent,
         handleModalDeleteConfirm,
-        PreviewModal,
+        HandlePreviewModal,
       }}
     >
       {children}
