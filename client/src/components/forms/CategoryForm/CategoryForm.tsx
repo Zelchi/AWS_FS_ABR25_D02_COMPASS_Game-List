@@ -13,7 +13,9 @@ export interface CategoryFormProps {
 export default function CategoryForm({ initialData }: CategoryFormProps) {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [type] = useState(initialData ? "put" : "post");
+  const [type] = useState(
+      initialData && Object.keys(initialData).length > 0 ? "put" : "post"
+    );
   const { setIsModalOpen, setModalContent } = useModal();
   const [category, setCategory] = useState<Partial<ICategoryEntity>>({
     userId: "",

@@ -103,8 +103,12 @@ class GameRepository {
                 deletedAt: null
             },
             include: {
-                categories: true,
-                platforms: true
+                categories: {
+                    where: { deletedAt: null },
+                },
+                platforms: {
+                    where: { deletedAt: null },
+                }
             }
         });
     }
@@ -118,8 +122,12 @@ class GameRepository {
                     deletedAt: null
                 },
                 include: {
-                    categories: true,
-                    platforms: true
+                    categories: {
+                        where: { deletedAt: null },
+                    },
+                    platforms: {
+                        where: { deletedAt: null },
+                    }
                 }
             });
             return games;
@@ -183,8 +191,12 @@ class GameRepository {
                 prisma.game.findMany({
                     where,
                     include: {
-                        categories: true,
-                        platforms: true
+                        categories: {
+                            where: { deletedAt: null },
+                        },
+                        platforms: {
+                            where: { deletedAt: null },
+                        }
                     },
                     skip,
                     take: limit,

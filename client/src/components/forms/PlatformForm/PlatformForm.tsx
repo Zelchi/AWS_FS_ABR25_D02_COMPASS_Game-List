@@ -12,7 +12,9 @@ export interface PlatformFormProps {
 export default function PlatformForm({ initialData }: PlatformFormProps) {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [type] = useState(initialData ? "put" : "post");
+  const [type] = useState(
+    initialData && Object.keys(initialData).length > 0 ? "put" : "post"
+  );
   const { setIsModalOpen, setModalContent } = useModal();
   const [platform, setPlatform] = useState<Partial<IPlatformEntity>>({
     userId: "",
