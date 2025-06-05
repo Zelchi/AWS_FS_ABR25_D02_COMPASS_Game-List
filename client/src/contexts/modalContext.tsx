@@ -2,7 +2,8 @@ import { createContext, ReactNode, useContext, useState, Dispatch, SetStateActio
 import GameForm from "@/components/forms/GameForm/GameForm";
 import CategoryForm from "@/components/forms/CategoryForm/CategoryForm";
 import PlatformForm from "@/components/forms/PlatformForm/PlatformForm";
-import DeletionConfirmModal from "@/components/modal/DeletionConfirmModal";
+import DeletionConfirmModal from "@/components/modal/Layouts/DeletionConfirmModal";
+import PreviewModal from "@/components/modal/Layouts/PreviewModal";
 
 type ModalContextType = {
   isModalOpen: boolean;
@@ -11,6 +12,7 @@ type ModalContextType = {
   setModalContent: Dispatch<SetStateAction<ReactNode | null>>;
   handleModalContent: (path: string, initialData: any) => void;
   handleModalDeleteConfirm: (path: string, initialData: any) => void;
+  PrewviewModal: (path: string, initialData: any) => void;
 };
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
@@ -40,6 +42,11 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     setIsModalOpen(true);
   };
 
+  const PrewviewModal = (path: string, initialData: any) => {
+    setModalContent(() => <PreviewModal path={path} initialData={initialData} />);
+    setIsModalOpen(true);
+  };
+
   return (
     <ModalContext.Provider
       value={{
@@ -49,6 +56,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         setModalContent,
         handleModalContent,
         handleModalDeleteConfirm,
+        PrewviewModal,
       }}
     >
       {children}
