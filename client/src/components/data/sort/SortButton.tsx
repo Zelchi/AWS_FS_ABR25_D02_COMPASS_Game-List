@@ -11,7 +11,7 @@ export default function SortButton({ children, head }: { children: ReactNode; he
     <Button value={head} onClick={handleSortByAndOrder}>
       {children}{" "}
       {sortBy === head ? (
-        <StyledIcon icon={SortActiveIcon} $asc={sortOrder === "asc"} />
+        <StyledIcon icon={SortActiveIcon} $asc={sortOrder === "desc"} />
       ) : (
         <StyledIcon icon={SortIcon} />
       )}
