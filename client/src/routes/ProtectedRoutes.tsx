@@ -1,0 +1,15 @@
+import { Outlet } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { GlobalProvider } from "@/contexts/globalContext";
+import { ModalProvider } from "@/contexts/modalContext";
+
+export default function ProtectedRoutes() {
+  return (
+    <GlobalProvider>
+      <ModalProvider>
+        <ToastContainer position="bottom-right" autoClose={3000} theme="dark" />
+        <Outlet />
+      </ModalProvider>
+    </GlobalProvider>
+  );
+}

@@ -18,7 +18,7 @@ const ModalContent = styled.div`
   width: 80%;
   max-width: 500px;
   max-height: 50vh;
-  
+
   display: flex;
   flex-direction: column;
   background-color: white;
@@ -27,7 +27,7 @@ const ModalContent = styled.div`
 const ModalList = styled.div`
   width: 100%;
   max-height: 300px;
-  
+
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -44,61 +44,65 @@ const SelectItem = styled.div`
 `;
 
 export interface SelectionModalProps {
-    title: string;
-    items: { id: string; name: string }[];
-    selectedItemIds: string[];
-    onConfirm: (selectedIds: string[]) => void;
-    onCancel: () => void;
+  title: string;
+  items: { id: string; name: string }[];
+  selectedItemIds: string[];
+  onConfirm: (selectedIds: string[]) => void;
+  onCancel: () => void;
 }
 
 export function SelectionModal({
-    title,
-    items,
-    selectedItemIds,
-    onConfirm,
-    onCancel,
+  title,
+  items,
+  selectedItemIds,
+  onConfirm,
+  onCancel,
 }: SelectionModalProps) {
-    const [localSelectedIds, setLocalSelectedIds] = useState<string[]>(selectedItemIds);
+  const [localSelectedIds, setLocalSelectedIds] = useState<string[]>(selectedItemIds);
 
-    const handleItemToggle = (id: string, checked: boolean) => {
-        if (checked) {
-            setLocalSelectedIds(prev => [...prev, id]);
-        } else {
-            setLocalSelectedIds(prev => prev.filter(itemId => itemId !== id));
-        }
-    };
+  const handleItemToggle = (id: string, checked: boolean) => {
+    if (checked) {
+      setLocalSelectedIds((prev) => [...prev, id]);
+    } else {
+      setLocalSelectedIds((prev) => prev.filter((itemId) => itemId !== id));
+    }
+  };
 
-    const handleCancel = () => {
-        setLocalSelectedIds([]);
-        onCancel();
-    };
+  const handleCancel = () => {
+    setLocalSelectedIds([]);
+    onCancel();
+  };
 
-    return (
-        <ModalOverlay>
-            <ModalContent>
-                <h2>{title}</h2>
-                <ModalList>
-                    {items.length > 0 ? (
-                        items.map(item => (
-                            <SelectItem key={item.id}>
-                                <input
-                                    id={`modal-item-${item.id}`}
-                                    type="checkbox"
-                                    checked={localSelectedIds.includes(item.id)}
-                                    onChange={(e) => handleItemToggle(item.id, e.target.checked)}
-                                />
-                                <label htmlFor={`modal-item-${item.id}`}>{item.name}</label>
-                            </SelectItem>
-                        ))
-                    ) : (
-                        <div>No items available</div>
-                    )}
-                </ModalList>
-                <ModalFooter>
-                    <button type="button" onClick={handleCancel}>Cancel</button>
-                    <button type="button" onClick={() => onConfirm(localSelectedIds)}>Confirm</button>
-                </ModalFooter>
-            </ModalContent>
-        </ModalOverlay>
-    );
+  return (
+    <ModalOverlay>
+      <ModalContent>
+        <h2>{title}</h2>
+        <ModalList>
+          {items.length > 0 ? (
+            items.map((item) => (
+              <SelectItem key={item.id}>
+                <input
+                  id={`modal-item-${item.id}`}
+                  type="checkbox"
+                  checked={localSelectedIds.includes(item.id)}
+                  onChange={(e) => handleItemToggle(item.id, e.target.checked)}
+                />
+                <label htmlFor={`modal-item-${item.id}`}>{item.name}</label>
+              </SelectItem>
+            ))
+          ) : (
+            <div>No items available</div>
+          )}
+        </ModalList>
+        <ModalFooter>
+          <button type="button" onClick={handleCancel}>
+            Cancel
+          </button>
+          <button type="button" onClick={() => onConfirm(localSelectedIds)}>
+            Confirm
+          </button>
+        </ModalFooter>
+      </ModalContent>
+    </ModalOverlay>
+  );
 }
