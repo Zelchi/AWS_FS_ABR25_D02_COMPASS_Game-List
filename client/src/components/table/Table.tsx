@@ -13,8 +13,7 @@ type TableProps<T> = {
 export default function Table<T extends Record<string, any>>({ data, header }: TableProps<T>) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [visibleData, setVisibleData] = useState(data);
-  const { sortBy, sortOrder, isLaptop, games, categories, platforms } = useGlobal();
-  const sorted = [...visibleData].sort(sortItems<T>(sortBy, sortOrder));
+  const { isLaptop, games, categories, platforms } = useGlobal();
   const tableTransitionDuration = 600;
 
   useEffect(() => {

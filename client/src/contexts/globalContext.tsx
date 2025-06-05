@@ -74,11 +74,11 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [filters, setFilters] = useState<string>("");
   const [selectedFilter, setSelectedFilter] = useState("");
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const { mobile, laptop, desktop } = breakpoints;
+  const { mobile, tablet, laptop, desktop } = breakpoints;
   const path = useLocation().pathname;
 
   const isMobile = useMediaQuery({ maxWidth: mobile * 16 });
-  const isTablet = useMediaQuery({ maxWidth: mobile * 16 });
+  const isTablet = useMediaQuery({ maxWidth: tablet * 16 });
   const isLaptop = useMediaQuery({ maxWidth: laptop * 16 });
   const isDesktop = useMediaQuery({ maxWidth: desktop * 16 });
   const limit = 10;
@@ -156,7 +156,6 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
       setSortOrder((order: SortOrder) => (order === "asc" ? "desc" : "asc"));
       return;
     }
-    setSortOrder("asc");
     setSortBy(e.currentTarget.value);
   };
 
