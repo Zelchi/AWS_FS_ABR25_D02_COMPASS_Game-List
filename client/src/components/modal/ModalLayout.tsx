@@ -11,13 +11,9 @@ const SIZES = {
 
 const Overlay = styled.div`
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.9);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
   backdrop-filter: blur(20px);
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,9 +25,8 @@ const ModalContainer = styled.div<{ size: string }>`
   max-width: ${({ size }) => SIZES[size as keyof typeof SIZES] || SIZES.md};
   max-height: 90vh;
   border-radius: 8px;
-
   overflow-y: auto;
-  background-color: var(--color-white);
+  background: var(--color-white);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 `;
 
@@ -39,8 +34,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
-  title?: string;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: keyof typeof SIZES;
   closeOnClickOutside?: boolean;
   closeOnEsc?: boolean;
 }
@@ -51,41 +45,44 @@ export default function Modal({
   children,
   size = "md",
   closeOnEsc = true,
+  closeOnClickOutside = true,
 }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen || !closeOnEsc) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    const onKeyDown = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [isOpen, onClose, closeOnEsc]);
 
   useEffect(() => {
-    if (isOpen) {
-      if (modalRef.current) {
-        const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        );
-        if (focusableElements.length > 0) {
-          focusableElements[0].focus();
-        }
-      }
+    if (isOpen && modalRef.current) {
+      const el = modalRef.current.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      el?.focus();
     }
   }, [isOpen]);
+
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (
+      closeOnClickOutside &&
+      modalRef.current &&
+      !modalRef.current.contains(e.target as Node)
+    ) {
+      onClose();
+    }
+  };
 
   if (!isOpen) return null;
 
   return createPortal(
-    <Overlay role="dialog" aria-modal="true">
-      <ModalContainer ref={modalRef} size={size} onClick={(e) => e.stopPropagation()}>
+    <Overlay role="dialog" aria-modal="true" onMouseDown={handleOverlayClick}>
+      <ModalContainer ref={modalRef} size={size} onClick={e => e.stopPropagation()}>
         {children}
       </ModalContainer>
     </Overlay>,
-    document.body,
+    document.body
   );
 }
