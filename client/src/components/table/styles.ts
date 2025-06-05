@@ -104,9 +104,9 @@ export const ButtonSet = styled.td<{ $location: string }>`
     gap: 2.6rem;
 
     @media (max-width: ${mobile}em) {
-      flex-direction: ${({ $location }) => ($location === "/Games" ? "column" : "row")};
-      justify-content: ${({ $location }) => ($location === "/Games" ? "center" : "flex-end")};
-      align-items: ${({ $location }) => ($location === "/Games" ? "flex-end" : "center")};
+      flex-direction: ${({ $location }) => ($location === "/games" ? "column" : "row")};
+      justify-content: ${({ $location }) => ($location === "/games" ? "center" : "flex-end")};
+      align-items: ${({ $location }) => ($location === "/games" ? "flex-end" : "center")};
       gap: 1rem;
     }
   }

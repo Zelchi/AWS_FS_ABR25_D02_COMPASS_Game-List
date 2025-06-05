@@ -12,19 +12,19 @@ export const routes = [
     icon: HouseIcon,
   },
   {
-    path: "/Games",
+    path: "/games",
     label: "Games",
     singular: "game",
     icon: ControllerIcon,
   },
   {
-    path: "/Categories",
+    path: "/categories",
     label: "Categories",
     singular: "category",
     icon: TagIcon,
   },
   {
-    path: "/Platforms",
+    path: "/platforms",
     label: "Platforms",
     singular: "platform",
     icon: ChipIcon,

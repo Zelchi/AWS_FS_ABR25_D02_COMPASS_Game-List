@@ -37,7 +37,7 @@ model Game {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   deletedAt   DateTime?
-  user        User       @relation("UserGame", fields: [userId], references: [id])
+  user        User       @relation("UserGame", fields: [userId], references: [id], onDelete: Cascade)
   categories  Category[] @relation("CategoryGame")
   platforms   Platform[] @relation("PlatformGame")
 }
@@ -49,7 +49,7 @@ model Category {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
-  user      User      @relation("UserCategory", fields: [userId], references: [id])
+  user      User      @relation("UserCategory", fields: [userId], references: [id], onDelete: Cascade)
   games     Game[]    @relation("CategoryGame")
 }
 
@@ -62,7 +62,7 @@ model Platform {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
-  user      User      @relation("UserPlatform", fields: [userId], references: [id])
+  user      User      @relation("UserPlatform", fields: [userId], references: [id], onDelete: Cascade)
   games     Game[]    @relation("PlatformGame")
 }
 
@@ -81,5 +81,5 @@ model Dashboard {
   totalCategories Int      @default(0)
   totalPlatforms  Int      @default(0)
   lastUpdated     DateTime @default(now())
-  user            User     @relation(fields: [userId], references: [id])
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

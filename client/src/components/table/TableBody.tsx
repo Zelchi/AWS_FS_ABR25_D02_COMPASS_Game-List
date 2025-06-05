@@ -22,7 +22,15 @@ type TableProps = {
 
 export default function TableBody({ data, header, isAnimating, transitionDuration }: TableProps) {
   const location = useLocation().pathname;
-  const { handleModalContent, handleModalDeleteConfirm } = useModal();
+  const { handleModalContent, handleModalDeleteConfirm, PrewviewModal } = useModal();
+
+  const handlePreview = async (item: any) => {
+    const response = await getItem(
+      item && item.id,
+      routes.find((route) => route.path === location)!.singular,
+    );
+    PreviewModal(location, response);
+  };
 
   const handleEdit = async (item: any) => {
     const response = await getItem(
@@ -44,7 +52,7 @@ export default function TableBody({ data, header, isAnimating, transitionDuratio
           $location={location}
           role="option"
           tabIndex={0}
-          onClick={() => handleModalContent(location, item)}
+          onClick={() => handlePreview(item)}
         >
           {location === "/Games" && <TableImages item={item} />}
           {header.map((head) => (
