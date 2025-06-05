@@ -38,6 +38,7 @@ class GameDto {
     }
 
     static validateStatus(status?: string): boolean {
+        console.log('Validating status:', status);
         const lowerStatus = typeof status === 'string' ? status.toLowerCase() : '';
         return ['playing', 'done', 'abandoned'].includes(lowerStatus);
     }

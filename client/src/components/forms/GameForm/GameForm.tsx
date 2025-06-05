@@ -24,9 +24,7 @@ export default function GameForm({ initialData }: GameFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [type] = useState(
-    initialData && Object.keys(initialData).length > 0 ? "put" : "post"
-  );
+  const [type] = useState(initialData ? "put" : "post");
   const { setIsModalOpen, setModalContent } = useModal();
   const { handleClear } = useGlobal();
   const [game, setGame] = useState<Partial<IGameEntity>>({
@@ -34,10 +32,10 @@ export default function GameForm({ initialData }: GameFormProps) {
     name: initialData?.name || "",
     description: initialData?.description || "",
     imageUrl: initialData?.imageUrl || "",
-    price: initialData?.price || 1,
+    price: initialData?.price || 0,
     status: initialData?.status || "playing",
     favorite: initialData?.favorite || false,
-    rating: initialData?.rating || 1,
+    rating: initialData?.rating || 0,
     acquisDate: initialData?.acquisDate ? new Date(initialData.acquisDate) : null,
     finishDate: initialData?.finishDate ? new Date(initialData.finishDate) : null,
     categories: initialData?.categories || [],
@@ -99,7 +97,7 @@ export default function GameForm({ initialData }: GameFormProps) {
       if ((response && response.status === 201) || response.status === 200) {
         setModalContent(null);
         setIsModalOpen(false);
-        handleClear();
+        if (type === "post") handleClear();
       }
     } catch (e) {
       setError("An error occurred while saving the game. Please try again.");

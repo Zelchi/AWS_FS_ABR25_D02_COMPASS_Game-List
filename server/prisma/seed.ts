@@ -483,7 +483,7 @@ async function main() {
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
 
   for (const game of games) {
-    await prisma.$executeRaw`UPDATE "Game" SET "updatedAt" = ${oneYearAgo} WHERE "id" = ${game.id}`;
+    await prisma.$executeRaw`UPDATE "Game" SET "updatedAt" = ${oneYearAgo.toISOString()} WHERE "id" = ${game.id}`;
   }
 
   console.log('Seeding completed successfully!');
