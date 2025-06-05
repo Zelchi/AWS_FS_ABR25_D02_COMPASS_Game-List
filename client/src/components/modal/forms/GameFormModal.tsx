@@ -1,8 +1,9 @@
 import { useState, FormEvent, useEffect, Dispatch, SetStateAction } from "react";
-import { IGameEntity } from "../../../../server/src/Game/GameEntity";
-import { SelectionField } from "./Fields/SelectionField";
-import { FormField } from "./Fields/FormField";
+import { IGameEntity } from "../../../../../server/src/Game/GameEntity";
+import { SelectionField } from "../../forms/Fields/SelectionField";
+import { FormField } from "../../forms/Fields/FormField";
 import { useModal } from "@/contexts/modalContext";
+import { useGlobal } from "@/contexts/globalContext";
 import API from "@/utils/API";
 
 export interface GameFormProps {
@@ -25,6 +26,7 @@ export default function GameForm({
     const [submitting, setSubmitting] = useState(false);
     const [type] = useState(initialData ? "put" : "post");
     const { setIsModalOpen, setModalContent } = useModal();
+    const { handleClear } = useGlobal();
     const [game, setGame] = useState<Partial<IGameEntity>>({
         userId: "",
         name: initialData?.name || "",
@@ -88,8 +90,9 @@ export default function GameForm({
                 ? await API.POST("/game", gameData)
                 : await API.PUT(`/game/${initialData?.id}`, gameData);
             if (response && response.status === 201 || response.status === 200) {
-                setIsModalOpen(false);
                 setModalContent(null);
+                setIsModalOpen(false);
+                handleClear();
             }
         } catch (e) {
             setError("An error occurred while saving the game. Please try again.");
@@ -148,6 +151,20 @@ export default function GameForm({
                 onChange={(e) => setGame(prev => ({
                     ...prev,
                     price: Math.round(Number(e.target.value) * 100)
+                }))}
+            />
+
+            <FormField
+                id="rating"
+                label="Rating"
+                type="range"
+                min={1}
+                max={5}
+                step="1"
+                value={game.rating || 1}
+                onChange={(e) => setGame(prev => ({
+                    ...prev,
+                    rating: Number(e.target.value)
                 }))}
             />
 

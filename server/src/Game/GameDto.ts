@@ -122,7 +122,7 @@ export class GameRegisterDto {
         }
 
         if (!GameDto.validateRating(this.rating)) {
-            errors.push('Rating must be between 0 and 10');
+            errors.push('Rating must be between 1 and 5');
         }
 
         if (!GameDto.validatePrice(this.price)) {
@@ -232,7 +232,7 @@ export class GameUpdateDto {
         }
 
         if (this.rating !== undefined && !GameDto.validateRating(this.rating)) {
-            errors.push('Rating must be between 0 and 10');
+            errors.push('Rating must be between 1 and 5');
         }
 
         if (this.price !== undefined && !GameDto.validatePrice(this.price)) {

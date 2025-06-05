@@ -164,15 +164,19 @@ export default function Table<T extends Record<string, any>>({ data, header }: T
     const [visibleData, setVisibleData] = useState(data);
     const { sortBy, sortOrder, isLaptop, games, categories, platforms } = useGlobal();
     const location = useLocation().pathname;
-    const pathKey = location.substring(1) as DictionaryKey; // Remove the leading slash
+    const pathKey = location.substring(1) as DictionaryKey; 
     const sorted = [...visibleData].sort(sortItems<T>(sortBy, sortOrder));
-    const { handleModalContent } = useModal();
+    const { handleModalContent, handleModalDeleteConfirm } = useModal();
     const maxSizeText = 30;
 
     const handleEdit = async (item: any) => {
         const response = await getItem(item && item.id, dicionary[pathKey])
         handleModalContent(location, response);
     }
+
+    const handleDelete = (item: any) => {
+        handleModalDeleteConfirm(location, item);
+    };
     
     useEffect(() => {
         setIsAnimating(true);
@@ -282,7 +286,7 @@ export default function Table<T extends Record<string, any>>({ data, header }: T
                                 <button onClick={() => handleEdit(item)}>
                                     <Edit />
                                 </button>
-                                <button>
+                                <button onClick={() => handleDelete(item)}>
                                     <Delete />
                                 </button>
                             </span>
