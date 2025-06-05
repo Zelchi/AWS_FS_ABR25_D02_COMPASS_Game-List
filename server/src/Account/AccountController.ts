@@ -1,40 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { accountService } from "./AccountService";
 import { AccountLoginDto, AccountRegisterDto } from "./AccountDto";
+import { Auth } from "../auth";
 
 export class AccountController {
-
-    async middleware(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            const authHeader = req.headers.authorization;
-            const { userId } = req.body;
-
-            if (userId) throw new Error('User ID should not be in the request body for this middleware');
-
-            if (authHeader) {
-                const type = authHeader.split(' ')[0];
-                const token = authHeader.split(' ')[1];
-
-                if (type !== 'Bearer') {
-                    res.status(401).json({ error: 'Invalid authorization type' });
-                    return;
-                }
-
-                if (!token || token === 'null' || token === 'undefined') {
-                    return next();
-                }
-
-                if (token) {
-                    const decoded = await accountService.verifyToken(token);
-                    req.body.userId = decoded.id;
-                }
-            }
-
-            return next();
-        } catch (error) {
-            res.status(401).json({ error: 'Invalid token' });
-        }
-    }
+    public middleware = Auth.createAccountMiddleware();
 
     async userPost(req: Request, res: Response): Promise<void> {
         try {
