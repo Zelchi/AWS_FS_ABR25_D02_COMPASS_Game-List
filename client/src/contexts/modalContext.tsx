@@ -22,11 +22,11 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const handleModalContent = (path: string, initialData: any) => {
     setModalContent(() => {
       switch (path) {
-        case "/Games":
+        case "/games":
           return <GameForm initialData={initialData} />;
-        case "/Categories":
+        case "/categories":
           return <CategoryForm initialData={initialData} />;
-        case "/Platforms":
+        case "/platforms":
           return <PlatformForm initialData={initialData} />;
         default:
           return null;

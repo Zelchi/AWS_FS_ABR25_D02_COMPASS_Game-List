@@ -11,7 +11,7 @@ export default function TableHead({ header }: { header: string[] }) {
   return (
     <thead>
       <tr role="option">
-        {location === "/Games" && (
+        {location === "/games" && (
           <THCell colSpan={3}>
             <SortButton head={"updatedAt"}>
               <HeaderStyledIcon icon={LastUpdateIcon} />

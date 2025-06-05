@@ -172,9 +172,9 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const handleLoad = (): void => {
-    if (path === "/Games") void loadGames();
-    if (path === "/Categories") void loadCategories();
-    if (path === "/Platforms") void loadPlatforms();
+    if (path === "/games") void loadGames();
+    if (path === "/categories") void loadCategories();
+    if (path === "/platforms") void loadPlatforms();
   };
 
   const handleClear = (): void => {

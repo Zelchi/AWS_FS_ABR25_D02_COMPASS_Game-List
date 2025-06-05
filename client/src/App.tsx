@@ -19,9 +19,9 @@ export default function App(): React.JSX.Element {
         </Route>
         <Route element={<ProtectedRoutes />}>
           <Route path="/" element={<Home />} />
-          <Route path="/Games" element={<Games />} />
-          <Route path="/Categories" element={<Categories />} />
-          <Route path="/Platforms" element={<Platforms />} />
+          <Route path="/games" element={<Games />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/platforms" element={<Platforms />} />
         </Route>
         <Route path="/*" element={<NotFound />} />
       </Routes>

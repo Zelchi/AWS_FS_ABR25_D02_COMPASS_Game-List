@@ -40,7 +40,7 @@ export default function TableBody({ data, header, isAnimating, transitionDuratio
     <TBody $isAnimating={isAnimating} $transitionDuration={transitionDuration}>
       {data.map((item: { id: string; [key: string]: any }) => (
         <TBRow key={item.id} $location={location} role="option" tabIndex={0}>
-          {location === "/Games" && <TableImages item={item} />}
+          {location === "/games" && <TableImages item={item} />}
           {header.map((head) => (
             <TBCell key={head} $width={head === "title"}>
               <ColumnMap
