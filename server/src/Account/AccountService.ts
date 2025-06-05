@@ -1,10 +1,8 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import { AccountEntity } from './AccountEntity';
 import { accountRepository } from './AccountRepository';
 import { AccountRegister, AccountLogin } from './AccountEntity';
-
-const SECRET_KEY = process.env.JWT_SECRET || 'default-secret-key';
+import { Auth } from '../auth';
 
 export class AccountService {
 
@@ -35,29 +33,16 @@ export class AccountService {
             throw new Error('Invalid email or password');
         }
 
-        const token = this.generateToken(user);
+        const token = Auth.generateToken({
+            id: user.id,
+            email: user.email
+        });
 
         const { password, ...userWithoutPassword } = user;
         return {
             user: userWithoutPassword as AccountEntity,
             token
         };
-    }
-
-    private generateToken(user: AccountEntity): string {
-        return jwt.sign(
-            { id: user.id, email: user.email },
-            SECRET_KEY,
-            { expiresIn: '24h' }
-        );
-    }
-
-    async verifyToken(token: string): Promise<{ id: string; email: string }> {
-        try {
-            return jwt.verify(token, SECRET_KEY) as { id: string; email: string };
-        } catch (error) {
-            throw new Error('Invalid token');
-        }
     }
 
     async getUser(userId: string): Promise<AccountEntity> {
