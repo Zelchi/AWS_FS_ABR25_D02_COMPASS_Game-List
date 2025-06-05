@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { useModal } from "@/contexts/modalContext";
+import defaultImage from "@/assets/imgs/default-image.jpg";
+import SmartImage from "@/components/logic/SmartImage";
 
 const Container = styled.div`
   padding: 2rem;
@@ -22,11 +24,14 @@ const Label = styled.span`
   margin-right: 0.5rem;
 `;
 
-const Image = styled.img`
+const Image = styled.span`
+  display: block;
+  width: 100%;
   max-width: 100%;
-  max-height: 180px;
+  height: 180px;
   border-radius: 6px;
   margin-bottom: 1rem;
+  background-color: #eee;
 `;
 
 const Button = styled.button`
@@ -43,7 +48,11 @@ const Button = styled.button`
 function renderGame(game: any) {
     return (
         <>
-            {game.imageUrl && <Image src={game.imageUrl} alt={game.name} />}
+            <SmartImage
+                src={game.imageUrl}
+                fallback={defaultImage}
+                className={Image.styledComponentId}
+            />
             <Field>
                 <Label>Name:</Label> {game.name}
             </Field>
@@ -96,7 +105,11 @@ function renderCategory(category: any) {
 function renderPlatform(platform: any) {
     return (
         <>
-            {platform.imageUrl && <Image src={platform.imageUrl} alt={platform.name} />}
+            <SmartImage
+                src={platform.imageUrl}
+                fallback={defaultImage}
+                className={Image.styledComponentId}
+            />
             <Field>
                 <Label>Name:</Label> {platform.name}
             </Field>
