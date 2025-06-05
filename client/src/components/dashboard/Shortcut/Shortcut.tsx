@@ -20,13 +20,13 @@ export function Shortcut({ data, className }: ShortcutsContainerProps) {
     const title = previous?.textContent;
 
     if (title === "Games") {
-      handleModalContent("/Games", {});
+      handleModalContent("/games", {});
     }
     if (title === "Categories") {
-      handleModalContent("/Categories", {});
+      handleModalContent("/categories", {});
     }
     if (title === "Platforms") {
-      handleModalContent("/Platforms", {});
+      handleModalContent("/platforms", {});
     }
   };
 

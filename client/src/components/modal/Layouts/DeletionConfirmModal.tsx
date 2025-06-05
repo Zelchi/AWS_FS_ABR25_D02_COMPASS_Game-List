@@ -87,11 +87,11 @@ const DeletionConfirmModal = ({ path, initialData }: DeletionConfirmModalProps) 
 
   const getEndpoint = () => {
     switch (path) {
-      case "/Games":
+      case "/games":
         return `/game/${initialData.id}`;
-      case "/Categories":
+      case "/categories":
         return `/category/${initialData.id}`;
-      case "/Platforms":
+      case "/platforms":
         return `/platform/${initialData.id}`;
       default:
         return null;

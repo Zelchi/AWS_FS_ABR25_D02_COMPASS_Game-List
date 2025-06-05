@@ -14,61 +14,74 @@ import { getItem } from "@/utils/crudHandlers";
 import { routes } from "@/routes/routes";
 
 type TableProps = {
-  data: any;
-  header: string[];
-  isAnimating: boolean;
-  transitionDuration: number;
+    data: any;
+    header: string[];
+    isAnimating: boolean;
+    transitionDuration: number;
 };
 
 export default function TableBody({ data, header, isAnimating, transitionDuration }: TableProps) {
-  const location = useLocation().pathname;
-  const { handleModalContent, handleModalDeleteConfirm } = useModal();
+    const location = useLocation().pathname;
+    const { handleModalContent, handleModalDeleteConfirm, PrewviewModal } = useModal();
 
-  const handleEdit = async (item: any) => {
-    const response = await getItem(
-      item && item.id,
-      routes.find((route) => route.path === location)!.singular,
+    const handlePreview = async (item: any) => {
+        const response = await getItem(
+            item && item.id,
+            routes.find((route) => route.path === location)!.singular,
+        );
+        PrewviewModal(location, response);
+    };
+
+    const handleEdit = async (item: any) => {
+        const response = await getItem(
+            item && item.id,
+            routes.find((route) => route.path === location)!.singular,
+        );
+        handleModalContent(location, response);
+    };
+
+    const handleDelete = (item: any) => {
+        handleModalDeleteConfirm(location, item);
+    };
+
+    return (
+        <TBody $isAnimating={isAnimating} $transitionDuration={transitionDuration}>
+            {data.map((item: { id: string;[key: string]: any }) => (
+                <TBRow key={item.id} $location={location} role="option" tabIndex={0}>
+                    {location === "/games" && <TableImages item={item} />}
+                    {header.map((head) => (
+                        <TBCell key={head} $width={head === "title"}>
+                            <ColumnMap
+                                head={head}
+                                name={<ColumnName item={item} head={head} />}
+                                rating={<ColumnRating item={item} head={head} />}
+                                dates={<ColumnDates item={item} head={head} />}
+                                price={<ColumnPrice item={item} head={head} />}
+                                fallback={String(item[head] ?? "")}
+                            />
+                        </TBCell>
+                    ))}
+                    <ButtonSet $location={location}>
+                        <span>
+                            <BodyStyledIcon
+                                icon={EditIcon}
+                                role="button"
+                                onClick={(e) => void handlePreview(item)}
+                            />
+                            <BodyStyledIcon
+                                icon={EditIcon}
+                                role="button"
+                                onClick={(e) => void handleEdit(item)}
+                            />
+                            <BodyStyledIcon
+                                icon={DeleteIcon}
+                                role="button"
+                                onClick={(e) => void handleDelete(item)}
+                            />
+                        </span>
+                    </ButtonSet>
+                </TBRow>
+            ))}
+        </TBody>
     );
-    handleModalContent(location, response);
-  };
-
-  const handleDelete = (item: any) => {
-    handleModalDeleteConfirm(location, item);
-  };
-
-  return (
-    <TBody $isAnimating={isAnimating} $transitionDuration={transitionDuration}>
-      {data.map((item: { id: string; [key: string]: any }) => (
-        <TBRow key={item.id} $location={location} role="option" tabIndex={0}>
-          {location === "/Games" && <TableImages item={item} />}
-          {header.map((head) => (
-            <TBCell key={head} $width={head === "title"}>
-              <ColumnMap
-                head={head}
-                name={<ColumnName item={item} head={head} />}
-                rating={<ColumnRating item={item} head={head} />}
-                dates={<ColumnDates item={item} head={head} />}
-                price={<ColumnPrice item={item} head={head} />}
-                fallback={String(item[head] ?? "")}
-              />
-            </TBCell>
-          ))}
-          <ButtonSet $location={location}>
-            <span>
-              <BodyStyledIcon
-                icon={EditIcon}
-                role="button"
-                onClick={(e) => void handleEdit(item)}
-              />
-              <BodyStyledIcon
-                icon={DeleteIcon}
-                role="button"
-                onClick={(e) => void handleDelete(item)}
-              />
-            </span>
-          </ButtonSet>
-        </TBRow>
-      ))}
-    </TBody>
-  );
 }

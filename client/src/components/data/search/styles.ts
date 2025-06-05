@@ -23,7 +23,7 @@ export const SearchForm = styled.form<{ $path: string }>`
 
   @media (max-width: ${laptop}em) {
     & > * {
-      width: ${({ $path }) => ($path === "/Games" ? "100%" : "calc(50% - 0.5rem)")};
+      width: ${({ $path }) => ($path === "/games" ? "100%" : "calc(50% - 0.5rem)")};
     }
   }
 

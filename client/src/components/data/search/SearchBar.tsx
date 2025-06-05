@@ -28,7 +28,7 @@ export default function SearchBar() {
       <Button size="medium" type="submit">
         Search <StyledIcon icon={SearchIcon} />
       </Button>
-      {path !== "/Games" && isMobile && <ClearButton />}
+      {path !== "/games" && isMobile && <ClearButton />}
     </SearchForm>
   );
 }
