@@ -1,11 +1,11 @@
-import { ReactNode, useRef } from "react";
+import React, { ReactNode } from "react";
 import { Button as StyledButton } from "./styles";
 
 type ButtonProps = {
   className?: string;
   children: ReactNode;
   type?: "button" | "submit" | "reset" | undefined;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   size?: "small" | "medium" | "large";
   variant?: "primary" | "secondary" | "shortcut" | "danger";
   full?: boolean;

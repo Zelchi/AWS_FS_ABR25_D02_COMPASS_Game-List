@@ -3,6 +3,9 @@ import SmartImage from "@/components/logic/SmartImage";
 import RatingSummary from "@/components/rating/Summary/RatingSummary";
 import Icon from "@/components/image/Icon/Icon";
 import { darken } from "polished";
+import { breakpoints } from "@/utils/breakpoints";
+
+const { mobile } = breakpoints;
 
 export const StyledTable = styled.table<{ $isAnimating: boolean; $transitionDuration: number }>`
   width: 100%;
@@ -45,7 +48,7 @@ export const TBRow = styled.tr<{ $location: string }>`
       border-radius: 0.8rem 0 0 0.8rem;
       padding-left: 1.5rem;
 
-      @media (max-width: 30em) {
+      @media (max-width: ${mobile}em) {
         padding: 1rem;
       }
     }
@@ -54,7 +57,7 @@ export const TBRow = styled.tr<{ $location: string }>`
       border-radius: 0 0.8rem 0.8rem 0;
     }
 
-    @media (max-width: 30em) {
+    @media (max-width: ${mobile}em) {
       padding: 1rem 1rem 1rem 0;
     }
   }
@@ -71,7 +74,7 @@ export const TBCell = styled.td<{ $width: boolean }>`
     }
   }
 
-  @media (max-width: 30em) {
+  @media (max-width: ${mobile}em) {
     &:first-child {
       padding: 1rem;
     }
@@ -100,7 +103,7 @@ export const ButtonSet = styled.td<{ $location: string }>`
     justify-content: flex-end;
     gap: 2.6rem;
 
-    @media (max-width: 30em) {
+    @media (max-width: ${mobile}em) {
       flex-direction: ${({ $location }) => ($location === "/Games" ? "column" : "row")};
       justify-content: ${({ $location }) => ($location === "/Games" ? "center" : "flex-end")};
       align-items: ${({ $location }) => ($location === "/Games" ? "flex-end" : "center")};

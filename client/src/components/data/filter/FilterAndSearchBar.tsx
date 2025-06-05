@@ -5,20 +5,14 @@ import { FilterAndSearchBarContainer as Container } from "@/components/data/filt
 import { useGlobal } from "@/contexts/globalContext";
 import FilterBar from "@/components/data/filter/FilterBar";
 
-export default function FilterAndSearchBar({
-  header,
-  onLoadItems,
-}: {
-  header: string[];
-  onLoadItems: () => Promise<void>;
-}) {
+export default function FilterAndSearchBar({ header }: { header: string[] }) {
   const { isLaptop } = useGlobal();
 
   return (
     <Container>
-      <FilterBar header={header} onLoadItems={onLoadItems} />
-      <SearchBar onLoadItems={onLoadItems} />
-      {!isLaptop && <ClearButton onLoadItems={onLoadItems} />}
+      <FilterBar header={header} />
+      <SearchBar />
+      {!isLaptop && <ClearButton />}
     </Container>
   );
 }

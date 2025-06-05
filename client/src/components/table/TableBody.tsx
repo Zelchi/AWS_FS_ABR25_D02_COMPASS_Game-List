@@ -9,6 +9,9 @@ import ColumnRating from "@/components/table/columns/ColumnRating";
 import ColumnDates from "@/components/table/columns/ColumnDates";
 import ColumnPrice from "@/components/table/columns/ColumnPrice";
 import { BodyStyledIcon, ButtonSet, TBCell, TBody, TBRow } from "@/components/table/styles";
+import { useModal } from "@/contexts/modalContext";
+import { getItem } from "@/utils/crudHandlers";
+import { routes } from "@/routes/routes";
 
 type TableProps = {
   data: any;
@@ -19,6 +22,19 @@ type TableProps = {
 
 export default function TableBody({ data, header, isAnimating, transitionDuration }: TableProps) {
   const location = useLocation().pathname;
+  const { handleModalContent, handleModalDeleteConfirm } = useModal();
+
+  const handleEdit = async (item: any) => {
+    const response = await getItem(
+      item && item.id,
+      routes.find((route) => route.path === location)!.singular,
+    );
+    handleModalContent(location, response);
+  };
+
+  const handleDelete = (item: any) => {
+    handleModalDeleteConfirm(location, item);
+  };
 
   return (
     <TBody $isAnimating={isAnimating} $transitionDuration={transitionDuration}>
@@ -39,8 +55,16 @@ export default function TableBody({ data, header, isAnimating, transitionDuratio
           ))}
           <ButtonSet $location={location}>
             <span>
-              <BodyStyledIcon icon={EditIcon} role="button" onClick={() => {}} />
-              <BodyStyledIcon icon={DeleteIcon} role="button" onClick={() => {}} />
+              <BodyStyledIcon
+                icon={EditIcon}
+                role="button"
+                onClick={(e) => void handleEdit(item)}
+              />
+              <BodyStyledIcon
+                icon={DeleteIcon}
+                role="button"
+                onClick={(e) => void handleDelete(item)}
+              />
             </span>
           </ButtonSet>
         </TBRow>

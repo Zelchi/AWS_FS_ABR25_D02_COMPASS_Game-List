@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Button from "@/components/button/Button";
 import { breakpoints } from "@/utils/breakpoints";
 
 const { mobile, tablet } = breakpoints;

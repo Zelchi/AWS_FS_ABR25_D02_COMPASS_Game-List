@@ -9,15 +9,55 @@ import ShortcutDesktop from "./medias/ShortcutDesktop";
 import ShortcutFallback from "./medias/ShortcutFallback";
 import ResponsiveLayout from "@/components/layout/ResponsiveLayout/ResponsiveLayout";
 
-export default function ShortcutItem({ icon, qty, title }: ShortcutProps) {
+export default function ShortcutItem({ icon, qty, title, onClick }: ShortcutProps) {
   return (
     <Container>
       <ResponsiveLayout
-        mobile={<ShortcutMobile icon={icon} plusIcon={PlusIcon} title={title} qty={qty} />}
-        tablet={<ShortcutTablet icon={icon} plusIcon={PlusIcon} title={title} qty={qty} />}
-        laptop={<ShortcutLaptop icon={icon} plusIcon={PlusIcon} title={title} qty={qty} />}
-        desktop={<ShortcutDesktop icon={icon} plusIcon={PlusIcon} title={title} qty={qty} />}
-        fallback={<ShortcutFallback icon={icon} plusIcon={PlusIcon} title={title} qty={qty} />}
+        mobile={
+          <ShortcutMobile
+            icon={icon}
+            plusIcon={PlusIcon}
+            title={title}
+            qty={qty}
+            onClick={onClick}
+          />
+        }
+        tablet={
+          <ShortcutTablet
+            icon={icon}
+            plusIcon={PlusIcon}
+            title={title}
+            qty={qty}
+            onClick={onClick}
+          />
+        }
+        laptop={
+          <ShortcutLaptop
+            icon={icon}
+            plusIcon={PlusIcon}
+            title={title}
+            qty={qty}
+            onClick={onClick}
+          />
+        }
+        desktop={
+          <ShortcutDesktop
+            icon={icon}
+            plusIcon={PlusIcon}
+            title={title}
+            qty={qty}
+            onClick={onClick}
+          />
+        }
+        fallback={
+          <ShortcutFallback
+            icon={icon}
+            plusIcon={PlusIcon}
+            title={title}
+            qty={qty}
+            onClick={onClick}
+          />
+        }
       />
     </Container>
   );

@@ -1,17 +1,16 @@
+import React from "react";
 import { useState, FormEvent, useEffect, Dispatch, SetStateAction } from "react";
 import { IGameEntity } from "@/../../server/src/Game/GameEntity";
+import Button from "@/components/button/Button";
 import { SelectionField } from "@/components/forms/Fields/SelectionField";
 import { InputField } from "@/components/forms/Fields/InputField";
+import { Container, Input, Select, Label } from "@/components/forms/Fields/styles";
 import { useModal } from "@/contexts/modalContext";
+import { useGlobal } from "@/contexts/globalContext";
 import API from "@/utils/API";
-import { Form, InvalidMessage } from "@/components/forms/styles";
-import { Container, Input, Label, Select } from "@/components/forms/Fields/styles";
-import Button from "@/components/button/Button";
 
 export interface GameFormProps {
   initialData?: Partial<IGameEntity>;
-  userId?: string;
-  onSuccess?: () => void;
 }
 
 export interface ItemData {
@@ -19,38 +18,34 @@ export interface ItemData {
   name: string;
 }
 
-export default function GameForm({ initialData, userId = "", onSuccess }: GameFormProps) {
+export default function GameForm({ initialData }: GameFormProps) {
   const [categories, setCategories] = useState<ItemData[]>([]);
   const [platforms, setPlatforms] = useState<ItemData[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [type] = useState(initialData ? "put" : "post");
   const { setIsModalOpen, setModalContent } = useModal();
-
+  const { handleClear } = useGlobal();
   const [game, setGame] = useState<Partial<IGameEntity>>({
-    userId: userId,
-    name: "",
-    description: "",
-    imageUrl: "",
-    price: 0,
-    status: "playing",
-    favorite: false,
-    rating: 0,
-    acquisDate: new Date(),
-    finishDate: null,
-    categories: [],
-    platforms: [],
-    ...initialData,
+    userId: "",
+    name: initialData?.name || "",
+    description: initialData?.description || "",
+    imageUrl: initialData?.imageUrl || "",
+    price: initialData?.price || 0,
+    status: initialData?.status || "playing",
+    favorite: initialData?.favorite || false,
+    rating: initialData?.rating || 0,
+    acquisDate: initialData?.acquisDate ? new Date(initialData.acquisDate) : null,
+    finishDate: initialData?.finishDate ? new Date(initialData.finishDate) : null,
+    categories: initialData?.categories || [],
+    platforms: initialData?.platforms || [],
   });
 
   const fetchItems = async (endpoint: string, setItems: Dispatch<SetStateAction<ItemData[]>>) => {
-    try {
-      const response = await API.GET(endpoint);
-      if (response && response.data) {
-        setItems(Array.isArray(response.data) ? response.data : []);
-      }
-    } catch (error) {
-      console.error(`Error fetching ${endpoint}:`, error);
+    const response = await API.GET(endpoint);
+    if (response && response.data) {
+      setItems(Array.isArray(response.data) ? response.data : []);
     }
   };
 
@@ -75,38 +70,37 @@ export default function GameForm({ initialData, userId = "", onSuccess }: GameFo
     setError("");
     setSubmitting(true);
 
-    try {
-      const gameData = {
-        userId: game.userId,
-        name: game.name,
-        description: game.description,
-        imageUrl: game.imageUrl,
-        status: game.status,
-        favorite: game.favorite,
-        rating: game.rating,
-        price: game.price,
-        acquisDate:
-          game.acquisDate instanceof Date ? game.acquisDate.toISOString() : game.acquisDate,
-        finishDate:
-          game.finishDate instanceof Date ? game.finishDate.toISOString() : game.finishDate,
-        categories: Array.isArray(game.categories)
-          ? game.categories.map((cat) => ({ id: cat.id }))
-          : [],
-        platforms: Array.isArray(game.platforms)
-          ? game.platforms.map((plat) => ({ id: plat.id }))
-          : [],
-      };
+    const gameData = {
+      userId: game.userId,
+      name: game.name,
+      description: game.description,
+      imageUrl: game.imageUrl,
+      status: game.status,
+      favorite: game.favorite,
+      rating: game.rating,
+      price: game.price,
+      acquisDate: game.acquisDate instanceof Date ? game.acquisDate.toISOString() : game.acquisDate,
+      finishDate: game.finishDate instanceof Date ? game.finishDate.toISOString() : game.finishDate,
+      categories: Array.isArray(game.categories)
+        ? game.categories.map((cat) => ({ id: cat.id }))
+        : [],
+      platforms: Array.isArray(game.platforms)
+        ? game.platforms.map((plat) => ({ id: plat.id }))
+        : [],
+    };
 
-      const response = await API.POST("/game", gameData);
-      if (response && response.status === 201) {
-        setIsModalOpen(false);
+    try {
+      const response =
+        type === "post"
+          ? await API.POST("/game", gameData)
+          : await API.PUT(`/game/${initialData?.id}`, gameData);
+      if ((response && response.status === 201) || response.status === 200) {
         setModalContent(null);
-      } else {
-        setError("Failed to save the game. Please try again.");
+        setIsModalOpen(false);
+        if (type === "post") handleClear();
       }
-    } catch (error) {
-      console.error("Error saving game:", error);
-      setError("Failed to save the game. Please check your connection and try again.");
+    } catch (e) {
+      setError("An error occurred while saving the game. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -119,18 +113,16 @@ export default function GameForm({ initialData, userId = "", onSuccess }: GameFo
 
   useEffect(() => {
     setLoading(true);
-
-    Promise.all([fetchItems("/category", setCategories), fetchItems("/platform", setPlatforms)])
-      .catch((error) => {
-        console.error("Error fetching form data:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    Promise.all([
+      fetchItems("/category", setCategories),
+      fetchItems("/platform", setPlatforms),
+    ]).finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <InputField
         name="name"
         value={game.name || ""}
@@ -173,6 +165,23 @@ export default function GameForm({ initialData, userId = "", onSuccess }: GameFo
         Price
       </InputField>
 
+      <InputField
+        name="rating"
+        type="range"
+        min={1}
+        max={5}
+        step="1"
+        value={game.rating || 1}
+        onChange={(e) =>
+          setGame((prev) => ({
+            ...prev,
+            rating: Number(e.target.value),
+          }))
+        }
+      >
+        Rating
+      </InputField>
+
       <Container>
         <Label htmlFor="status">Status</Label>
         <Select
@@ -185,16 +194,17 @@ export default function GameForm({ initialData, userId = "", onSuccess }: GameFo
           <option value="abandoned">Abandoned</option>
         </Select>
       </Container>
-
-      <Container>
+      <div>
         <Input
           name="favorite"
           type="checkbox"
           checked={game.favorite || false}
-          onChange={(e) => setGame((prev) => ({ ...prev, favorite: e.target.checked }))}
-        />
+          onChange={(e: React.ChangeEvent<any>) =>
+            setGame((prev) => ({ ...prev, favorite: e.target.checked }))
+          }
+        ></Input>
         <Label htmlFor="favorite">Favorite</Label>
-      </Container>
+      </div>
 
       <InputField
         name="acquisDate"
@@ -216,7 +226,7 @@ export default function GameForm({ initialData, userId = "", onSuccess }: GameFo
           }))
         }
       >
-        ACompletion Date
+        Completion Date
       </InputField>
 
       <SelectionField
@@ -227,7 +237,6 @@ export default function GameForm({ initialData, userId = "", onSuccess }: GameFo
         loading={loading}
         onConfirm={handleModalConfirm("categories")}
       />
-
       <SelectionField
         label="Platforms"
         modalTitle="Select Platforms"
@@ -236,17 +245,17 @@ export default function GameForm({ initialData, userId = "", onSuccess }: GameFo
         loading={loading}
         onConfirm={handleModalConfirm("platforms")}
       />
-
-      {error && <InvalidMessage>{error}</InvalidMessage>}
-
+      {error && <p>{error}</p>}
       <Container>
         <Button type="button" variant="danger" onClick={handleCancel} disabled={submitting}>
-          Cancel
+          {" "}
+          Cancel{" "}
         </Button>
         <Button type="submit" disabled={submitting}>
-          {submitting ? "Saving..." : "Save"}
+          {" "}
+          {submitting ? "Saving..." : "Save"}{" "}
         </Button>
       </Container>
-    </Form>
+    </form>
   );
 }

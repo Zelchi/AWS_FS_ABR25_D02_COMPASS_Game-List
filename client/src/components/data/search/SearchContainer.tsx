@@ -4,13 +4,13 @@ import SearchBar from "@/components/data/search/SearchBar";
 import { Container } from "@/components/data/search/styles";
 import { useGlobal } from "@/contexts/globalContext";
 
-export default function SearchContainer({ onLoadItems }: { onLoadItems: () => Promise<void> }) {
+export default function SearchContainer() {
   const { isMobile } = useGlobal();
 
   return (
     <Container>
-      <SearchBar onLoadItems={onLoadItems} />
-      {!isMobile && <ClearButton onLoadItems={onLoadItems} />}
+      <SearchBar />
+      {!isMobile && <ClearButton />}
     </Container>
   );
 }

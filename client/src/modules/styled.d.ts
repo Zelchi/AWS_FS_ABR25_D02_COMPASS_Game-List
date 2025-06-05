@@ -24,6 +24,7 @@ declare module "styled-components" {
       pink: string;
       red: string;
       aqua: string;
+      yellowLight: string;
     };
     fonts: {
       primary: string;

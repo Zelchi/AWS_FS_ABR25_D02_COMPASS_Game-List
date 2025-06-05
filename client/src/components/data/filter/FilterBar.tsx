@@ -9,13 +9,7 @@ import { useGlobal } from "@/contexts/globalContext";
 import API from "@/utils/API";
 import FavoriteIcon from "@/components/data/filter/FavoriteIcon";
 
-export default function FilterBar({
-  header,
-  onLoadItems,
-}: {
-  header: string[];
-  onLoadItems: () => Promise<void>;
-}) {
+export default function FilterBar({ header }: { header: string[] }) {
   const { filters, handleSelectedFilter } = useGlobal();
 
   const [data, setData] = useState<{ id: string; name: string }[]>([]);
@@ -51,22 +45,8 @@ export default function FilterBar({
   return (
     <Container>
       <ResponsiveLayout
-        mobile={
-          <FilterBarMobile
-            header={header}
-            onLoadItems={onLoadItems}
-            data={data}
-            favoriteIcon={<FavoriteIcon />}
-          />
-        }
-        laptop={
-          <FilterBarLaptop
-            header={header}
-            onLoadItems={onLoadItems}
-            data={data}
-            favoriteIcon={<FavoriteIcon />}
-          />
-        }
+        mobile={<FilterBarMobile header={header} data={data} favoriteIcon={<FavoriteIcon />} />}
+        laptop={<FilterBarLaptop header={header} data={data} favoriteIcon={<FavoriteIcon />} />}
         fallback={<FilterBarFallback data={data} favoriteIcon={<FavoriteIcon />} />}
       />
     </Container>

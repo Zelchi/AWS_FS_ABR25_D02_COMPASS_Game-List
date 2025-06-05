@@ -2,7 +2,6 @@ import { IGameEntity } from "@/../../server/src/Game/GameEntity";
 import { IPlatformEntity } from "@/../../server/src/Platform/PlatformEntity";
 import { useModal } from "@/contexts/modalContext";
 import { useGlobal } from "@/contexts/globalContext";
-import Icon from "@/components/image/Icon/Icon";
 import MoreIcon from "@/assets/icons/dots.svg?react";
 import { useState } from "react";
 import { Container, Image, StyledIcon } from "@/components/image/PlatformImages/styles";

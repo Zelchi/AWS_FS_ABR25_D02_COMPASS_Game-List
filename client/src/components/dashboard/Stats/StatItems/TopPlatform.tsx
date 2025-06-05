@@ -1,3 +1,5 @@
+// noinspection SpellCheckingInspection
+
 import defaultPlatformImage from "@/assets/imgs/default-platform.jpg";
 import { StatsItem, PlatformImage } from "@/components/dashboard/Stats/styles";
 

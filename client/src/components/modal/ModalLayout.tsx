@@ -80,7 +80,7 @@ export default function Modal({
 
   if (!isOpen) return null;
 
-  const Portal = createPortal(
+  return createPortal(
     <Overlay role="dialog" aria-modal="true">
       <ModalContainer ref={modalRef} size={size} onClick={(e) => e.stopPropagation()}>
         {children}
@@ -88,6 +88,4 @@ export default function Modal({
     </Overlay>,
     document.body,
   );
-
-  return Portal;
 }

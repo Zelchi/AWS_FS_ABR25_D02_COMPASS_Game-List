@@ -1,10 +1,22 @@
-import { CategoryProvider } from "@/contexts/categoryContext";
-import CategoriesContent from "@/pages/Categories/CategoriesContent";
+import React, { useEffect } from "react";
+import { ICategoryEntity } from "@/../../server/src/Category/CategoryEntity";
+import SearchContainer from "@/components/data/search/SearchContainer";
+import SiteLayout from "@/components/layout/SiteLayout/SiteLayout";
+import Table from "@/components/table/Table";
+import { useGlobal } from "@/contexts/globalContext";
 
-export default function Categories() {
+export default function CategoriesContent() {
+  const { categories, page, limit, sortOrder, loadCategories } = useGlobal();
+  const header = ["name"];
+
+  useEffect(() => {
+    void loadCategories();
+  }, [page, limit, sortOrder]);
+
   return (
-    <CategoryProvider>
-      <CategoriesContent />
-    </CategoryProvider>
+    <SiteLayout>
+      <SearchContainer />
+      <Table<ICategoryEntity> data={categories} header={header} />
+    </SiteLayout>
   );
 }

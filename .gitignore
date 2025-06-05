@@ -126,13 +126,6 @@ logs/
 *.so
 *.dylib
 
-## Images
-#*.png
-#*.jpg
-#*.jpeg
-#*.gif
-#*.ico
-
 # Archives
 *.zip
 *.tar
@@ -324,7 +317,6 @@ fastlane/screenshots
 fastlane/test_output
 
 # Cordova
-platforms/
 plugins/
 www/
 

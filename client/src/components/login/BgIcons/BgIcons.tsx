@@ -5,7 +5,7 @@ import PsSymbolsIcon from "@/assets/icons/ps-symbols-outline.svg?react";
 import { StyledIcon } from "@/components/login/BgIcons/styles";
 import { theme } from "@/themes/theme";
 
-export default function BackgroundIcons(): React.JSX.Element {
+export default function BgIcons(): React.JSX.Element {
   return (
     <>
       <StyledIcon

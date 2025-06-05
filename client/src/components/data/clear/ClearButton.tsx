@@ -4,7 +4,7 @@ import Button from "@/components/button/Button";
 import { StyledIcon } from "@/components/data/clear/styles";
 import { useGlobal } from "@/contexts/globalContext";
 
-export default function ClearButton({ onLoadItems }: { onLoadItems: () => Promise<void> }) {
+export default function ClearButton() {
   const { handleClear } = useGlobal();
   const [cleared, setCleared] = useState(false);
 
@@ -15,10 +15,9 @@ export default function ClearButton({ onLoadItems }: { onLoadItems: () => Promis
 
   useEffect(() => {
     if (cleared) {
-      onLoadItems();
       setCleared(false);
     }
-  }, [cleared, onLoadItems]);
+  }, [cleared]);
 
   return (
     <Button size="medium" variant="secondary" onClick={handleClick}>

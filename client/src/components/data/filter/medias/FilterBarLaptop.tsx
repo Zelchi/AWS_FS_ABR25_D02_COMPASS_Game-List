@@ -6,12 +6,7 @@ import FavoriteSelection from "@/components/data/filter/fields/FavoriteSelection
 import { FavoriteAndClearWrapper } from "@/components/data/filter/styles";
 import { FilterBarProps } from "@/components/data/filter/types";
 
-export default function FilterBarLaptop({
-  header,
-  onLoadItems,
-  data,
-  favoriteIcon,
-}: FilterBarProps) {
+export default function FilterBarLaptop({ header, data, favoriteIcon }: FilterBarProps) {
   return (
     <>
       <div style={{ display: "flex", gap: "1rem" }}>
@@ -20,7 +15,7 @@ export default function FilterBarLaptop({
       </div>
       <FavoriteAndClearWrapper>
         <FavoriteSelection favoriteIcon={favoriteIcon} />
-        <ClearButton onLoadItems={onLoadItems!} />
+        <ClearButton />
       </FavoriteAndClearWrapper>
     </>
   );

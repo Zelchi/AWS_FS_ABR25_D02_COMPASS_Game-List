@@ -5,18 +5,13 @@ import SortSelection from "@/components/data/filter/fields/SortSelection";
 import FavoriteSelection from "@/components/data/filter/fields/FavoriteSelection";
 import { FilterBarProps } from "@/components/data/filter/types";
 
-export default function FilterBarMobile({
-  header,
-  onLoadItems,
-  data,
-  favoriteIcon,
-}: FilterBarProps) {
+export default function FilterBarMobile({ header, data, favoriteIcon }: FilterBarProps) {
   return (
     <>
       <FilterSelection data={data} />
       <SortSelection header={header!} />
       <FavoriteSelection favoriteIcon={favoriteIcon} />
-      <ClearButton onLoadItems={onLoadItems!} />
+      <ClearButton />
     </>
   );
 }

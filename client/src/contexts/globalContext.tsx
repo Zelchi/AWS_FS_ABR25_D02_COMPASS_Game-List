@@ -8,12 +8,14 @@ import React, {
   useCallback,
 } from "react";
 import { useMediaQuery } from "react-responsive";
+import { useLocation } from "react-router-dom";
 import { ICategoryEntity } from "@/../../server/src/Category/CategoryEntity";
 import { IGameEntity } from "@/../../server/src/Game/GameEntity";
 import { IPlatformEntity } from "@/../../server/src/Platform/PlatformEntity";
 import { SortOrder } from "@/types/types";
 import { breakpoints } from "@/utils/breakpoints";
 import API from "@/utils/API";
+import { fetchAndSetData } from "@/utils/fetchAndSetData";
 
 type GlobalContextType = {
   user: string;
@@ -38,6 +40,9 @@ type GlobalContextType = {
   isFavorite: boolean;
   setIsFavorite: React.Dispatch<React.SetStateAction<boolean>>;
   setSortOrder: React.Dispatch<React.SetStateAction<SortOrder>>;
+  loadGames: () => Promise<void>;
+  loadCategories: () => Promise<void>;
+  loadPlatforms: () => Promise<void>;
   handleUserName: () => Promise<void>;
   handleSearch: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSortBy: (e: MouseEvent<HTMLButtonElement> | ChangeEvent<HTMLSelectElement>) => void;
@@ -46,6 +51,7 @@ type GlobalContextType = {
   handleFilters: (e: ChangeEvent<HTMLSelectElement>) => void;
   handleSelectedFilter: (e: ChangeEvent<HTMLSelectElement>) => void;
   handleIsFavorite: () => void;
+  handleLoad: () => void;
   handleClear: () => void;
   isMobile: boolean;
   isTablet: boolean;
@@ -64,17 +70,57 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("updatedAt");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [filters, setFilters] = useState<string>("");
   const [selectedFilter, setSelectedFilter] = useState("");
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const { mobile, tablet, laptop, desktop } = breakpoints;
+  const { mobile, laptop, desktop } = breakpoints;
+  const path = useLocation().pathname;
 
   const isMobile = useMediaQuery({ maxWidth: mobile * 16 });
   const isTablet = useMediaQuery({ maxWidth: mobile * 16 });
   const isLaptop = useMediaQuery({ maxWidth: laptop * 16 });
   const isDesktop = useMediaQuery({ maxWidth: desktop * 16 });
   const limit = 10;
+
+  const gamesPathAPI =
+    `game/page?page=${page}&limit=${limit}` +
+    `&sortBy=${sortBy}&sortOrder=${sortOrder}` +
+    `${selectedFilter ? `&${filters}=${selectedFilter}` : ""}` +
+    `${isFavorite ? `&isFavorite=${isFavorite}` : ""}`;
+
+  const categoriesPathAPI =
+    `category/page?page=${page}&limit=${limit}` + `&sortBy=name&sortOrder=${sortOrder}`;
+
+  const platformsPathAPI =
+    `platform/page?page=${page}&limit=${limit}` + `&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+
+  const loadGames = async () => {
+    await fetchAndSetData<IGameEntity[]>({
+      path: gamesPathAPI,
+      search,
+      setData: setGames,
+      extractData: (res) => res?.games,
+    });
+  };
+
+  const loadCategories = async () => {
+    await fetchAndSetData<ICategoryEntity[]>({
+      path: categoriesPathAPI,
+      search,
+      setData: setCategories,
+      extractData: (res) => res?.categories,
+    });
+  };
+
+  const loadPlatforms = async () => {
+    await fetchAndSetData<IPlatformEntity[]>({
+      path: platformsPathAPI,
+      search,
+      setData: setPlatforms,
+      extractData: (res) => res?.platforms,
+    });
+  };
 
   const handleUserName = useCallback(async () => {
     const res = await API.GET("account/");
@@ -126,7 +172,13 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     setIsFavorite((is) => !is);
   };
 
-  const handleClear = () => {
+  const handleLoad = (): void => {
+    if (path === "/Games") void loadGames();
+    if (path === "/Categories") void loadCategories();
+    if (path === "/Platforms") void loadPlatforms();
+  };
+
+  const handleClear = (): void => {
     setPage(1);
     setSearch("");
     setSortBy(isLaptop ? "" : "updatedAt");
@@ -134,6 +186,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     setFilters("");
     setSelectedFilter("");
     setIsFavorite(false);
+    handleLoad();
   };
 
   return (
@@ -161,11 +214,15 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setSelectedFilter,
         isFavorite,
         setIsFavorite,
+        loadGames,
+        loadCategories,
+        loadPlatforms,
         handleUserName,
         handleSearch,
         handleSortBy,
         handleSortOrder,
         handleSortByAndOrder,
+        handleLoad,
         handleClear,
         handleFilters,
         handleSelectedFilter,

@@ -9,7 +9,7 @@ import {
 import { ShortcutProps } from "@/components/dashboard/Shortcut/types";
 import Icon from "@/components/image/Icon/Icon";
 
-export default function ShortcutDesktop({ icon, plusIcon, qty, title }: ShortcutProps) {
+export default function ShortcutDesktop({ icon, plusIcon, qty, title, onClick }: ShortcutProps) {
   return (
     <>
       <Wrapper>
@@ -17,7 +17,7 @@ export default function ShortcutDesktop({ icon, plusIcon, qty, title }: Shortcut
         <Type>{title}</Type>
       </Wrapper>
       <Number>{qty}</Number>
-      <StyledButton variant="shortcut">
+      <StyledButton variant="shortcut" onClick={onClick}>
         <Icon icon={plusIcon!} />
         <span>
           <span>Add</span>

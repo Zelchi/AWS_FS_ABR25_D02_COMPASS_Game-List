@@ -3,14 +3,14 @@ import { StyledIcon, Number, Wrapper, StyledButton } from "@/components/dashboar
 import { ShortcutProps } from "@/components/dashboard/Shortcut/types";
 import Icon from "@/components/image/Icon/Icon";
 
-export default function ShortcutTablet({ icon, plusIcon, qty, title }: ShortcutProps) {
+export default function ShortcutTablet({ icon, plusIcon, qty, title, onClick }: ShortcutProps) {
   return (
     <>
       <Wrapper>
         <StyledIcon icon={icon}></StyledIcon>
         <Number>{qty}</Number>
       </Wrapper>
-      <StyledButton>
+      <StyledButton variant="shortcut" onClick={onClick}>
         <span>
           <Icon icon={plusIcon!} /> Add
         </span>{" "}

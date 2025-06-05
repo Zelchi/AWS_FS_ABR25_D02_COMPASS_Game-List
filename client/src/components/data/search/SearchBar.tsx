@@ -7,8 +7,8 @@ import { Input, SearchForm, StyledIcon } from "@/components/data/search/styles";
 import { useGlobal } from "@/contexts/globalContext";
 import { routes } from "@/routes/routes";
 
-export default function SearchBar({ onLoadItems }: { onLoadItems: () => Promise<void> }) {
-  const { search, handleSearch } = useGlobal();
+export default function SearchBar() {
+  const { search, handleSearch, handleLoad } = useGlobal();
   const { isMobile } = useGlobal();
   const path = useLocation().pathname;
 
@@ -16,7 +16,7 @@ export default function SearchBar({ onLoadItems }: { onLoadItems: () => Promise<
     <SearchForm
       onSubmit={(e) => {
         e.preventDefault();
-        void onLoadItems();
+        handleLoad();
       }}
       $path={path}
     >
@@ -28,7 +28,7 @@ export default function SearchBar({ onLoadItems }: { onLoadItems: () => Promise<
       <Button size="medium" type="submit">
         Search <StyledIcon icon={SearchIcon} />
       </Button>
-      {path !== "/Games" && isMobile && <ClearButton onLoadItems={onLoadItems} />}
+      {path !== "/Games" && isMobile && <ClearButton />}
     </SearchForm>
   );
 }

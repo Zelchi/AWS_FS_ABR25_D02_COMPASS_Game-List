@@ -1,17 +1,17 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, MouseEventHandler } from "react";
 
-type IconProps = {
+type IconProps<T> = {
   className?: string;
   icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   fillColor?: string;
   strokeColor?: string;
   role?: "button" | undefined;
-  onClick?: () => void;
+  onClick?: MouseEventHandler<T> | undefined;
   onHoverIn?: () => void;
   onHoverOut?: () => void;
 };
 
-export default function Icon({
+export default function Icon<T extends SVGSVGElement>({
   className,
   icon: SvgIcon,
   fillColor,
@@ -20,7 +20,7 @@ export default function Icon({
   onClick,
   onHoverIn,
   onHoverOut,
-}: IconProps) {
+}: IconProps<T>) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [iconName, setIconName] = useState<string | undefined>("");
 

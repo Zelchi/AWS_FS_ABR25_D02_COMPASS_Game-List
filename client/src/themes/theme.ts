@@ -21,13 +21,14 @@ export const theme = {
     pink: "#FD4760",
     red: "#FF0000",
     aqua: "#42D9C8",
+    yellowLight: "#FEF2D9",
   },
   fonts: {
     primary: '"Montserrat", sans-serif',
     secondary: '"Inter", sans-serif',
   },
   sizes: {
-    mainMaxWidth: "110rem",
+    mainMaxWidth: "144rem",
     menuMaxWidth: "3.8rem",
   },
   transitions: {
