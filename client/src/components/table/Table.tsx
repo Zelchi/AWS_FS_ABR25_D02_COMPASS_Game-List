@@ -40,7 +40,7 @@ export default function Table<T extends Record<string, any>>({ data, header }: T
     <StyledTable $isAnimating={isAnimating} $transitionDuration={tableTransitionDuration}>
       {!isLaptop && <TableHead header={header} />}
       <TableBody
-        data={sorted}
+        data={visibleData}
         header={header}
         isAnimating={isAnimating}
         transitionDuration={tableTransitionDuration}
