@@ -21,8 +21,8 @@ export const ListItem = styled.li<{ $active: boolean }>`
     }
 
     @media (max-width: ${mobile}em) {
+      justify-content: center;
       margin: 30% 0 0;
-      width: 100%;
     }
   }
 `;
@@ -47,12 +47,12 @@ export const Link = styled.a<{ $active: boolean; $label: string }>`
   stroke: ${({ theme, $active }) => ($active ? theme.colors.black : theme.colors.white)};
 
   span {
-    background: ${({ $label }) => ($label === "Logout" ? "none" : "auto")};
-    padding: ${({ $label }) => ($label === "Logout" ? 0 : "auto")};
+    background-color: ${({ $label }) => ($label === "Logout" ? "none" : "unset")};
+    padding: ${({ $label }) => ($label === "Logout" ? 0 : "unset")};
   }
 
   @media (max-width: ${tablet}em) {
-    display: none;
+    gap: 1rem;
     font-size: 1.2rem;
   }
 
@@ -81,14 +81,19 @@ export const Link = styled.a<{ $active: boolean; $label: string }>`
   }
 
   @media (max-width: ${tablet}em) {
-    padding: 0.8rem;
+    padding: 0.5rem;
     width: fit-content;
   }
 
   @media (max-width: ${mobile}em) {
+    display: flex;
     justify-content: center;
     padding: 1.2rem;
     width: 100%;
+
+    span {
+      font-size: 1.6rem;
+    }
   }
 `;
 
@@ -96,4 +101,12 @@ export const StyledIcon = styled(Icon)<{ $active: boolean }>`
   flex-shrink: 0;
   width: 1.8rem;
   transition: ${({ theme }) => theme.transitions.fastInOut};
+
+  @media (max-width: ${tablet}em) {
+    width: 1.2rem;
+  }
+
+  @media (max-width: ${mobile}em) {
+    width: 1.8rem;
+  }
 `;

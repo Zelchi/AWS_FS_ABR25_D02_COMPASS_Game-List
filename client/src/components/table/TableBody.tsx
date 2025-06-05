@@ -39,7 +39,13 @@ export default function TableBody({ data, header, isAnimating, transitionDuratio
   return (
     <TBody $isAnimating={isAnimating} $transitionDuration={transitionDuration}>
       {data.map((item: { id: string; [key: string]: any }) => (
-        <TBRow key={item.id} $location={location} role="option" tabIndex={0}>
+        <TBRow
+          key={item.id}
+          $location={location}
+          role="option"
+          tabIndex={0}
+          onClick={() => handleModalContent(location, item)}
+        >
           {location === "/Games" && <TableImages item={item} />}
           {header.map((head) => (
             <TBCell key={head} $width={head === "title"}>
@@ -58,12 +64,18 @@ export default function TableBody({ data, header, isAnimating, transitionDuratio
               <BodyStyledIcon
                 icon={EditIcon}
                 role="button"
-                onClick={(e) => void handleEdit(item)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  void handleEdit(item);
+                }}
               />
               <BodyStyledIcon
                 icon={DeleteIcon}
                 role="button"
-                onClick={(e) => void handleDelete(item)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  void handleDelete(item);
+                }}
               />
             </span>
           </ButtonSet>

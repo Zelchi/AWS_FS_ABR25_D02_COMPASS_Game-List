@@ -28,6 +28,7 @@ const ModalContainer = styled.div<{ size: string }>`
   overflow-y: auto;
   background: white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 3rem;
 `;
 
 interface ModalProps {
@@ -59,18 +60,14 @@ export default function Modal({
   useEffect(() => {
     if (isOpen && modalRef.current) {
       const el = modalRef.current.querySelector<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
       );
       el?.focus();
     }
   }, [isOpen]);
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (
-      closeOnClickOutside &&
-      modalRef.current &&
-      !modalRef.current.contains(e.target as Node)
-    ) {
+    if (closeOnClickOutside && modalRef.current && !modalRef.current.contains(e.target as Node)) {
       onClose();
     }
   };
@@ -79,10 +76,10 @@ export default function Modal({
 
   return createPortal(
     <Overlay role="dialog" aria-modal="true" onMouseDown={handleOverlayClick}>
-      <ModalContainer ref={modalRef} size={size} onClick={e => e.stopPropagation()}>
+      <ModalContainer ref={modalRef} size={size} onClick={(e) => e.stopPropagation()}>
         {children}
       </ModalContainer>
     </Overlay>,
-    document.body
+    document.body,
   );
 }

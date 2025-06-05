@@ -33,6 +33,12 @@ export const FilterBarContainer = styled.div`
       width: 100%;
     }
   }
+
+  @media (max-width: ${mobile}em) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: flex-start;
+  }
 `;
 
 export const SelectContainer = styled.div`
