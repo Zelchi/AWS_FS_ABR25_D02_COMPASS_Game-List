@@ -5,7 +5,7 @@ import SmartImage from "@/components/logic/SmartImage";
 import { flexCenter } from "@/styles/mixins";
 import { breakpoints } from "@/utils/breakpoints";
 
-const { mobile, laptop } = breakpoints;
+const { mobile, tablet, laptop } = breakpoints;
 
 export const Container = styled(motion.div)`
   ${flexCenter};
@@ -70,7 +70,8 @@ export const GameTitle = styled.div`
   left: -3rem;
   transform: skew(-35deg);
   max-width: 95%;
-  padding: 0.5rem 8rem;
+  padding: 0.5rem 6rem;
+
   background-color: ${({ theme }) => theme.colors.aqua};
   box-shadow: ${({ theme }) => `2rem 1.5rem 0 ${theme.colors.greyDark03}`};
 
@@ -80,14 +81,15 @@ export const GameTitle = styled.div`
     width: fit-content;
     color: ${({ theme }) => theme.colors.greyDark03};
     font-weight: 600;
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-family: ${({ theme }) => theme.fonts.primary};
   }
 `;
 
 export const GameTitleTag = styled.span`
+  display: block;
   width: fit-content;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.7rem;
   padding: 0.5rem 1rem;
   font-family: ${({ theme }) => theme.fonts.primary};
   font-weight: 500;
@@ -138,7 +140,12 @@ export const Question = styled.p`
     font-size: 2.6rem;
   }
 
+  @media (max-width: ${laptop}em) {
+    font-size: 2.2rem;
+  }
+
   @media (max-width: ${mobile}em) {
+    font-size: 2.6rem;
     text-align: center;
   }
 `;
@@ -170,7 +177,17 @@ export const ButtonSet = styled.div`
       padding: 1rem;
       font-size: 1rem;
     }
+
+  @media (max-width: ${tablet}em) {
+    button {
+      padding: 0.8rem;
+      font-size: 1rem;
+    }
   }
+
+      @media (max-width: ${mobile}em) {
+          justify-content: center;
+      }
 `;
 
 export const Wrapper = styled(motion.div)`

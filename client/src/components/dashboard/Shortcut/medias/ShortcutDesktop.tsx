@@ -18,11 +18,7 @@ export default function ShortcutDesktop({ icon, plusIcon, qty, title, onClick }:
       </Wrapper>
       <Number>{qty}</Number>
       <StyledButton variant="shortcut" onClick={onClick}>
-        <Icon icon={plusIcon!} />
-        <span>
-          <span>Add</span>
-          <span>new</span>
-        </span>
+        <Icon icon={plusIcon!} /> Add new
       </StyledButton>
     </>
   );

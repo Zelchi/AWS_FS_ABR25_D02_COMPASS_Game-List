@@ -78,8 +78,8 @@ export const Number = styled.span`
 `;
 
 export const PlatformImage = styled(SmartImage)`
-  width: 6rem;
-  height: 6rem;
+  width: 5rem;
+  height: 5rem;
   margin-bottom: 0.5rem;
   background-size: cover;
   background-position: center;

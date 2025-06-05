@@ -5,24 +5,24 @@ import Icon from "@/components/image/Icon/Icon";
 import Button from "@/components/button/Button";
 import { darken } from "polished";
 
-const { mobile, laptop, desktop } = breakpoints;
+const { mobile, tablet, laptop, desktop } = breakpoints;
 
 export const GroupContainer = styled.div`
   display: flex;
   gap: 2rem;
 
-  @media (max-width: ${mobile}em) {
+  @media (max-width: ${tablet}em) {
     gap: 1rem;
   }
 `;
 
 export const Container = styled.div`
   display: grid;
-  grid-template-columns: 5.5rem auto 2fr;
+  grid-template-columns: 4rem auto 2fr;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
   width: 100%;
-  padding: 2rem;
+  padding: 1.5rem;
   font-family: ${({ theme }) => theme.fonts.primary};
   color: ${({ theme }) => theme.colors.white};
   background-color: ${({ theme }) => theme.colors.greyDark03};
@@ -36,19 +36,21 @@ export const Container = styled.div`
   }
 
   @media (max-width: ${desktop}em) {
-    grid-template-columns: auto auto 2fr;
+    grid-template-columns: 1fr 1fr;
+    justify-content: flex-start;
     align-items: flex-end;
+    gap: 1.5rem;
   }
 
   @media (max-width: ${laptop}em) {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     justify-content: center;
     align-items: center;
-    gap: 1.5rem;
-    padding: 1.5rem;
+    gap: 1rem;
   }
 
   @media (max-width: ${mobile}em) {
+    grid-template-columns: 1fr;
     gap: 1rem;
     padding: 1rem;
   }
@@ -58,12 +60,15 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: 1rem;
+  padding-left: 0.5rem;
 
   @media (max-width: ${desktop}em) {
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-end;
     gap: 0.5rem;
+    padding-left: 0;
   }
 
   @media (max-width: ${laptop}em) {
@@ -97,20 +102,21 @@ export const StyledIcon = styled(Icon)`
 `;
 
 export const Number = styled.span`
-  font-size: 5.2rem;
+  font-size: 4.8rem;
   font-weight: 700;
   line-height: 1;
   text-transform: uppercase;
+  padding-left: 0.5rem;
 
   @media (max-width: ${desktop}em) {
-    font-size: 6.5rem;
+    justify-self: flex-end;
+    padding-left: 0;
+    font-size: 4.6rem;
     line-height: 0.8;
   }
 
   @media (max-width: ${laptop}em) {
-    margin-left: auto;
-    font-size: 3rem;
-    line-height: 0.8;
+    font-size: 4rem;
   }
 
   @media (max-width: ${mobile}em) {
@@ -135,7 +141,11 @@ export const Type = styled.span`
 `;
 
 export const StyledButton = styled(Button)`
+  width: 100%;
+  padding: 0.6rem 1rem;
+
   svg {
+    flex-shrink: 0;
     transition: ${({ theme }) => theme.transitions.fastInOut};
     width: 0.6rem;
     height: 0.6rem;
@@ -143,27 +153,13 @@ export const StyledButton = styled(Button)`
 
   @media (max-width: ${desktop}em) {
     display: flex;
-    gap: 1rem;
+    grid-column: 1 / -1;
+    gap: 0.5rem;
     height: 100%;
     font-weight: 600;
 
     & > :last-child {
       ${flexCenter};
-    }
-
-    svg {
-      width: 2rem;
-      height: 2rem;
-    }
-  }
-
-  @media (max-width: ${laptop}em) {
-    gap: 0.5rem;
-
-    & > :last-child {
-      flex-direction: row;
-      align-items: center;
-      gap: 0.5rem;
     }
 
     svg {
@@ -173,7 +169,33 @@ export const StyledButton = styled(Button)`
   }
 
   @media (max-width: ${laptop}em) {
+    gap: 0.5rem;
+
+    font-size: 1rem;
+
+    & > :last-child {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    svg {
+      width: 0.6rem;
+      height: 0.6rem;
+    }
+  }
+
+  @media (max-width: ${tablet}em) {
+    padding: 0.5rem;
+  }
+
+  @media (max-width: ${laptop}em) {
     flex-wrap: wrap;
     gap: 0.2rem;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+    }
   }
 `;

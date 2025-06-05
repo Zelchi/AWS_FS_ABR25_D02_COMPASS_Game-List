@@ -8,17 +8,18 @@ import {
 } from "@/components/dashboard/Shortcut/styles";
 import { ShortcutProps } from "@/components/dashboard/Shortcut/types";
 import Icon from "@/components/image/Icon/Icon";
+import { routes } from "@/routes/routes";
 
 export default function ShortcutLaptop({ icon, plusIcon, qty, title, onClick }: ShortcutProps) {
   return (
     <>
-      <Wrapper>
-        <StyledIcon icon={icon}></StyledIcon>
-        <Type>{title}</Type>
-        <Number>{qty}</Number>
-      </Wrapper>
+      <StyledIcon icon={icon}></StyledIcon>
+      <Number>{qty}</Number>
       <StyledButton variant="shortcut" onClick={onClick}>
-        <Icon icon={plusIcon!} /> Add new
+        <span>
+          <Icon icon={plusIcon!} /> Add
+        </span>{" "}
+        {routes.find((route) => route.path.slice(1) === title)?.singular}
       </StyledButton>
     </>
   );
