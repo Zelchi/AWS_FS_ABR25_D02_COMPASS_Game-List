@@ -35,9 +35,21 @@ export function SelectionField({
         ) : (
           <>
             <div>
-              {selectedItemIds.length > 0
-                ? `${selectedItemIds.length} item(s) selected`
-                : "No items selected"}
+              {selectedItemIds.length > 0 ? (
+                <>
+                  <div>
+                    {`${selectedItemIds.length} item(s) selected`}
+                  </div>
+                  <div>
+                    {items
+                      .filter(item => selectedItemIds.includes(item.id))
+                      .map(item => item.name)
+                      .join(", ")}
+                  </div>
+                </>
+              ) : (
+                "No items selected"
+              )}
             </div>
             <Button type="button" onClick={() => setShowModal(true)}>
               {`Select ${label}`}

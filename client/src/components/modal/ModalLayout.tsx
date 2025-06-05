@@ -26,7 +26,7 @@ const ModalContainer = styled.div<{ size: string }>`
   max-height: 90vh;
   border-radius: 8px;
   overflow-y: auto;
-  background: var(--color-white);
+  background: white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 `;
 
