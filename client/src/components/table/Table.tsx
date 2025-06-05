@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { sortItems } from "@/utils/sortItems";
+import { useEffect, useState } from "react";
 import { useGlobal } from "@/contexts/globalContext";
 import { StyledTable } from "@/components/table/styles";
 import TableHead from "@/components/table/TableHead";
