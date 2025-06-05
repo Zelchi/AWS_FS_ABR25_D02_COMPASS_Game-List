@@ -58,6 +58,8 @@ type GlobalContextType = {
   isLaptop: boolean;
   isDesktop: boolean;
   limit: number;
+  cleared: boolean;
+  setCleared: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -74,6 +76,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [filters, setFilters] = useState<string>("");
   const [selectedFilter, setSelectedFilter] = useState("");
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [cleared, setCleared] = useState<boolean>(false);
   const { mobile, tablet, laptop, desktop } = breakpoints;
   const path = useLocation().pathname;
 
@@ -185,7 +188,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     setFilters("");
     setSelectedFilter("");
     setIsFavorite(false);
-    handleLoad();
+    setCleared((prev) => !prev);
   };
 
   return (
@@ -231,6 +234,8 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         isLaptop,
         isDesktop,
         limit,
+        cleared,
+        setCleared,
       }}
     >
       {children}

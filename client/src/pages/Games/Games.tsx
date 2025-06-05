@@ -6,13 +6,13 @@ import Table from "@/components/table/Table";
 import { useGlobal } from "@/contexts/globalContext";
 
 export default function GamesContent() {
-  const { games, page, limit, sortBy, sortOrder, selectedFilter, isFavorite, isLaptop, loadGames } =
+  const { games, page, limit, sortBy, sortOrder, selectedFilter, isFavorite, isLaptop, cleared, loadGames } =
     useGlobal();
   const header = ["name", "rating", "price", "acquisDate", "finishDate"];
 
   useEffect(() => {
     void loadGames();
-  }, [page, limit, sortBy, sortOrder, selectedFilter, isFavorite]);
+  }, [page, limit, sortBy, sortOrder, selectedFilter, isFavorite, cleared]);
 
   return (
     <SiteLayout>

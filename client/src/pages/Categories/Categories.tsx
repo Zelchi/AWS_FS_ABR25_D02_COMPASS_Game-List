@@ -6,12 +6,12 @@ import Table from "@/components/table/Table";
 import { useGlobal } from "@/contexts/globalContext";
 
 export default function CategoriesContent() {
-  const { categories, page, limit, sortOrder, loadCategories } = useGlobal();
+  const { categories, page, limit, sortOrder, cleared, loadCategories } = useGlobal();
   const header = ["name"];
 
   useEffect(() => {
     void loadCategories();
-  }, [page, limit, sortOrder]);
+  }, [page, limit, sortOrder, cleared]);
 
   return (
     <SiteLayout>

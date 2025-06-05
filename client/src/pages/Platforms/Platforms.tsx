@@ -6,12 +6,12 @@ import SiteLayout from "@/components/layout/SiteLayout/SiteLayout";
 import Table from "@/components/table/Table";
 
 export default function PlatformsContent() {
-  const { platforms, page, limit, sortBy, sortOrder, loadPlatforms } = useGlobal();
+  const { platforms, page, limit, sortBy, sortOrder, cleared, loadPlatforms } = useGlobal();
   const header = ["name", "company"];
 
   useEffect(() => {
     void loadPlatforms();
-  }, [page, limit, sortBy, sortOrder]);
+  }, [page, limit, sortBy, sortOrder, cleared]);
 
   return (
     <SiteLayout>
