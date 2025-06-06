@@ -1,5 +1,5 @@
 ## Game List - Challenge 02
-##  📜 Project Description:
+##  📜 Project description:
 
 This project is an application for listing and managing games. It allows users to add, edit, and delete games from the list, as well as view details about each game.
 ## ✨ Features:
