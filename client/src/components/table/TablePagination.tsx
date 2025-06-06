@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { useGlobal } from "@/contexts/globalContext";
+import { useLocation } from "react-router-dom";
 
 const PaginationWrapper = styled.div`
   width: 100%;
@@ -48,8 +49,13 @@ const Arrow = styled.button<{ disabled?: boolean }>`
 export const PaginationButtons = () => {
     const { page, setPage, pagination } = useGlobal();
     const totalPages = pagination.totalPages;
+    const location = useLocation();
 
     const [showButtons, setShowButtons] = useState(false);
+
+    useEffect(() => {
+        setPage(1); 
+    }, [location]);
 
     useEffect(() => {
         const timer = setTimeout(() => setShowButtons(true), 1000);

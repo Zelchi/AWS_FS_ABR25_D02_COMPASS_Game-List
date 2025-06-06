@@ -8,6 +8,8 @@ const GlobalStyle = createGlobalStyle`
         padding: 0;
         box-sizing: inherit;
         outline: none;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
     }
 
     html {
