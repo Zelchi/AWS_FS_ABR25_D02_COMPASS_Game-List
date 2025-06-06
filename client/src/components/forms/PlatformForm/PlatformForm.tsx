@@ -1,9 +1,5 @@
 import { useState, FormEvent } from "react";
 import { IPlatformEntity } from "../../../../../server/src/routes/Platform/PlatformEntity";
-import { InputField } from "@/components/forms/Fields/InputField";
-import React, { useState, FormEvent } from "react";
-import { IPlatformEntity } from "../../../../../server/src/Platform/PlatformEntity";
-
 import { useModal } from "@/contexts/modalContext";
 import API from "@/utils/API";
 import { useGlobal } from "@/contexts/globalContext";

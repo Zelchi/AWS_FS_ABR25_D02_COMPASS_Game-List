@@ -74,7 +74,7 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
 
       {error && <p>{error}</p>}
 
-      <div>
+      <ButtonSet>
         <Button type="button" onClick={handleCancel} disabled={submitting}>
           {" "}
           Cancel{" "}

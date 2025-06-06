@@ -32,8 +32,6 @@ export const fetchAndSetData = async <T>({
   const response = await getAllItems<PaginationResponse | PaginationResponse[]>(finalPath);
   const data = extractData(response);
 
-  console.log("Response from fetchAndSetData:", response);
-
   if (data) {
     setData(data);
     if (Array.isArray(response)) {

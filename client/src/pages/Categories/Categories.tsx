@@ -4,6 +4,7 @@ import SearchContainer from "@/components/data/search/SearchContainer";
 import SiteLayout from "@/components/layout/SiteLayout/SiteLayout";
 import Table from "@/components/table/Table";
 import { useGlobal } from "@/contexts/globalContext";
+import { PaginationButtons } from "@/components/table/TablePagination";
 
 export default function CategoriesContent() {
   const { categories, page, limit, sortOrder, cleared, loadCategories } = useGlobal();

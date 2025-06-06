@@ -33,7 +33,6 @@ export function LoginForm({ isRegistered, onRegister }: LoginFormType): React.JS
       }
 
       if (status === 400) {
-        console.log(errors);
         toast.error("Invalid credentials! Please try again.");
       }
 

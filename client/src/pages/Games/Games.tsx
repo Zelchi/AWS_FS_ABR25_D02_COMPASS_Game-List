@@ -14,7 +14,7 @@ const Container = styled.div`
 `
 
 export default function Games() {
-  const { games, page, limit, sortBy, sortOrder, selectedFilter, isFavorite, isLaptop, loadGames } =
+  const { games, page, limit, sortBy, sortOrder, selectedFilter, isFavorite, isLaptop, loadGames, cleared } =
     useGlobal();
   const header = ["name", "rating", "price", "acquisDate", "finishDate"];
 
