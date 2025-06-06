@@ -10,6 +10,7 @@ export const Wrapper = styled.div`
   text-align: center;
   color: ${({ theme }) => theme.colors.yellowLight};
   background-color: ${({ theme }) => theme.colors.greyDark01};
+  user-select: none;
 `;
 
 export const ErrorContainer = styled.div`

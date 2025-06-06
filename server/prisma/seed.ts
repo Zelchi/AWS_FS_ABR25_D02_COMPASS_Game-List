@@ -76,6 +76,54 @@ async function main() {
         userId: user1.id,
         name: 'Shooter',
       }
+    }),
+    prisma.category.create({
+      data: {
+        userId: user1.id,
+        name: 'Sports',
+      }
+    }),
+    prisma.category.create({
+      data: {
+        userId: user1.id,
+        name: 'Fighting',
+      }
+    }),
+    prisma.category.create({
+      data: {
+        userId: user1.id,
+        name: 'Puzzle',
+      }
+    }),
+    prisma.category.create({
+      data: {
+        userId: user1.id,
+        name: 'Platformer',
+      }
+    }),
+    prisma.category.create({
+      data: {
+        userId: user1.id,
+        name: 'Horror',
+      }
+    }),
+    prisma.category.create({
+      data: {
+        userId: user1.id,
+        name: 'MMORPG',
+      }
+    }),
+    prisma.category.create({
+      data: {
+        userId: user1.id,
+        name: 'Indie',
+      }
+    }),
+    prisma.category.create({
+      data: {
+        userId: user1.id,
+        name: 'Survival',
+      }
     })
   ]);
 
@@ -161,9 +209,65 @@ async function main() {
         company: 'Google',
         imageUrl: 'https://logowik.com/content/uploads/images/google-play-store4701.jpg'
       }
+    }),
+    prisma.platform.create({
+      data: {
+        userId: user1.id,
+        name: 'PlayStation 4',
+        company: 'Sony',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/PlayStation_logo.svg/2560px-PlayStation_logo.svg.png'
+      }
+    }),
+    prisma.platform.create({
+      data: {
+        userId: user1.id,
+        name: 'Xbox One',
+        company: 'Microsoft',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Xbox_one_logo.svg/1200px-Xbox_one_logo.svg.png'
+      }
+    }),
+    prisma.platform.create({
+      data: {
+        userId: user1.id,
+        name: 'Ubisoft Connect',
+        company: 'Ubisoft',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Ubisoft_logo.svg/1200px-Ubisoft_logo.svg.png'
+      }
+    }),
+    prisma.platform.create({
+      data: {
+        userId: user1.id,
+        name: 'Rockstar Games Launcher',
+        company: 'Rockstar Games',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Rockstar_Games_Logo.svg/1200px-Rockstar_Games_Logo.svg.png'
+      }
+    }),
+    prisma.platform.create({
+      data: {
+        userId: user1.id,
+        name: 'Nintendo 3DS',
+        company: 'Nintendo',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Nintendo_3DS_Logo.svg/1280px-Nintendo_3DS_Logo.svg.png'
+      }
+    }),
+    prisma.platform.create({
+      data: {
+        userId: user1.id,
+        name: 'Xbox Game Pass',
+        company: 'Microsoft',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Xbox_Game_Pass_2023.svg/1200px-Xbox_Game_Pass_2023.svg.png'
+      }
+    }),
+    prisma.platform.create({
+      data: {
+        userId: user1.id,
+        name: 'PlayStation Plus',
+        company: 'Sony',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/PlayStation_Plus_logo.svg/1200px-PlayStation_Plus_logo.svg.png'
+      }
     })
   ]);
-
+  
   console.log('Creating games...');
 
   const games = await Promise.all([
@@ -476,9 +580,203 @@ async function main() {
           connect: [{ id: platforms[0].id }, { id: platforms[2].id }, { id: platforms[3].id }]
         }
       }
+    }),
+    prisma.game.create({
+      data: {
+        userId: user1.id,
+        name: 'FIFA 23',
+        description: 'Football simulation game with updated teams and gameplay',
+        imageUrl: 'https://image.api.playstation.com/vulcan/ap/rnd/202207/0515/BkaGNzqOZAkZOCyZfReusuBL.jpg',
+        price: 5999,
+        rating: 3,
+        status: 'playing',
+        favorite: false,
+        acquisDate: new Date('2022-09-30'),
+        categories: {
+          connect: [{ id: categories[8].id }]
+        },
+        platforms: {
+          connect: [{ id: platforms[0].id }, { id: platforms[2].id }, { id: platforms[3].id }]
+        }
+      }
+    }),
+    prisma.game.create({
+      data: {
+        userId: user1.id,
+        name: 'The Witcher 3: Wild Hunt',
+        description: 'Fantasy RPG based on the book series by Andrzej Sapkowski',
+        imageUrl: 'https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlD25nHkYGMFkju.png',
+        price: 3999,
+        rating: 5,
+        status: 'done',
+        favorite: true,
+        acquisDate: new Date('2019-12-20'),
+        finishDate: new Date('2020-03-15'),
+        categories: {
+          connect: [{ id: categories[0].id }, { id: categories[1].id }, { id: categories[6].id }]
+        },
+        platforms: {
+          connect: [{ id: platforms[3].id }, { id: platforms[10].id }, { id: platforms[11].id }]
+        }
+      }
+    }),
+    prisma.game.create({
+      data: {
+        userId: user1.id,
+        name: 'Minecraft',
+        description: 'Block-building sandbox game with survival elements',
+        imageUrl: 'https://image.api.playstation.com/vulcan/img/rnd/202010/2621/H9v5o8vP6RKkQtR77LIGrGDE.png',
+        price: 2999,
+        rating: 5,
+        status: 'playing',
+        favorite: true,
+        acquisDate: new Date('2018-06-10'),
+        categories: {
+          connect: [{ id: categories[15].id }, { id: categories[14].id }, { id: categories[6].id }]
+        },
+        platforms: {
+          connect: [{ id: platforms[1].id }, { id: platforms[2].id }, { id: platforms[9].id }]
+        }
+      }
+    }),
+    prisma.game.create({
+      data: {
+        userId: user1.id,
+        name: 'Mario Kart 8 Deluxe',
+        description: 'Kart racing game featuring Nintendo characters',
+        imageUrl: 'https://a-static.mlcdn.com.br/800x560/cartao-presente-digital-nintendo-r-34900-mario-kart-8-deluxe/magazineluiza/238813000/53bcbb413ab6a73a514ae5467e685f01.jpg',
+        price: 5999,
+        rating: 4,
+        status: 'done',
+        favorite: true,
+        acquisDate: new Date('2020-07-15'),
+        finishDate: new Date('2020-09-10'),
+        categories: {
+          connect: [{ id: categories[5].id }]
+        },
+        platforms: {
+          connect: [{ id: platforms[1].id }]
+        }
+      }
+    }),
+    prisma.game.create({
+      data: {
+        userId: user1.id,
+        name: 'Monster Hunter Rise',
+        description: 'Action RPG about hunting massive monsters',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/pt/6/60/Monster_Hunter_Rise_capa.jpg',
+        price: 3999,
+        rating: 4,
+        status: 'playing',
+        favorite: false,
+        acquisDate: new Date('2022-01-12'),
+        categories: {
+          connect: [{ id: categories[0].id }, { id: categories[1].id }]
+        },
+        platforms: {
+          connect: [{ id: platforms[1].id }, { id: platforms[3].id }]
+        }
+      }
+    }),
+    prisma.game.create({
+      data: {
+        userId: user1.id,
+        name: 'Resident Evil Village',
+        description: 'Survival horror FPS with gothic elements',
+        imageUrl: 'https://image.api.playstation.com/vulcan/ap/rnd/202101/0812/FkzwjnJknkrFlozkTdeQBMub.png',
+        price: 5999,
+        rating: 4,
+        status: 'done',
+        favorite: true,
+        acquisDate: new Date('2021-05-07'),
+        finishDate: new Date('2021-05-20'),
+        categories: {
+          connect: [{ id: categories[12].id }, { id: categories[1].id }, { id: categories[7].id }]
+        },
+        platforms: {
+          connect: [{ id: platforms[0].id }, { id: platforms[3].id }]
+        }
+      }
+    }),
+    prisma.game.create({
+      data: {
+        userId: user1.id,
+        name: 'Super Smash Bros. Ultimate',
+        description: 'Fighting game with Nintendo characters',
+        imageUrl: 'https://needgames.com.br/wp-content/uploads/2023/01/Super-Smash-Bros.jpg',
+        price: 5999,
+        rating: 5,
+        status: 'playing',
+        favorite: true,
+        acquisDate: new Date('2020-11-23'),
+        categories: {
+          connect: [{ id: categories[9].id }]
+        },
+        platforms: {
+          connect: [{ id: platforms[1].id }]
+        }
+      }
+    }),
+    prisma.game.create({
+      data: {
+        userId: user1.id,
+        name: 'Hades',
+        description: 'Roguelike dungeon crawler with Greek mythology',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/pt/thumb/8/80/Hades_capa.jpg/330px-Hades_capa.jpg',
+        price: 2499,
+        rating: 5,
+        status: 'done',
+        favorite: true,
+        acquisDate: new Date('2021-08-15'),
+        finishDate: new Date('2021-10-02'),
+        categories: {
+          connect: [{ id: categories[1].id }, { id: categories[14].id }]
+        },
+        platforms: {
+          connect: [{ id: platforms[1].id }, { id: platforms[3].id }, { id: platforms[15].id }]
+        }
+      }
+    }),
+    prisma.game.create({
+      data: {
+        userId: user1.id,
+        name: 'Tetris Effect: Connected',
+        description: 'Modern twist on the classic puzzle game with stunning visuals',
+        imageUrl: 'https://cdn.cloudflare.steamstatic.com/steam/apps/1003590/header.jpg',
+        price: 3999,
+        rating: 4,
+        status: 'playing',
+        favorite: false,
+        acquisDate: new Date('2022-10-08'),
+        categories: {
+          connect: [{ id: categories[10].id }]
+        },
+        platforms: {
+          connect: [{ id: platforms[2].id }, { id: platforms[3].id }, { id: platforms[15].id }]
+        }
+      }
+    }),
+    prisma.game.create({
+      data: {
+        userId: user1.id,
+        name: 'Street Fighter 6',
+        description: 'Latest entry in the classic fighting game series',
+        imageUrl: 'https://image.api.playstation.com/vulcan/ap/rnd/202304/0304/0d5c3aeefb83649f7f87b27436fc540b1952edbc6ea8cf28.png',
+        price: 5999,
+        rating: 4,
+        status: 'playing',
+        favorite: true,
+        acquisDate: new Date('2023-06-02'),
+        categories: {
+          connect: [{ id: categories[9].id }]
+        },
+        platforms: {
+          connect: [{ id: platforms[0].id }, { id: platforms[2].id }, { id: platforms[3].id }]
+        }
+      }
     })
   ]);
-
+  
   const oneYearAgo = new Date();
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
 
