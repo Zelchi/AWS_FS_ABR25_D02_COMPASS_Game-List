@@ -5,7 +5,6 @@ import Button from "@/components/button/Button";
 import {
   Header,
   Message,
-  ItemName,
   ButtonSet,
   StyledIcon,
   Container,
