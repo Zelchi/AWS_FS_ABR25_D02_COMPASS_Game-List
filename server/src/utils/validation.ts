@@ -13,8 +13,8 @@ export class ValidationUtils {
     }
 
     static validateDescription(description?: string, maxLength: number = 500): boolean {
-        return description === undefined || (typeof description === 'string' &&
-            description.trim() !== '' && description.length <= maxLength);
+        return description === undefined || description.trim() === '' ||
+            (typeof description === 'string' && description.length <= maxLength);
     }
 
     static validateImageUrl(imageUrl?: string): boolean {

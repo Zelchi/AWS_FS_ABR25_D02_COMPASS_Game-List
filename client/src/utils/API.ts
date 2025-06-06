@@ -22,27 +22,47 @@ class API {
   };
 
   public GET = async (path: string) => {
-    this.route.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
-    const res = await this.route.get(path);
-    return { data: res.data, status: res.status };
+    try {
+      this.route.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
+      const res = await this.route.get(path);
+      return { data: res.data, status: res.status };
+    }
+    catch (error) {
+      return { errors: error.response.data.errors };
+    }
   };
 
   public POST = async (path: string, data: object) => {
-    this.route.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
-    const res = await this.route.post(path, data);
-    return { data: res.data, status: res.status };
+    try {
+      this.route.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
+      const res = await this.route.post(path, data);
+      return { data: res.data, status: res.status };
+    }
+    catch (error) {
+      return { errors: error.response.data.errors };
+    }
   };
 
   public PUT = async (path: string, data: object) => {
-    this.route.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
-    const res = await this.route.put(path, data);
-    return { data: res.data, status: res.status };
+    try {
+      this.route.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
+      const res = await this.route.put(path, data);
+      return { data: res.data, status: res.status };
+    }
+    catch (error) {
+      return { errors: error.response.data.errors };
+    }
   };
 
   public DELETE = async (path: string) => {
-    this.route.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
-    const res = await this.route.delete(path);
-    return { data: res.data, status: res.status };
+    try {
+      this.route.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
+      const res = await this.route.delete(path);
+      return { data: res.data, status: res.status };
+    }
+    catch (error) {
+      return { errors: error.response.data.errors };
+    }
   };
 }
 
