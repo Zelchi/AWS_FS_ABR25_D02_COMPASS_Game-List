@@ -5,18 +5,19 @@ import SiteLayout from "@/components/layout/SiteLayout/SiteLayout";
 import Table from "@/components/table/Table";
 import { useGlobal } from "@/contexts/globalContext";
 
-export default function Categories() {
-  const { categories, page, limit, sortOrder, loadCategories } = useGlobal();
+export default function CategoriesContent() {
+  const { categories, page, limit, sortOrder, cleared, loadCategories } = useGlobal();
   const header = ["name"];
 
   useEffect(() => {
     void loadCategories();
-  }, [page, limit, sortOrder]);
+  }, [page, limit, sortOrder, cleared]);
 
   return (
     <SiteLayout>
       <SearchContainer />
       <Table<ICategoryEntity> data={categories} header={header} />
+      <PaginationButtons />
     </SiteLayout>
   );
 }

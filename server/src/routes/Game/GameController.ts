@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { gameService } from './GameService';
 import { GameRegisterDto, GameUpdateDto } from './GameDto';
-import { Auth } from '../auth';
+import { Auth } from '../../utils/auth';
 
 export class GameController {
     public middleware = Auth.createAuthMiddleware();

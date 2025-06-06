@@ -1,5 +1,6 @@
-export class AccountDto {
+import { ValidationResult, ValidationUtils } from '../../utils/validation';
 
+export class AccountDto {
     static validateEmail(email: string): boolean {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return emailRegex.test(email);
@@ -25,14 +26,14 @@ export class AccountLoginDto {
         this.password = password;
     }
 
-    isValid(): { valid: boolean; errors: string[] } {
+    isValid(): ValidationResult {
         const errors: string[] = [];
 
-        if (!AccountDto.validateEmail(this.email)) {
+        if (!ValidationUtils.validateEmail(this.email)) {
             errors.push('Invalid email format');
         }
 
-        if (!AccountDto.validatePassword(this.password)) {
+        if (!ValidationUtils.validatePassword(this.password)) {
             errors.push('Invalid password format');
         }
 
@@ -54,18 +55,18 @@ export class AccountRegisterDto {
         this.password = password;
     }
 
-    isValid(): { valid: boolean; errors: string[] } {
+    isValid(): ValidationResult {
         const errors: string[] = [];
 
-        if (!AccountDto.validateName(this.name)) {
-            errors.push('Name must be at least 2 characters');
+        if (!ValidationUtils.validateName(this.name) || this.name.trim().length < 3) {
+            errors.push('Name must be at least 3 characters');
         }
 
-        if (!AccountDto.validateEmail(this.email)) {
+        if (!ValidationUtils.validateEmail(this.email)) {
             errors.push('Invalid email format');
         }
 
-        if (!AccountDto.validatePassword(this.password)) {
+        if (!ValidationUtils.validatePassword(this.password)) {
             errors.push('Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character');
         }
 

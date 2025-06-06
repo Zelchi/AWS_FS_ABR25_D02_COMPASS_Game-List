@@ -1,4 +1,4 @@
-import { prisma } from '../db';
+import { prisma } from '../../utils/db';
 import { IGameEntity } from '../Game/GameEntity';
 import { IDashboardEntity } from './DashboardEntity';
 

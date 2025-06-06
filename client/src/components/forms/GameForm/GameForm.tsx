@@ -27,6 +27,7 @@ import {
 import StarRating from "@/components/rating/Rating/StarRating";
 import { InvalidMessage } from "@/components/forms/LoginForm/styles";
 import { SelectMany } from "@/components/forms/GameForm/SelectMany/SelectMany";
+import { toast } from "react-toastify";
 
 export interface GameFormProps {
   initialData?: Partial<IGameEntity>;
@@ -114,6 +115,9 @@ export default function GameForm({ initialData }: GameFormProps) {
           ? await API.POST("/game", gameData)
           : await API.PUT(`/game/${initialData?.id}`, gameData);
       if ((response && response.status === 201) || response.status === 200) {
+        response.status === 200 && toast.success("Game updated successfully!");
+        response.status === 201 && toast.success("Game created successfully!");
+        setIsModalOpen(false);
         setModalContent(null);
         setIsModalOpen(false);
         handleClear();

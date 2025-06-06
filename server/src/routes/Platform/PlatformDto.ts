@@ -1,29 +1,5 @@
 import { IPlatformEntity } from './PlatformEntity';
-
-class PlatformDto {
-    static validateName(name: string): boolean {
-        return typeof name === 'string' && name.trim() !== '';
-    }
-
-    static validateCompany(company: string): boolean {
-        return typeof company === 'string' && company.trim() !== '';
-    }
-
-    static validateUserId(userId: string): boolean {
-        return typeof userId === 'string' && userId.trim() !== '';
-    }
-
-    static validateImageUrl(imageUrl: string): boolean {
-        if (!imageUrl || imageUrl === undefined || imageUrl === null) return true;
-
-        try {
-            const url = new URL(imageUrl);
-            return url.protocol === 'http:' || url.protocol === 'https:';
-        } catch (e) {
-            return false;
-        }
-    }
-}
+import { ValidationResult, ValidationUtils } from '../../utils/validation';
 
 export class PlatformRegisterDto implements IPlatformEntity {
     userId: string;
@@ -43,22 +19,22 @@ export class PlatformRegisterDto implements IPlatformEntity {
         this.imageUrl = imageUrl;
     }
 
-    public isValid(): { valid: boolean; errors: string[] } {
+    public isValid(): ValidationResult {
         const errors: string[] = [];
 
-        if (!PlatformDto.validateUserId(this.userId)) {
+        if (!ValidationUtils.validateUserId(this.userId)) {
             errors.push('Invalid user ID');
         }
 
-        if (!PlatformDto.validateName(this.name)) {
+        if (!ValidationUtils.validateName(this.name)) {
             errors.push('Invalid platform name');
         }
 
-        if (!PlatformDto.validateCompany(this.company)) {
+        if (!ValidationUtils.validateCompany(this.company)) {
             errors.push('Invalid company name');
         }
 
-        if (!PlatformDto.validateImageUrl(this.imageUrl)) {
+        if (!ValidationUtils.validateImageUrl(this.imageUrl)) {
             errors.push('Invalid image URL format');
         }
 
@@ -93,18 +69,18 @@ export class PlatformUpdateDto implements Partial<IPlatformEntity> {
         if (imageUrl !== undefined) this.imageUrl = imageUrl;
     }
 
-    public isValid(): { valid: boolean; errors: string[] } {
+    public isValid(): ValidationResult {
         const errors: string[] = [];
 
-        if (this.name !== undefined && !PlatformDto.validateName(this.name)) {
+        if (this.name !== undefined && !ValidationUtils.validateName(this.name)) {
             errors.push('Invalid platform name');
         }
 
-        if (this.company !== undefined && !PlatformDto.validateCompany(this.company)) {
+        if (this.company !== undefined && !ValidationUtils.validateCompany(this.company)) {
             errors.push('Invalid company name');
         }
 
-        if (this.imageUrl !== undefined && !PlatformDto.validateImageUrl(this.imageUrl)) {
+        if (this.imageUrl !== undefined && !ValidationUtils.validateImageUrl(this.imageUrl)) {
             errors.push('Invalid image URL format');
         }
 

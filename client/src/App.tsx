@@ -9,10 +9,12 @@ import NotFound from "@/pages/NotFound/NotFound";
 import { Auth } from "@/components/logic/Auth";
 import ProtectedRoutes from "@/routes/ProtectedRoutes";
 import UnprotectedRoutes from "@/routes/UnprotectedRoutes";
+import { ToastContainer } from "react-toastify";
 
 export default function App(): React.JSX.Element {
   return (
     <Auth>
+      <ToastContainer position="bottom-right" autoClose={3000} theme="dark" />
       <Routes>
         <Route element={<UnprotectedRoutes />}>
           <Route path="/login" element={<Login />} />

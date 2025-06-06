@@ -1,11 +1,11 @@
-import { prisma } from '../db';
-import { IPlatformEntity, IPlatformRegister } from './PlatformEntity';
+import { prisma } from '../../utils/db';
+import { ICategoryEntity, ICategoryRegister } from './CategoryEntity';
 
-class PlatformRepository {
+class CategoryRepository {
 
     async findAllNames(userId: string): Promise<{ id: string, name: string }[]> {
         try {
-            const platforms = await prisma.platform.findMany({
+            const categories = await prisma.category.findMany({
                 where: {
                     userId,
                     deletedAt: null
@@ -18,68 +18,66 @@ class PlatformRepository {
                     name: 'asc'
                 }
             });
-            return platforms;
+            return categories;
         } catch (error) {
-            throw new Error('Failed to fetch platform names from database');
+            throw new Error('Failed to fetch category names');
         }
     }
 
-    async create(data: IPlatformRegister): Promise<IPlatformEntity> {
+    async create(categoryData: ICategoryRegister): Promise<ICategoryEntity> {
         try {
-            return await prisma.platform.create({
+            return await prisma.category.create({
+                data: categoryData,
+                include: {
+                    games: true
+                }
+            });
+        } catch (error) {
+            throw new Error('Failed to create category in database');
+        }
+    };
+
+    async update(id: string, data: Partial<ICategoryRegister>): Promise<ICategoryEntity> {
+        try {
+            const category = await prisma.category.update({
+                where: { id },
                 data,
                 include: {
                     games: true
                 }
             });
+            return category;
         } catch (error) {
-            throw new Error('Failed to create platform in database');
+            throw new Error('Failed to update category in database');
         }
-    }
-
-    async update(id: string, data: Partial<IPlatformEntity>): Promise<IPlatformEntity> {
-        try {
-            const { id: platformId, userId, createdAt, updatedAt, deletedAt, games, ...updateData } = data;
-
-            const platform = await prisma.platform.update({
-                where: { id },
-                data: updateData,
-                include: {
-                    games: true
-                }
-            });
-            return platform;
-        } catch (error) {
-            throw new Error('Failed to update platform in database');
-        }
-    }
+    };
 
     async delete(id: string): Promise<void> {
         try {
-            await prisma.platform.update({
+            await prisma.category.update({
                 where: { id },
                 data: { deletedAt: new Date() }
             });
         } catch (error) {
-            throw new Error('Failed to delete platform');
+            throw new Error('Failed to delete category');
         }
-    }
+    };
 
-    async findById(id: string, userId: string): Promise<IPlatformEntity | null> {
+    async findById(id: string, userId: string): Promise<ICategoryEntity | null> {
         try {
-            const platform = await prisma.platform.findFirst({
-                where: {
-                    id,
-                    userId,
-                    deletedAt: null
+            const category = await prisma.category.findFirst({
+                where: { 
+                    id, 
+                    userId, 
+                    deletedAt: null 
                 },
                 include: {
                     games: true
                 }
             });
-            return platform;
+            return category;
         } catch (error) {
-            throw new Error('Failed to find platform by id');
+            throw new Error('Failed to find category by id');
         }
     }
 
@@ -90,7 +88,7 @@ class PlatformRepository {
         sortBy: string = 'createdAt',
         sortOrder: 'asc' | 'desc' = 'desc',
         userId: string
-    ): Promise<{ platforms: IPlatformEntity[], total: number }> {
+    ): Promise<{ categories: ICategoryEntity[], total: number }> {
         try {
             const skip = (page - 1) * limit;
 
@@ -106,8 +104,8 @@ class PlatformRepository {
                 where.name = { contains: search };
             }
 
-            const [platforms, total] = await Promise.all([
-                prisma.platform.findMany({
+            const [categories, total] = await Promise.all([
+                prisma.category.findMany({
                     where,
                     skip,
                     take: limit,
@@ -116,20 +114,20 @@ class PlatformRepository {
                         games: true
                     }
                 }),
-                prisma.platform.count({
+                prisma.category.count({
                     where
                 })
             ]);
 
-            return { platforms, total };
+            return { categories, total };
         } catch (error) {
-            throw new Error('Failed to fetch paginated platforms');
+            throw new Error('Failed to fetch paginated categories');
         }
     }
 
-    async findByName(searchTerm: string, userId: string): Promise<IPlatformEntity[]> {
+    async findByName(searchTerm: string, userId: string): Promise<ICategoryEntity[]> {
         try {
-            const platforms = await prisma.platform.findMany({
+            const categories = await prisma.category.findMany({
                 where: {
                     name: { contains: searchTerm },
                     userId,
@@ -139,11 +137,11 @@ class PlatformRepository {
                     games: true
                 }
             });
-            return platforms;
+            return categories;
         } catch (error) {
-            throw new Error('Failed to find platforms by name');
+            throw new Error('Failed to find categories by name');
         }
     }
 }
 
-export const platformRepository = new PlatformRepository();
+export const categoryRepository = new CategoryRepository();

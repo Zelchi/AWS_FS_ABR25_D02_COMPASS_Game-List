@@ -1,9 +1,13 @@
+import { useState, FormEvent } from "react";
+import { IPlatformEntity } from "../../../../../server/src/routes/Platform/PlatformEntity";
+import { InputField } from "@/components/forms/Fields/InputField";
 import React, { useState, FormEvent } from "react";
 import { IPlatformEntity } from "../../../../../server/src/Platform/PlatformEntity";
-import { Input } from "@/components/forms/Fields/Input";
+
 import { useModal } from "@/contexts/modalContext";
 import API from "@/utils/API";
 import { useGlobal } from "@/contexts/globalContext";
+import { toast } from "react-toastify";
 import { ButtonSet, Form, FormField, StyledInput, StyledLabel } from "@/components/forms/styles";
 import { InvalidMessage } from "@/components/forms/LoginForm/styles";
 import Button from "@/components/button/Button";
@@ -44,6 +48,8 @@ export default function PlatformForm({ initialData }: PlatformFormProps) {
           : await API.PUT(`/platform/${initialData?.id}`, platformData);
 
       if (response && (response.status === 201 || response.status === 200)) {
+        response.status === 200 && toast.success("Platform updated successfully!");
+        response.status === 201 && toast.success("Platform created successfully!");
         setIsModalOpen(false);
         setModalContent(null);
       }

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "@/components/button/Button";
 import { Form, StyledInput, Label, InvalidMessage } from "@/components/forms/LoginForm/styles";
 import API from "@/utils/API";
+import { toast } from "react-toastify";
 
 type LoginFormType = {
   isRegistered: boolean;
@@ -20,17 +21,25 @@ export function LoginForm({ isRegistered, onRegister }: LoginFormType): React.JS
     e.preventDefault();
 
     try {
-      const { status, data } = await API.POST("/account/log", {
+      const { status, data, errors } = await API.POST("/account/log", {
         email,
         password,
       });
 
       if (status === 200) {
+        toast.success("Login successful!");
         localStorage.setItem("token", data.token);
         navigate("/");
       }
-    } catch {
-      alert("Login failed!");
+
+      if (status === 400) {
+        console.log(errors);
+        toast.error("Invalid credentials! Please try again.");
+      }
+
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response.data.error || "An error occurred during login. Please try again.");
     }
   };
 
@@ -47,7 +56,7 @@ export function LoginForm({ isRegistered, onRegister }: LoginFormType): React.JS
       });
 
       if (status === 201) {
-        alert("Successfully Registered!");
+        toast.success("Successfully Registered!");
 
         setName("");
         setEmail("");
@@ -56,8 +65,8 @@ export function LoginForm({ isRegistered, onRegister }: LoginFormType): React.JS
 
         onRegister();
       }
-    } catch {
-      alert("Register failed!");
+    } catch (err) {
+      toast.error(err.response.data.error || "Registration failed! Please try again.");
     }
   };
 

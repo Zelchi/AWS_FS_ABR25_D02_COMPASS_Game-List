@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { accountService } from "./AccountService";
 import { AccountLoginDto, AccountRegisterDto } from "./AccountDto";
-import { Auth } from "../auth";
+import { Auth } from "../../utils/auth";
 
 export class AccountController {
     public middleware = Auth.createAccountMiddleware();

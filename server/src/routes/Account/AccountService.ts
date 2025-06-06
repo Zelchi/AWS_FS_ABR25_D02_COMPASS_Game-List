@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { AccountEntity } from './AccountEntity';
 import { accountRepository } from './AccountRepository';
 import { AccountRegister, AccountLogin } from './AccountEntity';
-import { Auth } from '../auth';
+import { Auth } from '../../utils/auth';
 
 export class AccountService {
 
