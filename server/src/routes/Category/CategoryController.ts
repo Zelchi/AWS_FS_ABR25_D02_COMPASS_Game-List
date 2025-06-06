@@ -59,7 +59,8 @@ class CategoryController {
             const validationResult = categoryDto.isValid();
 
             const searchByName = await categoryService.getCategoriesByName(name, userId);
-            if (searchByName.length > 0) {
+            
+            if (searchByName.length > 0 && searchByName[0] && searchByName[0].name === name) {
                 res.status(400).json({ error: 'Category with this name already exists' });
                 return;
             }

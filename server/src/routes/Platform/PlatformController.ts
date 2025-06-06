@@ -55,8 +55,8 @@ export class PlatformController {
             );
 
             const searchByName = await platformService.getPlatformsByName(name, userId);
-            if (searchByName.length > 0) {
-                res.status(400).json({ error: 'Platform with this name already exists for this user' });
+            if (searchByName.length > 0 && searchByName[0] && searchByName[0].name === name) {
+                res.status(400).json({ error: 'Platform with this name already exists' });
                 return;
             }
 

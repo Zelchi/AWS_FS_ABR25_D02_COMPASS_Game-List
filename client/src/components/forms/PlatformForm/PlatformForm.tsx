@@ -7,111 +7,114 @@ import { toast } from "react-toastify";
 import { ButtonSet, Form, FormField, StyledInput, StyledLabel } from "@/components/forms/styles";
 import { InvalidMessage } from "@/components/forms/LoginForm/styles";
 import Button from "@/components/button/Button";
+import axios from "axios";
 
 export interface PlatformFormProps {
-  initialData?: IPlatformEntity;
+    initialData?: IPlatformEntity;
 }
 
 export default function PlatformForm({ initialData }: PlatformFormProps) {
-  const [error, setError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [type] = useState(initialData && Object.keys(initialData).length > 0 ? "put" : "post");
-  const { setIsModalOpen, setModalContent } = useModal();
-  const [platform, setPlatform] = useState<Partial<IPlatformEntity>>({
-    userId: "",
-    name: initialData?.name || "",
-    company: initialData?.company || "",
-    imageUrl: initialData?.imageUrl || "",
-  });
-  const { handleClear } = useGlobal();
+    const [error, setError] = useState("");
+    const [submitting, setSubmitting] = useState(false);
+    const [type] = useState(initialData && Object.keys(initialData).length > 0 ? "put" : "post");
+    const { setIsModalOpen, setModalContent } = useModal();
+    const [platform, setPlatform] = useState<Partial<IPlatformEntity>>({
+        userId: "",
+        name: initialData?.name || "",
+        company: initialData?.company || "",
+        imageUrl: initialData?.imageUrl || "",
+    });
+    const { handleClear } = useGlobal();
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setSubmitting(true);
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        setError("");
+        setSubmitting(true);
 
-    const platformData = {
-      userId: platform.userId,
-      name: platform.name,
-      company: platform.company,
-      imageUrl: platform.imageUrl,
+        const platformData = {
+            userId: platform.userId,
+            name: platform.name,
+            company: platform.company,
+            imageUrl: platform.imageUrl,
+        };
+
+        try {
+            const response =
+                type === "post"
+                    ? await API.POST("/platform", platformData)
+                    : await API.PUT(`/platform/${initialData?.id}`, platformData);
+
+            if (response && (response.status === 201 || response.status === 200)) {
+                response.status === 200 && toast.success("Platform updated successfully!");
+                response.status === 201 && toast.success("Platform created successfully!");
+                setIsModalOpen(false);
+                setModalContent(null);
+            }
+
+            if (type === "post") handleClear();
+        } catch (e) {
+            if (axios.isAxiosError(e)) {
+                toast.error(e.response?.data?.error || (e.response?.data?.errors && e.response.data.errors[0]) || "An error occurred while deleting the item.");
+            }
+        } finally {
+            setSubmitting(false);
+        }
     };
 
-    try {
-      const response =
-        type === "post"
-          ? await API.POST("/platform", platformData)
-          : await API.PUT(`/platform/${initialData?.id}`, platformData);
-
-      if (response && (response.status === 201 || response.status === 200)) {
-        response.status === 200 && toast.success("Platform updated successfully!");
-        response.status === 201 && toast.success("Platform created successfully!");
+    const handleCancel = () => {
         setIsModalOpen(false);
         setModalContent(null);
-      }
+    };
 
-      if (type === "post") handleClear();
-    } catch (e) {
-      setError("An error occurred while saving the platform. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    return (
+        <Form onSubmit={handleSubmit}>
+            <FormField>
+                <StyledLabel htmlFor="name">Platform Name</StyledLabel>
+                <StyledInput
+                    name="name"
+                    value={platform.name || ""}
+                    onChange={(e) => setPlatform((prev) => ({ ...prev, name: e.target.value }))}
+                />
+            </FormField>
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setModalContent(null);
-  };
+            <FormField>
+                <StyledLabel htmlFor="company">Company</StyledLabel>
+                <StyledInput
+                    name="company"
+                    value={platform.company || ""}
+                    onChange={(e) => setPlatform((prev) => ({ ...prev, company: e.target.value }))}
+                />
+            </FormField>
 
-  return (
-    <Form onSubmit={handleSubmit}>
-      <FormField>
-        <StyledLabel htmlFor="name">Platform Name</StyledLabel>
-        <StyledInput
-          name="name"
-          value={platform.name || ""}
-          onChange={(e) => setPlatform((prev) => ({ ...prev, name: e.target.value }))}
-        />
-      </FormField>
+            <FormField>
+                <StyledLabel htmlFor="imageUrl">Image URL</StyledLabel>
+                <StyledInput
+                    name="imageUrl"
+                    type="url"
+                    value={platform.imageUrl || ""}
+                    onChange={(e) => setPlatform((prev) => ({ ...prev, imageUrl: e.target.value }))}
+                />
+            </FormField>
 
-      <FormField>
-        <StyledLabel htmlFor="company">Company</StyledLabel>
-        <StyledInput
-          name="company"
-          value={platform.company || ""}
-          onChange={(e) => setPlatform((prev) => ({ ...prev, company: e.target.value }))}
-        />
-      </FormField>
+            {error && <InvalidMessage>{error}</InvalidMessage>}
 
-      <FormField>
-        <StyledLabel htmlFor="imageUrl">Image URL</StyledLabel>
-        <StyledInput
-          name="imageUrl"
-          type="url"
-          value={platform.imageUrl || ""}
-          onChange={(e) => setPlatform((prev) => ({ ...prev, imageUrl: e.target.value }))}
-        />
-      </FormField>
-
-      {error && <InvalidMessage>{error}</InvalidMessage>}
-
-      <ButtonSet>
-        <Button
-          type="button"
-          variant="danger"
-          size="large"
-          upper
-          onClick={handleCancel}
-          disabled={submitting}
-        >
-          {" "}
-          Cancel{" "}
-        </Button>
-        <Button type="submit" size="large" upper disabled={submitting}>
-          {" "}
-          {submitting ? "Saving..." : "Save"}{" "}
-        </Button>
-      </ButtonSet>
-    </Form>
-  );
+            <ButtonSet>
+                <Button
+                    type="button"
+                    variant="danger"
+                    size="large"
+                    upper
+                    onClick={handleCancel}
+                    disabled={submitting}
+                >
+                    {" "}
+                    Cancel{" "}
+                </Button>
+                <Button type="submit" size="large" upper disabled={submitting}>
+                    {" "}
+                    {submitting ? "Saving..." : "Save"}{" "}
+                </Button>
+            </ButtonSet>
+        </Form>
+    );
 }
