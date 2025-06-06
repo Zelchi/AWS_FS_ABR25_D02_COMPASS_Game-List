@@ -1,4 +1,4 @@
-import sadFace from "@/assets/imgs/sad-face-finish.svg";
+import sadFace from "@/assets/imgs/sad-face-finish2.svg";
 import signOutIcon from "@/assets/icons/sign-out-outline.svg";
 import {
   Wrapper,
