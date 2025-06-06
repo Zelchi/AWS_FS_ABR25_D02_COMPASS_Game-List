@@ -103,7 +103,7 @@ async function main() {
         userId: user1.id,
         name: 'Xbox Series X',
         company: 'Microsoft',
-        imageUrl: 'asdasdasdasdasdasdasda'
+        imageUrl: 'https://i.pinimg.com/736x/69/af/1b/69af1b021e6fe4d37383f80cdaf0cc26.jpg'
       }
     }),
     prisma.platform.create({
@@ -135,7 +135,7 @@ async function main() {
         userId: user1.id,
         name: 'Origin',
         company: 'EA Games',
-        imageUrl: ''
+        imageUrl: 'https://1000logos.net/wp-content/uploads/2020/09/EA-Desktop-Origin-Logo.png'
       }
     }),
     prisma.platform.create({
@@ -193,7 +193,7 @@ async function main() {
         description: 'Open-world adventure in Hyrule',
         imageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/fb/The_Legend_of_Zelda_Tears_of_the_Kingdom_cover.jpg/250px-The_Legend_of_Zelda_Tears_of_the_Kingdom_cover.jpg',
         price: 5999,
-        rating: 5,
+        rating: 4,
         status: 'done',
         favorite: true,
         acquisDate: new Date('2023-05-12'),
@@ -232,7 +232,7 @@ async function main() {
         description: 'Turn-based strategy game',
         imageUrl: 'https://image.api.playstation.com/vulcan/img/cfn/11307Hs8nlMsvWNuv_O2AC7tY7gdGyoYbRX1Effyn1qc2IR0XFvHXcdhJsAZMc00hW_0lukWIajDGsKsB7uK5LAFiCsjoVSW.png',
         price: 5999,
-        rating: 5,
+        rating: 4,
         status: 'playing',
         favorite: true,
         acquisDate: new Date('2023-08-15'),
@@ -271,7 +271,7 @@ async function main() {
         description: 'Action-adventure game based on Norse mythology',
         imageUrl: 'https://image.api.playstation.com/vulcan/ap/rnd/202207/1117/8YdK4x6G4L9EGpgWPkiPVj8y.png',
         price: 6999,
-        rating: 5,
+        rating: 3,
         status: 'done',
         favorite: true,
         acquisDate: new Date('2022-11-09'),
@@ -291,7 +291,7 @@ async function main() {
         description: 'Open-world RPG set in a dystopian future',
         imageUrl: 'https://image.api.playstation.com/vulcan/ap/rnd/202008/0416/6Bo40lnWU0BhgrOUm7Cb6by3.png',
         price: 4999,
-        rating: 3,
+        rating: 5,
         status: 'abandoned',
         favorite: false,
         acquisDate: new Date('2020-12-10'),
@@ -310,7 +310,7 @@ async function main() {
         description: 'Fantasy RPG based on Dungeons & Dragons',
         imageUrl: 'https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg',
         price: 5999,
-        rating: 5,
+        rating: 4,
         status: 'playing',
         favorite: true,
         acquisDate: new Date('2023-08-03'),
@@ -426,7 +426,7 @@ async function main() {
         description: 'JRPG about high school students with supernatural abilities',
         imageUrl: 'https://image.api.playstation.com/vulcan/img/cfn/11307WJ4TkwLDkBEJni04tu81UlL-PCQsfaFYBDLvZaC_STUeyp_1A7wJfHHj_XDoedOwpH3zh_JuU7HEiy63dDA31I4ymKb.png',
         price: 4999,
-        rating: 5,
+        rating: 1,
         status: 'done',
         favorite: true,
         acquisDate: new Date('2022-10-21'),
@@ -446,7 +446,7 @@ async function main() {
         description: 'Challenging metroidvania with beautiful hand-drawn art',
         imageUrl: 'https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg',
         price: 1499,
-        rating: 5,
+        rating: 3,
         status: 'playing',
         favorite: true,
         acquisDate: new Date('2021-05-05'),
