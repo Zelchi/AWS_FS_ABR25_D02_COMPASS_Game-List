@@ -4,6 +4,9 @@ import Icon from "@/components/image/Icon/Icon";
 import { darken, mix } from "polished";
 import { theme } from "@/themes/theme";
 import PlatformImages from "@/components/image/PlatformImages/PlatformImages";
+import { breakpoints } from "@/utils/breakpoints";
+
+const { tablet } = breakpoints;
 
 export function getRatingColor(rating: number) {
   const minColor = theme.colors.pink;
@@ -35,12 +38,21 @@ export const GameInfo = styled.div`
   font-size: 1.4rem;
   display: grid;
   grid-template-columns: 2fr 1fr;
+  column-gap: 1rem;
 
   & > *:last-child {
     align-self: start;
     border-radius: 0.4rem;
     background-color: ${({ theme }) => theme.colors.greyLight01};
     padding: 1rem;
+  }
+
+  @media (max-width: ${tablet}em) {
+    grid-template-columns: 1fr;
+
+    & > *:last-child {
+      margin-top: 2rem;
+    }
   }
 `;
 
