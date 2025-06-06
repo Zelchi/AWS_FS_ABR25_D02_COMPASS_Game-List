@@ -1,5 +1,5 @@
 {
-  "name": "garcia-barbearia-api",
+  "name": "server",
   "version": "1.0.0",
   "main": "index.js",
   "prisma": {
