@@ -22,7 +22,7 @@ export function LoginForm({ isRegistered, onRegister }: LoginFormType): React.JS
     e.preventDefault();
 
     try {
-      const { status, data } = await API.POST("/account/log", {
+      const { status, data, errors } = await API.POST("/account/log", {
         email,
         password,
       });
@@ -32,8 +32,15 @@ export function LoginForm({ isRegistered, onRegister }: LoginFormType): React.JS
         localStorage.setItem("token", data.token);
         navigate("/");
       }
-    } catch {
-      toast.error("Login failed! Please check your credentials.");
+
+      if (status === 400) {
+        console.log(errors);
+        toast.error("Invalid credentials! Please try again.");
+      }
+
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response.data.error || "An error occurred during login. Please try again.");
     }
   };
 
@@ -59,8 +66,8 @@ export function LoginForm({ isRegistered, onRegister }: LoginFormType): React.JS
 
         onRegister();
       }
-    } catch {
-      toast.error("Registration failed! Please try again.");
+    } catch (err) {
+      toast.error(err.response.data.error || "Registration failed! Please try again.");
     }
   };
 
