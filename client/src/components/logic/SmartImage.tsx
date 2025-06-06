@@ -7,11 +7,19 @@ type SmartImageProps = {
   fallback?: string;
   className?: string;
   onValid?: () => void;
+  maxAttempts?: number; 
 };
 
-export default function SmartImage({ src, fallback, className, onValid }: SmartImageProps) {
+export default function SmartImage({ 
+  src, 
+  fallback, 
+  className, 
+  onValid,
+  maxAttempts: maxAttemptsFromProps = 2
+}: SmartImageProps) {
   const [finalSrc, setFinalSrc] = useState<string | null>(null);
   const [attempts, setAttempts] = useState<number>(0);
+  const [maxAttempts] = useState<number>(maxAttemptsFromProps); 
 
   useEffect(() => {
     setAttempts(0);
@@ -23,7 +31,7 @@ export default function SmartImage({ src, fallback, className, onValid }: SmartI
       return;
     }
 
-    if (attempts >= 3) {
+    if (attempts >= maxAttempts) {
       banList.push(src);
       if (fallback) {
         setFinalSrc(fallback);
@@ -46,7 +54,7 @@ export default function SmartImage({ src, fallback, className, onValid }: SmartI
     img.onerror = () => {
       if (isMounted) {
         setAttempts((attempt) => ++attempt);
-        if (attempts >= 3) {
+        if (attempts >= maxAttempts) {
           banList.push(src);
           if (fallback) {
             setFinalSrc(fallback);
@@ -62,7 +70,7 @@ export default function SmartImage({ src, fallback, className, onValid }: SmartI
     return () => {
       isMounted = false;
     };
-  }, [src, attempts, fallback]);
+  }, [src, attempts, fallback, onValid, maxAttempts]);
 
   if (!finalSrc) return null;
 

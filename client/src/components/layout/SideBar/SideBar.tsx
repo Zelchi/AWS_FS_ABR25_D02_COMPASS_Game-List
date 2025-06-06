@@ -14,7 +14,7 @@ export default function SideBar() {
   return (
     <StyledSideBar $isOpen={isOpen} $isModalOpen={isModalOpen}>
       <LogoContainer>
-        <a href="/client/public">
+        <a href="/notfound">
           <Logo />
         </a>
       </LogoContainer>
