@@ -1,5 +1,5 @@
 import { useState, FormEvent } from "react";
-import { ICategoryEntity } from "../../../../../server/src/Category/CategoryEntity";
+import { ICategoryEntity } from "../../../../../server/src/routes/Category/CategoryEntity";
 import { InputField } from "@/components/forms/Fields/InputField";
 import { useModal } from "@/contexts/modalContext";
 import API from "@/utils/API";

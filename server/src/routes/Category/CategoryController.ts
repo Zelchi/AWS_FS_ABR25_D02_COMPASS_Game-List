@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { CategoryRegisterDto, CategoryUpdateDto } from "./CategoryDto";
 import { categoryService } from "./CategoryService";
-import { Auth } from "../auth";
+import { Auth } from "../../utils/auth";
 
 class CategoryController {
     public middleware = Auth.createAuthMiddleware();

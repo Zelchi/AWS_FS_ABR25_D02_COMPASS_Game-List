@@ -1,11 +1,11 @@
 import express, { Application, Router, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 
-import account from './Account/AccountRouter';
-import category from './Category/CategoryRouter';
-import dashboard from './Dashboard/DashboardRouter';
-import game from './Game/GameRouter';
-import platform from './Platform/PlatformRouter';
+import account from './routes/Account/AccountRouter';
+import category from './routes/Category/CategoryRouter';
+import dashboard from './routes/Dashboard/DashboardRouter';
+import game from './routes/Game/GameRouter';
+import platform from './routes/Platform/PlatformRouter';
 
 class App {
     private app: Application;

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { dashboardService } from "./DashboardService";
-import { Auth } from "../auth";
+import { Auth } from "../../utils/auth";
 
 class DashboardController {
     public middleware = Auth.createAuthMiddleware();

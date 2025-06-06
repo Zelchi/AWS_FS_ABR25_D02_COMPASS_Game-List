@@ -1,14 +1,5 @@
 import { ICategoryEntity } from './CategoryEntity';
-
-class CategoryDto {
-    static validateName(name: string): boolean {
-        return typeof name === 'string' && name.trim() !== '';
-    }
-
-    static validateUserId(userId: string): boolean {
-        return typeof userId === 'string' && userId.trim() !== '';
-    }
-}
+import { ValidationResult, ValidationUtils } from '../../utils/validation';
 
 export class CategoryRegisterDto implements ICategoryEntity {
     name: string;
@@ -19,14 +10,14 @@ export class CategoryRegisterDto implements ICategoryEntity {
         this.userId = userId;
     }
 
-    public isValid(): { valid: boolean; errors: string[] } {
+    public isValid(): ValidationResult {
         const errors: string[] = [];
 
-        if (!CategoryDto.validateUserId(this.userId)) {
+        if (!ValidationUtils.validateUserId(this.userId)) {
             errors.push('Invalid user ID');
         }
 
-        if (!CategoryDto.validateName(this.name)) {
+        if (!ValidationUtils.validateName(this.name)) {
             errors.push('Invalid category name');
         }
 
@@ -51,10 +42,10 @@ export class CategoryUpdateDto implements Partial<ICategoryEntity> {
         if (name !== undefined) this.name = name;
     }
 
-    public isValid(): { valid: boolean; errors: string[] } {
+    public isValid(): ValidationResult {
         const errors: string[] = [];
 
-        if (this.name !== undefined && !CategoryDto.validateName(this.name)) {
+        if (this.name !== undefined && !ValidationUtils.validateName(this.name)) {
             errors.push('Invalid category name');
         }
 

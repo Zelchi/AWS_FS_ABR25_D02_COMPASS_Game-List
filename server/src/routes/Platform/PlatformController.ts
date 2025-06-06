@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { platformService } from './PlatformService';
 import { PlatformRegisterDto, PlatformUpdateDto } from './PlatformDto';
-import { Auth } from '../auth';
+import { Auth } from '../../utils/auth';
 
 export class PlatformController {
     public middleware = Auth.createAuthMiddleware();
