@@ -16,8 +16,6 @@ export function Auth({ children }: { children: ReactNode }): JSX.Element {
     retry: false,
   });
 
-  console.log("isAuthenticated", isAuthenticated);
-
   useEffect(() => {
     if (isLoading) return;
 

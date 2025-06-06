@@ -332,7 +332,6 @@ export default function GameForm({ initialData }: GameFormProps) {
               onChange={(e) =>
                 setGame((prev) => ({ ...prev, acquisDate: new Date(e.target.value) }))
               }
-              required
             />
           </FormField>
           <FormField>
@@ -348,7 +347,6 @@ export default function GameForm({ initialData }: GameFormProps) {
                   finishDate: e.target.value ? new Date(e.target.value) : null,
                 }))
               }
-              required
             />
           </FormField>
         </>
@@ -365,7 +363,6 @@ export default function GameForm({ initialData }: GameFormProps) {
                 onChange={(e) =>
                   setGame((prev) => ({ ...prev, acquisDate: new Date(e.target.value) }))
                 }
-                required
               />
             </div>
 
@@ -382,7 +379,6 @@ export default function GameForm({ initialData }: GameFormProps) {
                     finishDate: e.target.value ? new Date(e.target.value) : null,
                   }))
                 }
-                required
               />
             </div>
           </Wrapper>
