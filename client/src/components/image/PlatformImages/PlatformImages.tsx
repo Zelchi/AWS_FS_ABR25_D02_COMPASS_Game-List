@@ -1,12 +1,18 @@
-import { IGameEntity } from "@/../../server/src/Game/GameEntity";
-import { IPlatformEntity } from "@/../../server/src/Platform/PlatformEntity";
-import { useModal } from "@/contexts/modalContext";
+import { IGameEntity } from "@/../../server/src/routes/Game/GameEntity";
+import { IPlatformEntity } from "@/../../server/src/routes/Platform/PlatformEntity";
 import { useGlobal } from "@/contexts/globalContext";
 import MoreIcon from "@/assets/icons/dots.svg?react";
 import { useState } from "react";
 import { Container, Image, StyledIcon } from "@/components/image/PlatformImages/styles";
+import { useModal } from "@/contexts/modalContext";
 
-export default function PlatformImages({ game }: { game: IGameEntity }) {
+export default function PlatformImages({
+  game,
+  className,
+}: {
+  game: IGameEntity;
+  className?: string;
+}) {
   const { isModalOpen } = useModal();
   const { isMobile } = useGlobal();
   const maxNPlatforms = isMobile ? 1 : 3;
@@ -14,34 +20,23 @@ export default function PlatformImages({ game }: { game: IGameEntity }) {
   const [validCount, setValidCount] = useState(0);
 
   const platforms = (game.platforms ?? []) as IPlatformEntity[];
-  const platformsWithImage = platforms.filter((p) => p.imageUrl?.trim()).slice(0, maxNPlatforms);
+  const platformsWithImage = isModalOpen
+    ? platforms.filter((p) => p.imageUrl?.trim())
+    : platforms.filter((p) => p.imageUrl?.trim()).slice(0, maxNPlatforms);
 
   const handleValidImage = () => {
     setValidCount((prev) => prev + 1);
   };
 
-  if (isModalOpen) {
-    return (
-      <div>
-        <p>
-          {platforms.map((platform, index) => (
-            <span key={platform.id}>
-              {platform.name}
-              {index < platforms.length - 1 ? ", " : ""}
-            </span>
-          ))}
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <Container>
+    <Container className={className}>
       {platformsWithImage.map((platform) => (
         <Image key={platform.id} src={platform.imageUrl} onValid={handleValidImage} />
       ))}
 
-      {(platforms.length > maxNPlatforms || validCount === 0) && <StyledIcon icon={MoreIcon} />}
+      {(platforms.length > maxNPlatforms || validCount === 0) && !isModalOpen && (
+        <StyledIcon icon={MoreIcon} />
+      )}
     </Container>
   );
 }
