@@ -12,6 +12,13 @@ type FetchAndSetType<T> = {
   }) => void;
 };
 
+type PaginationResponse = {
+  total?: number;
+  currentPage?: number;
+  totalPages?: number;
+  [key: string]: any;
+};
+
 export const fetchAndSetData = async <T>({
   search,
   path,
@@ -22,15 +29,25 @@ export const fetchAndSetData = async <T>({
   const trimmedSearch = search?.trim();
   const finalPath = trimmedSearch ? `${path}&search=${trimmedSearch}` : path;
 
-  const response = await getAllItems<any>(finalPath);
+  const response = await getAllItems<PaginationResponse | PaginationResponse[]>(finalPath);
   const data = extractData(response);
+
+  console.log("Response from fetchAndSetData:", response);
 
   if (data) {
     setData(data);
-    setPagination({
-      total: response?.total || 0,
-      currentPage: response?.currentPage || 1,
-      totalPages: response?.totalPages || 1,
-    })
+    if (Array.isArray(response)) {
+      setPagination({
+        total: response.length,
+        currentPage: 1,
+        totalPages: 1,
+      });
+    } else {
+      setPagination({
+        total: (response && (response as PaginationResponse)?.total) || 0,
+        currentPage: (response && (response as PaginationResponse)?.currentPage) || 1,
+        totalPages: (response && (response as PaginationResponse)?.totalPages) || 1,
+      });
+    }
   }
 };
