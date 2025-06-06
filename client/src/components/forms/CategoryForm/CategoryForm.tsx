@@ -1,5 +1,5 @@
 import React, { useState, FormEvent } from "react";
-import { ICategoryEntity } from "@/../../server/src/Category/CategoryEntity";
+import { ICategoryEntity } from "@/../../server/src/routes/Category/CategoryEntity";
 import { useModal } from "@/contexts/modalContext";
 import API from "@/utils/API";
 import { useGlobal } from "@/contexts/globalContext";
@@ -15,9 +15,7 @@ export interface CategoryFormProps {
 export default function CategoryForm({ initialData }: CategoryFormProps) {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [type] = useState(
-    initialData && Object.keys(initialData).length > 0 ? "put" : "post"
-  );
+  const [type] = useState(initialData && Object.keys(initialData).length > 0 ? "put" : "post");
   const { setIsModalOpen, setModalContent } = useModal();
   const [category, setCategory] = useState<Partial<ICategoryEntity>>({
     userId: "",
@@ -74,12 +72,12 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
 
       {error && <p>{error}</p>}
 
-      <div>
-        <Button type="button" onClick={handleCancel} disabled={submitting}>
+      <ButtonSet>
+        <Button type="button" variant="danger" upper onClick={handleCancel} disabled={submitting}>
           {" "}
           Cancel{" "}
         </Button>
-        <Button type="submit" size="large" disabled={submitting}>
+        <Button type="submit" size="large" upper disabled={submitting}>
           {" "}
           {submitting ? "Saving..." : "Save"}{" "}
         </Button>

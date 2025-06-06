@@ -1,4 +1,6 @@
+import { useId } from "react";
 import { Container } from "@/components/rating/Summary/styles";
+import { theme } from "@/themes/theme";
 
 const ratingLabels: Record<number, string> = {
   1: "Poor",
@@ -31,14 +33,23 @@ export default function RatingSummary({
   rating = 4,
   maxRating = 5,
   color = "#000",
-  bgColor = "#ddd",
+  bgColor = theme.colors.greyLight01,
   label = true,
 }: RatingSummaryProps) {
+  const gradientId = useId();
+
   return (
     <Container>
       <svg className={className} viewBox="0 0 44 42" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="halfFill" x1="0" y1="0" x2="44" y2="0" gradientUnits="userSpaceOnUse">
+          <linearGradient
+            id={gradientId}
+            x1="0"
+            y1="0"
+            x2="44"
+            y2="0"
+            gradientUnits="userSpaceOnUse"
+          >
             <stop offset={`${(rating / maxRating) * 100}%`} stopColor={color} />
             <stop offset={`${(rating / maxRating) * 100}%`} stopColor={bgColor} />
           </linearGradient>
@@ -46,7 +57,7 @@ export default function RatingSummary({
 
         <path
           d="M43 16.5H26.875L22 1.5L17.125 16.5H1L14.125 25.5L9.0625 40.5L22 31.125L34.9375 40.5L29.875 25.5L43 16.5Z"
-          fill="url(#halfFill)"
+          fill={`url(#${gradientId})`}
           stroke="none"
         />
       </svg>

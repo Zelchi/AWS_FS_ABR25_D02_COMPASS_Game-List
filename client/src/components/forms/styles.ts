@@ -191,3 +191,45 @@ export const StyledIcon = styled(Icon)<{ $isFavorite: boolean }>`
     fill: ${({ theme }) => theme.colors.aqua};
   }
 `;
+
+export const CheckboxWrapper = styled.label`
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+`;
+
+export const HiddenCheckbox = styled.input.attrs({ type: "checkbox" })`
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  height: 0;
+`;
+
+export const CustomCheckbox = styled.span`
+  width: 3.28rem;
+  height: 3.28rem;
+  border: none;
+  border-radius: 0.4rem;
+  background: ${({ theme }) => theme.colors.white};
+  border: ${({ theme }) => `1px solid ${theme.colors.aqua}`};
+  display: inline-block;
+  transition: all 0.2s ease-in-out;
+
+  ${HiddenCheckbox}:checked + & {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: ${({ theme }) => theme.colors.aqua};
+  }
+
+  ${HiddenCheckbox}:checked + &::after {
+    display: block;
+    transform: rotate(45deg);
+    margin-top: -0.5rem;
+    border: solid ${({ theme }) => theme.colors.white};
+    border-width: 0 0.4rem 0.4rem 0;
+    width: 0.8rem;
+    height: 1.6rem;
+    content: "";
+  }
+`;

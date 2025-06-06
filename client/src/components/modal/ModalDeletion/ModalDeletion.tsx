@@ -1,78 +1,19 @@
 import { useState } from "react";
+import DangerIcon from "@/assets/icons/danger.svg?react";
+import { InvalidMessage } from "@/components/forms/LoginForm/styles";
+import Button from "@/components/button/Button";
+import {
+  Header,
+  Message,
+  ItemName,
+  ButtonSet,
+  StyledIcon,
+  Container,
+} from "@/components/modal/ModalDeletion/styles";
 import { useModal } from "@/contexts/modalContext";
 import { useGlobal } from "@/contexts/globalContext";
 import API from "@/utils/API";
-import styled from "styled-components";
-
-const Container = styled.div`
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const Header = styled.h2`
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-`;
-
-const Message = styled.p`
-  margin-bottom: 1rem;
-`;
-
-const ItemName = styled.p`
-  font-weight: bold;
-  font-size: 1.2rem;
-  color: var(--color-primary);
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1rem;
-`;
-
-const DeleteButton = styled.button`
-  background-color: #d32f2f;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-
-  &:hover {
-    background-color: #b71c1c;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    background-color: #e57373;
-  }
-`;
-
-const CancelButton = styled.button`
-  background-color: transparent;
-  border: 1px solid #ccc;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    color: #bdbdbd;
-  }
-`;
-
-const ErrorMessage = styled.p`
-  color: #d32f2f;
-  margin-top: 1rem;
-`;
+import { routes } from "@/routes/routes";
 
 interface DeletionConfirmModalProps {
   path: string;
@@ -131,20 +72,40 @@ const ModalDeletion = ({ path, initialData }: DeletionConfirmModalProps) => {
 
   return (
     <Container>
-      <Header>Confirm Deletion</Header>
-      <Message>Are you sure you want to delete this item?</Message>
-      <ItemName>{initialData.name}</ItemName>
+      <div>
+        <StyledIcon icon={DangerIcon} />
+        <Header>Are you sure?</Header>
+        <Message>
+          {path === "/games" && <span>You're about to delete {initialData.name}</span>}
+          Deleting this {routes.find((route) => route.path === path)?.singular} will remove it
+          permanently from system. This action is not reversible.
+        </Message>
 
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+        {error && <InvalidMessage>{error}</InvalidMessage>}
 
-      <ButtonGroup>
-        <CancelButton type="button" onClick={handleCancel} disabled={deleting}>
-          Cancel
-        </CancelButton>
-        <DeleteButton type="button" onClick={handleDelete} disabled={deleting}>
-          {deleting ? "Deleting..." : "Delete"}
-        </DeleteButton>
-      </ButtonGroup>
+        <ButtonSet>
+          <Button
+            type="button"
+            variant="secondary"
+            size="large"
+            upper
+            onClick={handleCancel}
+            disabled={deleting}
+          >
+            On second thought...
+          </Button>
+          <Button
+            type="button"
+            variant="danger"
+            size="large"
+            upper
+            onClick={handleDelete}
+            disabled={deleting}
+          >
+            {deleting ? "Deleting..." : "Yes, for sure!"}
+          </Button>
+        </ButtonSet>
+      </div>
     </Container>
   );
 };

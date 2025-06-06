@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { IPlatformEntity } from "@/../../server/src/Platform/PlatformEntity";
+import { IPlatformEntity } from "@/../../server/src/routes/Platform/PlatformEntity";
 import { useGlobal } from "@/contexts/globalContext";
 import SearchContainer from "@/components/data/search/SearchContainer";
 import SiteLayout from "@/components/layout/SiteLayout/SiteLayout";

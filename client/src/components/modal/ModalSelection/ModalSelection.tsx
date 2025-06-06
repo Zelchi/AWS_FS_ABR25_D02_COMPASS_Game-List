@@ -4,10 +4,12 @@ import {
   ModalOverlay,
   ModalContent,
   ModalList,
-  SelectItem,
-  ModalFooter,
+  StyledCheckbox,
+  Topics,
+  Label,
 } from "@/components/modal/ModalSelection/styles";
 import { ButtonSet } from "@/components/forms/styles";
+import Checkbox from "@/components/forms/Fields/Checkbox";
 
 export interface SelectionModalProps {
   title: string;
@@ -46,31 +48,28 @@ export function ModalSelection({
         <ModalList>
           {items.length > 0 ? (
             items.map((item) => (
-              <SelectItem key={item.id}>
-                <input
+              <Topics key={item.id}>
+                <StyledCheckbox
                   id={`modal-item-${item.id}`}
-                  type="checkbox"
                   checked={localSelectedIds.includes(item.id)}
                   onChange={(e) => handleItemToggle(item.id, e.target.checked)}
                 />
-                <label htmlFor={`modal-item-${item.id}`}>{item.name}</label>
-              </SelectItem>
+                <Label htmlFor={`modal-item-${item.id}`}>{item.name}</Label>
+              </Topics>
             ))
           ) : (
             <div>No items available</div>
           )}
         </ModalList>
-        <ModalFooter>
-          <ButtonSet>
-            <Button type="button" variant="danger" size="large" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button type="submit" size="large" onClick={() => onConfirm(localSelectedIds)}>
-              {" "}
-              Confirm
-            </Button>
-          </ButtonSet>
-        </ModalFooter>
+        <ButtonSet>
+          <Button type="button" variant="danger" size="large" upper onClick={handleCancel}>
+            Cancel
+          </Button>
+          <Button type="submit" size="large" upper onClick={() => onConfirm(localSelectedIds)}>
+            {" "}
+            Confirm
+          </Button>
+        </ButtonSet>
       </ModalContent>
     </ModalOverlay>
   );

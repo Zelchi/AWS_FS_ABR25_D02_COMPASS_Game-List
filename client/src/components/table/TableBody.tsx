@@ -56,7 +56,7 @@ export default function TableBody({ data, header, isAnimating, transitionDuratio
         >
           {location === "/games" && <TableImages item={item} />}
           {header.map((head) => (
-            <TBCell key={head} $width={head === "title"}>
+            <TBCell key={`${head}-${item.id}`} $width={head === "title"}>
               <ColumnMap
                 head={head}
                 name={<ColumnName item={item} head={head} />}

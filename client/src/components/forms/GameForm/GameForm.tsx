@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, FormEvent, useEffect, Dispatch, SetStateAction } from "react";
 import HeartIcon from "@/assets/icons/heart.svg?react";
-import { IGameEntity } from "@/../../server/src/Game/GameEntity";
+import { IGameEntity } from "@/../../server/src/routes/Game/GameEntity";
 import Button from "@/components/button/Button";
 import { useModal } from "@/contexts/modalContext";
 import { useGlobal } from "@/contexts/globalContext";
@@ -421,7 +421,7 @@ export default function GameForm({ initialData }: GameFormProps) {
               <StyledLabel htmlFor="Categories">Categories</StyledLabel>
               <SelectMany
                 label="Categories"
-                modalTitle="SelectMany Categories"
+                modalTitle="Choose one or more categories"
                 items={categories}
                 selectedItemIds={getSelectedIds("categories")}
                 loading={loading}
@@ -432,7 +432,7 @@ export default function GameForm({ initialData }: GameFormProps) {
               <StyledLabel htmlFor="Platforms">Platforms</StyledLabel>
               <SelectMany
                 label="Platforms"
-                modalTitle="SelectMany Platforms"
+                modalTitle="Choose one or more platforms"
                 items={platforms}
                 selectedItemIds={getSelectedIds("platforms")}
                 loading={loading}
@@ -450,13 +450,14 @@ export default function GameForm({ initialData }: GameFormProps) {
           type="button"
           variant="danger"
           size="large"
+          upper
           onClick={handleCancel}
           disabled={submitting}
         >
           {" "}
           Cancel{" "}
         </Button>
-        <Button type="submit" size="large" disabled={submitting}>
+        <Button type="submit" size="large" upper disabled={submitting}>
           {" "}
           {submitting ? "Saving..." : "Save"}{" "}
         </Button>

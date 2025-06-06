@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { Overlay, ModalContainer } from "@/components/modal/ModalLayout/styles";
+import { Overlay, ModalContainer, ModalContent } from "@/components/modal/ModalLayout/styles";
 
 interface ModalProps {
   isOpen: boolean;
@@ -46,7 +46,7 @@ export default function Modal({
   return createPortal(
     <Overlay role="dialog" aria-modal="true" onMouseDown={handleOverlayClick}>
       <ModalContainer ref={modalRef} onClick={(e: React.ChangeEvent<any>) => e.stopPropagation()}>
-        {children}
+        <ModalContent>{children}</ModalContent>
       </ModalContainer>
     </Overlay>,
     document.body,

@@ -1,4 +1,9 @@
 import styled from "styled-components";
+import { rgba } from "polished";
+import Checkbox from "@/components/forms/Fields/Checkbox";
+import { breakpoints } from "@/utils/breakpoints";
+
+const { mobile, tablet } = breakpoints;
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -14,30 +19,43 @@ export const ModalOverlay = styled.div`
 `;
 
 export const ModalContent = styled.div`
-  width: 80%;
-  max-width: 500px;
-  max-height: 50vh;
-
+  padding: 4rem;
   display: flex;
   flex-direction: column;
   background-color: white;
+  border-radius: 2rem;
+  box-shadow: ${({ theme }) => `0 0 3rem ${rgba(theme.colors.aqua, 0.3)}`};
 `;
 
 export const ModalList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   width: 100%;
-  max-height: 300px;
+  max-width: 35rem;
+  padding: 2rem 0;
 
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
+  @media (max-width: ${tablet}em) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: ${mobile}em) {
+    grid-template-columns: 1fr;
+  }
 `;
 
-export const ModalFooter = styled.div`
-  display: flex;
-  justify-content: space-around;
+export const StyledCheckbox = styled(Checkbox)`
+  flex-shrink: 0;
+  transform: scale(0.5);
 `;
 
-export const SelectItem = styled.div`
+export const Topics = styled.div`
   display: flex;
   align-items: center;
+`;
+
+export const Label = styled.label`
+  cursor: pointer;
+  font-family: ${({ theme }) => theme.fonts.primary};
+  font-size: 1.2rem;
+  color: ${({ theme }) => theme.colors.greyDark03};
 `;

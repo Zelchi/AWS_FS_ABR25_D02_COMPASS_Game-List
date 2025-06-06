@@ -3,7 +3,7 @@ import { breakpoints } from "@/utils/breakpoints";
 
 const { mobile, tablet, laptop } = breakpoints;
 
-export const StyledSideBar = styled.aside<{ $isOpen: boolean }>`
+export const StyledSideBar = styled.aside<{ $isOpen: boolean; $isModalOpen: boolean }>`
   overflow: hidden;
   z-index: 999;
   position: relative;
@@ -14,7 +14,7 @@ export const StyledSideBar = styled.aside<{ $isOpen: boolean }>`
   background-color: ${({ theme }) => theme.colors.greyDark01};
 
   @media (max-width: ${tablet}em) {
-    z-index: 9999;
+    z-index: ${({ $isModalOpen }) => ($isModalOpen ? 0 : 9999)};
     border-right: none;
     border-bottom: ${({ theme }) => `0.2rem solid ${theme.colors.greyLight03}`};
   }
