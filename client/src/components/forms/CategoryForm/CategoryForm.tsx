@@ -5,6 +5,7 @@ import { useModal } from "@/contexts/modalContext";
 import API from "@/utils/API";
 import { useGlobal } from "@/contexts/globalContext";
 import Button from "@/components/button/Button";
+import { toast } from "react-toastify";
 
 export interface CategoryFormProps {
   initialData?: ICategoryEntity;
@@ -14,8 +15,8 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [type] = useState(
-      initialData && Object.keys(initialData).length > 0 ? "put" : "post"
-    );
+    initialData && Object.keys(initialData).length > 0 ? "put" : "post"
+  );
   const { setIsModalOpen, setModalContent } = useModal();
   const [category, setCategory] = useState<Partial<ICategoryEntity>>({
     userId: "",
@@ -40,6 +41,8 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
           : await API.PUT(`/category/${initialData?.id}`, categoryData);
 
       if (response && (response.status === 201 || response.status === 200)) {
+        response.status === 200 && toast.success("Category updated successfully!");
+        response.status === 201 && toast.success("Category created successfully!");
         setIsModalOpen(false);
         setModalContent(null);
         if (type === "post") handleClear();

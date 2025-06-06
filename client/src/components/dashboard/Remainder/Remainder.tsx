@@ -7,6 +7,7 @@ import RemainderImage from "@/components/dashboard/Remainder/RemainderImage";
 import RemainderQuestion from "./RemainderQuestion";
 import { fadeInUpBlur, fadeOutHeight } from "@/styles/animations";
 import API from "@/utils/API";
+import { toast } from "react-toastify";
 
 export function Remainder({ className }: { className?: string }) {
   const [isRating, setIsRating] = useState(false);
@@ -23,6 +24,7 @@ export function Remainder({ className }: { className?: string }) {
   const gamesKey = data ? "remainder" : null;
 
   const handleClick = async () => {
+    toast.success("Game status updated successfully!");
     setTimeout(async () => {
       await refetch();
       setIsRating(false);

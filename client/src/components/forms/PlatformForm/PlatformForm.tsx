@@ -4,6 +4,7 @@ import { InputField } from "@/components/forms/Fields/InputField";
 import { useModal } from "@/contexts/modalContext";
 import API from "@/utils/API";
 import { useGlobal } from "@/contexts/globalContext";
+import { toast } from "react-toastify";
 
 export interface PlatformFormProps {
   initialData?: IPlatformEntity;
@@ -43,6 +44,8 @@ export default function PlatformForm({ initialData }: PlatformFormProps) {
           : await API.PUT(`/platform/${initialData?.id}`, platformData);
 
       if (response && (response.status === 201 || response.status === 200)) {
+        response.status === 200 && toast.success("Platform updated successfully!");
+        response.status === 201 && toast.success("Platform created successfully!");
         setIsModalOpen(false);
         setModalContent(null);
       }

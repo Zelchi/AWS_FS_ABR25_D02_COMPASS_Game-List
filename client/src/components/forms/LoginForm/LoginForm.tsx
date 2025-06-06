@@ -4,6 +4,7 @@ import Button from "@/components/button/Button";
 import { InputField } from "@/components/forms/Fields/InputField";
 import { Form, InvalidMessage } from "@/components/forms/styles";
 import API from "@/utils/API";
+import { toast } from "react-toastify";
 
 type LoginFormType = {
   isRegistered: boolean;
@@ -27,11 +28,12 @@ export function LoginForm({ isRegistered, onRegister }: LoginFormType): React.JS
       });
 
       if (status === 200) {
+        toast.success("Login successful!");
         localStorage.setItem("token", data.token);
         navigate("/");
       }
     } catch {
-      alert("Login failed!");
+      toast.error("Login failed! Please check your credentials.");
     }
   };
 
@@ -48,7 +50,7 @@ export function LoginForm({ isRegistered, onRegister }: LoginFormType): React.JS
       });
 
       if (status === 201) {
-        alert("Successfully Registered!");
+        toast.success("Successfully Registered!");
 
         setName("");
         setEmail("");
@@ -58,7 +60,7 @@ export function LoginForm({ isRegistered, onRegister }: LoginFormType): React.JS
         onRegister();
       }
     } catch {
-      alert("Register failed!");
+      toast.error("Registration failed! Please try again.");
     }
   };
 

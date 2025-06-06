@@ -1,5 +1,5 @@
 import { useEffect, JSX, ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useQuery } from "@tanstack/react-query";
@@ -7,6 +7,7 @@ import API from "@/utils/API";
 
 export function Auth({ children }: { children: ReactNode }): JSX.Element {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { data: isAuthenticated, isLoading } = useQuery({
     queryKey: ["auth"],
@@ -15,23 +16,21 @@ export function Auth({ children }: { children: ReactNode }): JSX.Element {
     retry: false,
   });
 
+  console.log("isAuthenticated", isAuthenticated);
+
   useEffect(() => {
     if (isLoading) return;
 
     const isAuth = Boolean(isAuthenticated);
 
-    if (!isAuth && window.location.pathname !== "/Login") {
+    if (!isAuth && location.pathname !== "/login") {
       toast.error("You need to be logged in to access this page!");
-      setTimeout(() => {
-        navigate("/login");
-      }, 10);
+      navigate("/login");
     }
 
-    if (isAuth && window.location.pathname === "/Login") {
+    if (isAuth && location.pathname === "/login") {
       toast.success("You are already logged in!");
-      setTimeout(() => {
-        navigate("/");
-      }, 10);
+      navigate("/");
     }
   }, [isAuthenticated]);
 
