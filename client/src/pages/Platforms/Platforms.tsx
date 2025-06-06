@@ -4,6 +4,7 @@ import { useGlobal } from "@/contexts/globalContext";
 import SearchContainer from "@/components/data/search/SearchContainer";
 import SiteLayout from "@/components/layout/SiteLayout/SiteLayout";
 import Table from "@/components/table/Table";
+import { PaginationButtons } from "@/components/table/TablePagination";
 
 export default function PlatformsContent() {
   const { platforms, page, limit, sortBy, sortOrder, cleared, loadPlatforms } = useGlobal();
@@ -17,6 +18,7 @@ export default function PlatformsContent() {
     <SiteLayout>
       <SearchContainer />
       <Table<IPlatformEntity> data={platforms} header={header} />
+      <PaginationButtons />
     </SiteLayout>
   );
 }

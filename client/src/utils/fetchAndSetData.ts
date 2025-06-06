@@ -5,12 +5,18 @@ type FetchAndSetType<T> = {
   search?: string;
   setData: (data: T) => void;
   extractData: (response: any) => T | undefined;
+  setPagination: (pagination: {
+    total: number;
+    currentPage: number;
+    totalPages: number;
+  }) => void;
 };
 
 export const fetchAndSetData = async <T>({
   search,
   path,
   setData,
+  setPagination,
   extractData,
 }: FetchAndSetType<T>): Promise<void> => {
   const trimmedSearch = search?.trim();
@@ -21,5 +27,10 @@ export const fetchAndSetData = async <T>({
 
   if (data) {
     setData(data);
+    setPagination({
+      total: response?.total || 0,
+      currentPage: response?.currentPage || 1,
+      totalPages: response?.totalPages || 1,
+    })
   }
 };

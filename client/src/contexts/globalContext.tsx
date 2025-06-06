@@ -6,6 +6,7 @@ import React, {
   ChangeEvent,
   MouseEvent,
   useCallback,
+  useEffect,
 } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useLocation } from "react-router-dom";
@@ -60,6 +61,7 @@ type GlobalContextType = {
   limit: number;
   cleared: boolean;
   setCleared: React.Dispatch<React.SetStateAction<boolean>>;
+  pagination: { total: number; currentPage: number; totalPages: number };
 };
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -77,6 +79,12 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [selectedFilter, setSelectedFilter] = useState("");
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [cleared, setCleared] = useState<boolean>(false);
+  const [pagination, setPagination] = useState<{ total: number; currentPage: number; totalPages: number }>({
+    total: 0,
+    currentPage: 1,
+    totalPages: 0,
+  });
+
   const { mobile, tablet, laptop, desktop } = breakpoints;
   const path = useLocation().pathname;
 
@@ -103,6 +111,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
       path: gamesPathAPI,
       search,
       setData: setGames,
+      setPagination,
       extractData: (res) => res?.games,
     });
   };
@@ -112,6 +121,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
       path: categoriesPathAPI,
       search,
       setData: setCategories,
+      setPagination,
       extractData: (res) => res?.categories,
     });
   };
@@ -121,6 +131,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
       path: platformsPathAPI,
       search,
       setData: setPlatforms,
+      setPagination,
       extractData: (res) => res?.platforms,
     });
   };
@@ -236,6 +247,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         limit,
         cleared,
         setCleared,
+        pagination,
       }}
     >
       {children}
