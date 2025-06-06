@@ -1,48 +1,13 @@
-import { useState } from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
 import Button from "@/components/button/Button";
-
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-`;
-
-const ModalContent = styled.div`
-  width: 80%;
-  max-width: 500px;
-  max-height: 50vh;
-
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-`;
-
-const ModalList = styled.div`
-  width: 100%;
-  max-height: 300px;
-
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-`;
-
-const ModalFooter = styled.div`
-  display: flex;
-  justify-content: space-around;
-`;
-
-const SelectItem = styled.div`
-  display: flex;
-  align-items: center;
-`;
+import {
+  ModalOverlay,
+  ModalContent,
+  ModalList,
+  SelectItem,
+  ModalFooter,
+} from "@/components/modal/ModalSelection/styles";
+import { ButtonSet } from "@/components/forms/styles";
 
 export interface SelectionModalProps {
   title: string;
@@ -52,7 +17,7 @@ export interface SelectionModalProps {
   onCancel: () => void;
 }
 
-export function SelectionModal({
+export function ModalSelection({
   title,
   items,
   selectedItemIds,
@@ -96,12 +61,15 @@ export function SelectionModal({
           )}
         </ModalList>
         <ModalFooter>
-          <Button type="button" variant="danger" onClick={handleCancel}>
-            Cancel
-          </Button>
-          <Button type="button" onClick={() => onConfirm(localSelectedIds)}>
-            Confirm
-          </Button>
+          <ButtonSet>
+            <Button type="button" variant="danger" size="large" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button type="submit" size="large" onClick={() => onConfirm(localSelectedIds)}>
+              {" "}
+              Confirm
+            </Button>
+          </ButtonSet>
         </ModalFooter>
       </ModalContent>
     </ModalOverlay>

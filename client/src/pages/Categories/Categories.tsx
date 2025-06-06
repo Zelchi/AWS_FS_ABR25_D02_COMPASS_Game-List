@@ -5,7 +5,7 @@ import SiteLayout from "@/components/layout/SiteLayout/SiteLayout";
 import Table from "@/components/table/Table";
 import { useGlobal } from "@/contexts/globalContext";
 
-export default function CategoriesContent() {
+export default function Categories() {
   const { categories, page, limit, sortOrder, loadCategories } = useGlobal();
   const header = ["name"];
 

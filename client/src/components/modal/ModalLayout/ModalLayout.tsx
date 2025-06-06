@@ -1,41 +1,11 @@
-import { ReactNode, useEffect, useRef } from "react";
+import React, { ReactNode, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import styled from "styled-components";
-
-const SIZES = {
-  sm: "400px",
-  md: "600px",
-  lg: "800px",
-  xl: "1000px",
-};
-
-const Overlay = styled.div`
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.9);
-  backdrop-filter: blur(20px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-`;
-
-const ModalContainer = styled.div<{ size: string }>`
-  width: 100%;
-  max-width: ${({ size }) => SIZES[size as keyof typeof SIZES] || SIZES.md};
-  max-height: 90vh;
-  border-radius: 8px;
-  overflow-y: auto;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 3rem;
-`;
+import { Overlay, ModalContainer } from "@/components/modal/ModalLayout/styles";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
-  size?: keyof typeof SIZES;
   closeOnClickOutside?: boolean;
   closeOnEsc?: boolean;
 }
@@ -44,7 +14,6 @@ export default function Modal({
   isOpen,
   onClose,
   children,
-  size = "md",
   closeOnEsc = true,
   closeOnClickOutside = true,
 }: ModalProps) {
@@ -76,7 +45,7 @@ export default function Modal({
 
   return createPortal(
     <Overlay role="dialog" aria-modal="true" onMouseDown={handleOverlayClick}>
-      <ModalContainer ref={modalRef} size={size} onClick={(e) => e.stopPropagation()}>
+      <ModalContainer ref={modalRef} onClick={(e: React.ChangeEvent<any>) => e.stopPropagation()}>
         {children}
       </ModalContainer>
     </Overlay>,

@@ -1,13 +1,32 @@
 import React from "react";
 import { useState, FormEvent, useEffect, Dispatch, SetStateAction } from "react";
+import HeartIcon from "@/assets/icons/heart.svg?react";
 import { IGameEntity } from "@/../../server/src/Game/GameEntity";
 import Button from "@/components/button/Button";
-import { SelectionField } from "@/components/forms/Fields/SelectionField";
-import { InputField } from "@/components/forms/Fields/InputField";
-import { Container, Input, Select, Label } from "@/components/forms/Fields/styles";
 import { useModal } from "@/contexts/modalContext";
 import { useGlobal } from "@/contexts/globalContext";
 import API from "@/utils/API";
+import {
+  StyledInput,
+  StyledSelection,
+  StyledLabel,
+  StyledButtonUpload,
+  FormField,
+  Form,
+  ImageSelection,
+  Wrapper,
+  ButtonSet,
+  StyledIcon,
+  ImageUrl,
+  ImageUpload,
+  Rating,
+  Favorite,
+  Price,
+  FormFieldMobile,
+} from "@/components/forms/styles";
+import StarRating from "@/components/rating/Rating/StarRating";
+import { InvalidMessage } from "@/components/forms/LoginForm/styles";
+import { SelectMany } from "@/components/forms/GameForm/SelectMany/SelectMany";
 
 export interface GameFormProps {
   initialData?: Partial<IGameEntity>;
@@ -24,11 +43,9 @@ export default function GameForm({ initialData }: GameFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [type] = useState(
-    initialData && Object.keys(initialData).length > 0 ? "put" : "post"
-  );
+  const [type] = useState(initialData && Object.keys(initialData).length > 0 ? "put" : "post");
   const { setIsModalOpen, setModalContent } = useModal();
-  const { handleClear } = useGlobal();
+  const { handleClear, isMobile } = useGlobal();
   const [game, setGame] = useState<Partial<IGameEntity>>({
     userId: "",
     name: initialData?.name || "",
@@ -113,6 +130,13 @@ export default function GameForm({ initialData }: GameFormProps) {
     setModalContent(null);
   };
 
+  const handleRating = (rating: number) => {
+    setGame((prev) => ({
+      ...prev,
+      rating: Number(rating),
+    }));
+  };
+
   useEffect(() => {
     setLoading(true);
     Promise.all([
@@ -124,140 +148,315 @@ export default function GameForm({ initialData }: GameFormProps) {
   }, []);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <InputField
-        name="name"
-        value={game.name || ""}
-        onChange={(e) => setGame((prev) => ({ ...prev, name: e.target.value }))}
-      >
-        Game Name
-      </InputField>
+    <Form onSubmit={handleSubmit}>
+      <FormField>
+        <StyledLabel htmlFor="name">Game Name</StyledLabel>
+        <StyledInput
+          name="name"
+          value={game.name}
+          onChange={(e) => setGame((prev) => ({ ...prev, name: e.target.value }))}
+          required
+        />
+      </FormField>
 
-      <InputField
-        name="description"
-        type="textarea"
-        value={game.description || ""}
-        onChange={(e) => setGame((prev) => ({ ...prev, description: e.target.value }))}
-      >
-        Description
-      </InputField>
+      <FormField>
+        <StyledLabel htmlFor="description">Description</StyledLabel>
+        <StyledInput
+          $type={"textarea"}
+          name="description"
+          type="textarea"
+          value={game.description || ""}
+          onChange={(e) => setGame((prev) => ({ ...prev, description: e.target.value }))}
+        />
+      </FormField>
 
-      <InputField
-        name="imageUrl"
-        type="url"
-        value={game.imageUrl || ""}
-        onChange={(e) => setGame((prev) => ({ ...prev, imageUrl: e.target.value }))}
-      >
-        Image URL
-      </InputField>
+      {isMobile ? (
+        <>
+          <StyledLabel>Choose an image</StyledLabel>
+          <FormField>
+            <ImageUrl>
+              <StyledLabel htmlFor="imageUrl">Image URL:</StyledLabel>
+              <StyledInput
+                name="imageUrl"
+                type="url"
+                value={game.imageUrl || ""}
+                onChange={(e) => setGame((prev) => ({ ...prev, imageUrl: e.target.value }))}
+              />
+            </ImageUrl>
+            <ImageUpload>
+              <StyledLabel htmlFor="imageUrl">Upload file:</StyledLabel>
+              <StyledButtonUpload htmlFor="fileUpload">Upload</StyledButtonUpload>
+            </ImageUpload>
+          </FormField>
+          <FormFieldMobile>
+            <Rating>
+              <StyledLabel>Rating</StyledLabel>
+              <StarRating onSetRating={handleRating} size={28} />
+            </Rating>
+            <Favorite>
+              <StyledLabel htmlFor="favorite">Favorite</StyledLabel>
+              <StyledIcon
+                icon={HeartIcon}
+                onClick={() => setGame((prev) => ({ ...prev, favorite: !prev.favorite }))}
+                role="button"
+                $isFavorite={game.favorite || false}
+              />
+            </Favorite>
+          </FormFieldMobile>
+        </>
+      ) : (
+        <FormField>
+          <StyledLabel>Choose an image</StyledLabel>
+          <Wrapper>
+            <ImageSelection>
+              <ImageUrl>
+                <StyledLabel htmlFor="imageUrl">Image URL:</StyledLabel>
+                <StyledInput
+                  name="imageUrl"
+                  type="url"
+                  value={game.imageUrl || ""}
+                  onChange={(e) => setGame((prev) => ({ ...prev, imageUrl: e.target.value }))}
+                />
+              </ImageUrl>
+              <ImageUpload>
+                <StyledLabel htmlFor="imageUrl">Upload file:</StyledLabel>
+                <StyledButtonUpload htmlFor="fileUpload">Upload</StyledButtonUpload>
+              </ImageUpload>
+            </ImageSelection>
+            <div>
+              <Rating>
+                <StyledLabel>Rating</StyledLabel>
+                <StarRating onSetRating={handleRating} size={28} />
+              </Rating>
+              <Favorite>
+                <StyledLabel htmlFor="favorite">Favorite</StyledLabel>
+                <StyledIcon
+                  icon={HeartIcon}
+                  onClick={() => setGame((prev) => ({ ...prev, favorite: !prev.favorite }))}
+                  role="button"
+                  $isFavorite={game.favorite || false}
+                />
+              </Favorite>
+            </div>
+          </Wrapper>
+        </FormField>
+      )}
 
-      <InputField
-        name="price"
-        type="number"
-        min={0}
-        step="0.01"
-        value={(game.price || 0) / 100}
-        onChange={(e) =>
-          setGame((prev) => ({
-            ...prev,
-            price: Math.round(Number(e.target.value) * 100),
-          }))
-        }
-      >
-        Price
-      </InputField>
+      {isMobile ? (
+        <>
+          <FormField>
+            <StyledLabel htmlFor="price">Price</StyledLabel>
+            <Price>
+              <StyledLabel>$</StyledLabel>
+              <StyledInput
+                name="price"
+                type="number"
+                min={0}
+                step="0.01"
+                value={(game.price || 0) / 100}
+                onChange={(e) =>
+                  setGame((prev) => ({
+                    ...prev,
+                    price: Math.round(Number(e.target.value) * 100),
+                  }))
+                }
+              />
+            </Price>
+          </FormField>
+          <FormField>
+            <StyledLabel htmlFor="status">Status</StyledLabel>
+            <StyledSelection
+              name="status"
+              value={game.status || "playing"}
+              onChange={(e) => setGame((prev) => ({ ...prev, status: e.target.value }))}
+              required
+            >
+              <option value="playing">Playing</option>
+              <option value="done">Done</option>
+              <option value="abandoned">Abandoned</option>
+            </StyledSelection>
+          </FormField>
+        </>
+      ) : (
+        <FormField>
+          <Wrapper>
+            <Price>
+              <StyledLabel htmlFor="price">Price</StyledLabel>
+              <div>
+                <StyledLabel>$</StyledLabel>
+                <StyledInput
+                  name="price"
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  value={(game.price || 0) / 100}
+                  onChange={(e) =>
+                    setGame((prev) => ({
+                      ...prev,
+                      price: Math.round(Number(e.target.value) * 100),
+                    }))
+                  }
+                />
+              </div>
+            </Price>
+            <div>
+              <StyledLabel htmlFor="status">Status</StyledLabel>
+              <StyledSelection
+                name="status"
+                value={game.status || "playing"}
+                onChange={(e) => setGame((prev) => ({ ...prev, status: e.target.value }))}
+                required
+              >
+                <option value="playing">Playing</option>
+                <option value="done">Done</option>
+                <option value="abandoned">Abandoned</option>
+              </StyledSelection>
+            </div>
+          </Wrapper>
+        </FormField>
+      )}
 
-      <InputField
-        name="rating"
-        type="range"
-        min={1}
-        max={5}
-        step="1"
-        value={game.rating || 1}
-        onChange={(e) =>
-          setGame((prev) => ({
-            ...prev,
-            rating: Number(e.target.value),
-          }))
-        }
-      >
-        Rating
-      </InputField>
+      {isMobile ? (
+        <>
+          <FormField>
+            <StyledLabel htmlFor="acquisDate">Acquisition Date</StyledLabel>
+            <StyledInput
+              $type="date"
+              name="acquisDate"
+              type="date"
+              value={formatDateForInput(game.acquisDate as Date)}
+              onChange={(e) =>
+                setGame((prev) => ({ ...prev, acquisDate: new Date(e.target.value) }))
+              }
+              required
+            />
+          </FormField>
+          <FormField>
+            <StyledLabel htmlFor="finishDate">Completion Date</StyledLabel>
+            <StyledInput
+              $type="date"
+              name="finishDate"
+              type="date"
+              value={formatDateForInput(game.finishDate as Date)}
+              onChange={(e) =>
+                setGame((prev) => ({
+                  ...prev,
+                  finishDate: e.target.value ? new Date(e.target.value) : null,
+                }))
+              }
+              required
+            />
+          </FormField>
+        </>
+      ) : (
+        <FormField>
+          <Wrapper>
+            <div>
+              <StyledLabel htmlFor="acquisDate">Acquisition Date</StyledLabel>
+              <StyledInput
+                $type="date"
+                name="acquisDate"
+                type="date"
+                value={formatDateForInput(game.acquisDate as Date)}
+                onChange={(e) =>
+                  setGame((prev) => ({ ...prev, acquisDate: new Date(e.target.value) }))
+                }
+                required
+              />
+            </div>
 
-      <Container>
-        <Label htmlFor="status">Status</Label>
-        <Select
-          name="status"
-          value={game.status || "playing"}
-          onChange={(e) => setGame((prev) => ({ ...prev, status: e.target.value }))}
+            <div>
+              <StyledLabel htmlFor="finishDate">Completion Date</StyledLabel>
+              <StyledInput
+                $type="date"
+                name="finishDate"
+                type="date"
+                value={formatDateForInput(game.finishDate as Date)}
+                onChange={(e) =>
+                  setGame((prev) => ({
+                    ...prev,
+                    finishDate: e.target.value ? new Date(e.target.value) : null,
+                  }))
+                }
+                required
+              />
+            </div>
+          </Wrapper>
+        </FormField>
+      )}
+
+      {isMobile ? (
+        <>
+          <FormField>
+            <StyledLabel htmlFor="Categories">Categories</StyledLabel>
+            <SelectMany
+              label="Categories"
+              modalTitle="SelectMany Categories"
+              items={categories}
+              selectedItemIds={getSelectedIds("categories")}
+              loading={loading}
+              onConfirm={handleModalConfirm("categories")}
+            />
+          </FormField>
+          <FormField>
+            <StyledLabel htmlFor="Platforms">Platforms</StyledLabel>
+            <SelectMany
+              label="Platforms"
+              modalTitle="SelectMany Platforms"
+              items={platforms}
+              selectedItemIds={getSelectedIds("platforms")}
+              loading={loading}
+              onConfirm={handleModalConfirm("platforms")}
+            />
+          </FormField>
+        </>
+      ) : (
+        <FormField>
+          <Wrapper>
+            <div>
+              <StyledLabel htmlFor="Categories">Categories</StyledLabel>
+              <SelectMany
+                label="Categories"
+                modalTitle="SelectMany Categories"
+                items={categories}
+                selectedItemIds={getSelectedIds("categories")}
+                loading={loading}
+                onConfirm={handleModalConfirm("categories")}
+              />
+            </div>
+            <div>
+              <StyledLabel htmlFor="Platforms">Platforms</StyledLabel>
+              <SelectMany
+                label="Platforms"
+                modalTitle="SelectMany Platforms"
+                items={platforms}
+                selectedItemIds={getSelectedIds("platforms")}
+                loading={loading}
+                onConfirm={handleModalConfirm("platforms")}
+              />
+            </div>
+          </Wrapper>
+        </FormField>
+      )}
+
+      {error && <InvalidMessage>{error}</InvalidMessage>}
+
+      <ButtonSet>
+        <Button
+          type="button"
+          variant="danger"
+          size="large"
+          onClick={handleCancel}
+          disabled={submitting}
         >
-          <option value="playing">Playing</option>
-          <option value="done">Done</option>
-          <option value="abandoned">Abandoned</option>
-        </Select>
-      </Container>
-      <div>
-        <Input
-          name="favorite"
-          type="checkbox"
-          checked={game.favorite || false}
-          onChange={(e: React.ChangeEvent<any>) =>
-            setGame((prev) => ({ ...prev, favorite: e.target.checked }))
-          }
-        ></Input>
-        <Label htmlFor="favorite">Favorite</Label>
-      </div>
-
-      <InputField
-        name="acquisDate"
-        type="date"
-        value={formatDateForInput(game.acquisDate as Date)}
-        onChange={(e) => setGame((prev) => ({ ...prev, acquisDate: new Date(e.target.value) }))}
-      >
-        Acquisition Date
-      </InputField>
-
-      <InputField
-        name="finishDate"
-        type="date"
-        value={formatDateForInput(game.finishDate as Date)}
-        onChange={(e) =>
-          setGame((prev) => ({
-            ...prev,
-            finishDate: e.target.value ? new Date(e.target.value) : null,
-          }))
-        }
-      >
-        Completion Date
-      </InputField>
-
-      <SelectionField
-        label="Categories"
-        modalTitle="Select Categories"
-        items={categories}
-        selectedItemIds={getSelectedIds("categories")}
-        loading={loading}
-        onConfirm={handleModalConfirm("categories")}
-      />
-      <SelectionField
-        label="Platforms"
-        modalTitle="Select Platforms"
-        items={platforms}
-        selectedItemIds={getSelectedIds("platforms")}
-        loading={loading}
-        onConfirm={handleModalConfirm("platforms")}
-      />
-      {error && <p>{error}</p>}
-      <Container>
-        <Button type="button" variant="danger" onClick={handleCancel} disabled={submitting}>
           {" "}
           Cancel{" "}
         </Button>
-        <Button type="submit" disabled={submitting}>
+        <Button type="submit" size="large" disabled={submitting}>
           {" "}
           {submitting ? "Saving..." : "Save"}{" "}
         </Button>
-      </Container>
-    </form>
+      </ButtonSet>
+    </Form>
   );
 }

@@ -79,7 +79,7 @@ interface DeletionConfirmModalProps {
   initialData: any;
 }
 
-const DeletionConfirmModal = ({ path, initialData }: DeletionConfirmModalProps) => {
+const ModalDeletion = ({ path, initialData }: DeletionConfirmModalProps) => {
   const [error, setError] = useState("");
   const [deleting, setDeleting] = useState(false);
   const { setIsModalOpen, setModalContent } = useModal();
@@ -149,4 +149,4 @@ const DeletionConfirmModal = ({ path, initialData }: DeletionConfirmModalProps) 
   );
 };
 
-export default DeletionConfirmModal;
+export default ModalDeletion;

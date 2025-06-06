@@ -2,8 +2,8 @@ import { createContext, ReactNode, useContext, useState, Dispatch, SetStateActio
 import GameForm from "@/components/forms/GameForm/GameForm";
 import CategoryForm from "@/components/forms/CategoryForm/CategoryForm";
 import PlatformForm from "@/components/forms/PlatformForm/PlatformForm";
-import DeletionConfirmModal from "@/components/modal/Layouts/DeletionConfirmModal";
-import PreviewModal from "@/components/modal/Layouts/PreviewModal";
+import ModalDeletion from "@/components/modal/ModalDeletion/ModalDeletion";
+import PreviewModal from "@/components/modal/ModalPreview/PreviewModal";
 
 type ModalContextType = {
   isModalOpen: boolean;
@@ -19,7 +19,7 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState<ReactNode | null>(null);
+  const [modalContent, setModalContent] = useState<ReactNode | null>();
 
   const handleModalContent = (path: string, initialData: any) => {
     setModalContent(() => {
@@ -38,7 +38,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const handleModalDeleteConfirm = (path: string, initialData: any) => {
-    setModalContent(() => <DeletionConfirmModal path={path} initialData={initialData} />);
+    setModalContent(() => <ModalDeletion path={path} initialData={initialData} />);
     setIsModalOpen(true);
   };
 

@@ -1,10 +1,11 @@
-import { useState, FormEvent } from "react";
-import { ICategoryEntity } from "../../../../../server/src/Category/CategoryEntity";
-import { InputField } from "@/components/forms/Fields/InputField";
+import React, { useState, FormEvent } from "react";
+import { ICategoryEntity } from "@/../../server/src/Category/CategoryEntity";
 import { useModal } from "@/contexts/modalContext";
 import API from "@/utils/API";
 import { useGlobal } from "@/contexts/globalContext";
 import Button from "@/components/button/Button";
+import { ButtonSet, Form, FormField, StyledInput, StyledLabel } from "@/components/forms/styles";
+import { InvalidMessage } from "@/components/forms/LoginForm/styles";
 
 export interface CategoryFormProps {
   initialData?: ICategoryEntity;
@@ -13,9 +14,7 @@ export interface CategoryFormProps {
 export default function CategoryForm({ initialData }: CategoryFormProps) {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [type] = useState(
-      initialData && Object.keys(initialData).length > 0 ? "put" : "post"
-    );
+  const [type] = useState(initialData && Object.keys(initialData).length > 0 ? "put" : "post");
   const { setIsModalOpen, setModalContent } = useModal();
   const [category, setCategory] = useState<Partial<ICategoryEntity>>({
     userId: "",
@@ -57,27 +56,35 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <InputField
-        name="name"
-        value={category.name || ""}
-        onChange={(e) => setCategory((prev) => ({ ...prev, name: e.target.value }))}
-      >
-        Category Name
-      </InputField>
+    <Form onSubmit={handleSubmit}>
+      <FormField>
+        <StyledLabel htmlFor="name">Category Name</StyledLabel>
+        <StyledInput
+          name="name"
+          value={category.name || ""}
+          onChange={(e) => setCategory((prev) => ({ ...prev, name: e.target.value }))}
+          required
+        />
+      </FormField>
 
-      {error && <p>{error}</p>}
+      {error && <InvalidMessage>{error}</InvalidMessage>}
 
-      <div>
-        <Button type="button" onClick={handleCancel} disabled={submitting}>
+      <ButtonSet>
+        <Button
+          type="button"
+          variant="danger"
+          size="large"
+          onClick={handleCancel}
+          disabled={submitting}
+        >
           {" "}
           Cancel{" "}
         </Button>
-        <Button type="submit" disabled={submitting}>
+        <Button type="submit" size="large" disabled={submitting}>
           {" "}
           {submitting ? "Saving..." : "Save"}{" "}
         </Button>
-      </div>
-    </form>
+      </ButtonSet>
+    </Form>
   );
 }

@@ -2,7 +2,7 @@ import { getLabel, isLabelKey } from "@/utils/labels";
 import { SelectContainer as Container } from "@/components/data/filter/styles";
 import React from "react";
 import { useGlobal } from "@/contexts/globalContext";
-import { Select } from "@/components/forms/Fields/styles";
+import { Select } from "@/components/forms/LoginForm/styles";
 
 export default function SortSelection({ header }: { header: string[] }) {
   const { sortBy, sortOrder, handleSortBy, handleSortOrder } = useGlobal();

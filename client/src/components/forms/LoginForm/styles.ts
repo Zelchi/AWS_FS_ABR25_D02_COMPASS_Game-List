@@ -1,9 +1,22 @@
 import styled from "styled-components";
+import { Input } from "@/components/forms/Fields/Input";
+import { breakpoints } from "@/utils/breakpoints";
 
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+const { tablet } = breakpoints;
+
+export const Form = styled.form`
+  display: grid;
+  row-gap: 1.5rem;
+  width: 41.5rem;
+  margin-bottom: 2.8rem;
+
+  & > *:last-child {
+    margin-top: 2.4rem;
+  }
+
+  @media (max-width: ${tablet}em) {
+    width: 100%;
+  }
 `;
 
 export const Label = styled.label`
@@ -15,7 +28,7 @@ export const Label = styled.label`
   color: ${({ theme }) => theme.colors.grey01};
 `;
 
-export const Input = styled.input`
+export const StyledInput = styled(Input)`
   padding: 1.5rem;
   font-family: ${({ theme }) => theme.fonts.primary};
   font-weight: 400;
@@ -51,4 +64,11 @@ export const Select = styled.select`
   &:focus {
     box-shadow: ${({ theme }) => `0 0.2rem 1.2rem ${theme.colors.aqua}`};
   }
+`;
+
+export const InvalidMessage = styled.p`
+  font-family: ${({ theme }) => theme.fonts.primary};
+  text-align: right;
+  font-size: 1.4rem;
+  color: ${({ theme }) => theme.colors.pink};
 `;

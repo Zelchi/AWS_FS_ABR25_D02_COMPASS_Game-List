@@ -1,9 +1,12 @@
-import { useState, FormEvent } from "react";
+import React, { useState, FormEvent } from "react";
 import { IPlatformEntity } from "../../../../../server/src/Platform/PlatformEntity";
-import { InputField } from "@/components/forms/Fields/InputField";
+import { Input } from "@/components/forms/Fields/Input";
 import { useModal } from "@/contexts/modalContext";
 import API from "@/utils/API";
 import { useGlobal } from "@/contexts/globalContext";
+import { ButtonSet, Form, FormField, StyledInput, StyledLabel } from "@/components/forms/styles";
+import { InvalidMessage } from "@/components/forms/LoginForm/styles";
+import Button from "@/components/button/Button";
 
 export interface PlatformFormProps {
   initialData?: IPlatformEntity;
@@ -12,9 +15,7 @@ export interface PlatformFormProps {
 export default function PlatformForm({ initialData }: PlatformFormProps) {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [type] = useState(
-    initialData && Object.keys(initialData).length > 0 ? "put" : "post"
-  );
+  const [type] = useState(initialData && Object.keys(initialData).length > 0 ? "put" : "post");
   const { setIsModalOpen, setModalContent } = useModal();
   const [platform, setPlatform] = useState<Partial<IPlatformEntity>>({
     userId: "",
@@ -61,44 +62,53 @@ export default function PlatformForm({ initialData }: PlatformFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <InputField
-        name="name"
-        value={platform.name || ""}
-        onChange={(e) => setPlatform((prev) => ({ ...prev, name: e.target.value }))}
-      >
-        Platform Name
-      </InputField>
+    <Form onSubmit={handleSubmit}>
+      <FormField>
+        <StyledLabel htmlFor="name">Platform Name</StyledLabel>
+        <StyledInput
+          name="name"
+          value={platform.name || ""}
+          onChange={(e) => setPlatform((prev) => ({ ...prev, name: e.target.value }))}
+        />
+      </FormField>
 
-      <InputField
-        name="company"
-        value={platform.company || ""}
-        onChange={(e) => setPlatform((prev) => ({ ...prev, company: e.target.value }))}
-      >
-        Company
-      </InputField>
+      <FormField>
+        <StyledLabel htmlFor="company">Company</StyledLabel>
+        <StyledInput
+          name="company"
+          value={platform.company || ""}
+          onChange={(e) => setPlatform((prev) => ({ ...prev, company: e.target.value }))}
+        />
+      </FormField>
 
-      <InputField
-        name="imageUrl"
-        type="url"
-        value={platform.imageUrl || ""}
-        onChange={(e) => setPlatform((prev) => ({ ...prev, imageUrl: e.target.value }))}
-      >
-        Image URL
-      </InputField>
+      <FormField>
+        <StyledLabel htmlFor="imageUrl">Image URL</StyledLabel>
+        <StyledInput
+          name="imageUrl"
+          type="url"
+          value={platform.imageUrl || ""}
+          onChange={(e) => setPlatform((prev) => ({ ...prev, imageUrl: e.target.value }))}
+        />
+      </FormField>
 
-      {error && <p>{error}</p>}
+      {error && <InvalidMessage>{error}</InvalidMessage>}
 
-      <div>
-        <button type="button" onClick={handleCancel} disabled={submitting}>
+      <ButtonSet>
+        <Button
+          type="button"
+          variant="danger"
+          size="large"
+          onClick={handleCancel}
+          disabled={submitting}
+        >
           {" "}
           Cancel{" "}
-        </button>
-        <button type="submit" disabled={submitting}>
+        </Button>
+        <Button type="submit" size="large" disabled={submitting}>
           {" "}
           {submitting ? "Saving..." : "Save"}{" "}
-        </button>
-      </div>
-    </form>
+        </Button>
+      </ButtonSet>
+    </Form>
   );
 }

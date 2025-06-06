@@ -2,7 +2,7 @@ import React from "react";
 import { SelectContainer as Container } from "@/components/data/filter/styles";
 import { filterDictionary } from "@/components/data/filter/types";
 import { useGlobal } from "@/contexts/globalContext";
-import { Select } from "@/components/forms/Fields/styles";
+import { Select } from "@/components/forms/LoginForm/styles";
 
 export default function FilterSelection({
   data,

@@ -1,5 +1,5 @@
 import { useModal } from "@/contexts/modalContext";
-import ModalLayout from "./ModalLayout";
+import ModalLayout from "./ModalLayout/ModalLayout";
 
 const Modal = () => {
   const { isModalOpen, setIsModalOpen, modalContent } = useModal();

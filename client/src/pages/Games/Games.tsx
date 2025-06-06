@@ -5,7 +5,7 @@ import SiteLayout from "@/components/layout/SiteLayout/SiteLayout";
 import Table from "@/components/table/Table";
 import { useGlobal } from "@/contexts/globalContext";
 
-export default function GamesContent() {
+export default function Games() {
   const { games, page, limit, sortBy, sortOrder, selectedFilter, isFavorite, isLaptop, loadGames } =
     useGlobal();
   const header = ["name", "rating", "price", "acquisDate", "finishDate"];

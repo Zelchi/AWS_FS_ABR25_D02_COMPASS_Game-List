@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { SelectionModal } from "./SelectionModal";
-import { Form } from "@/components/forms/styles";
-import Button from "@/components/button/Button";
+import { ModalSelection } from "@/components/modal/ModalSelection/ModalSelection";
+import { StyledButton, SelectedOptions } from "@/components/forms/GameForm/SelectMany/styles";
 
 export interface SelectionFieldProps {
   label: string;
@@ -12,7 +11,7 @@ export interface SelectionFieldProps {
   onConfirm: (selectedIds: string[]) => void;
 }
 
-export function SelectionField({
+export function SelectMany({
   label,
   modalTitle,
   items,
@@ -28,38 +27,34 @@ export function SelectionField({
   };
 
   return (
-    <Form>
+    <>
       <div>
         {loading ? (
           <div>Loading...</div>
         ) : (
           <>
-            <div>
+            <StyledButton onClick={() => setShowModal(true)}>{`Select ${label}`}</StyledButton>
+            <SelectedOptions>
               {selectedItemIds.length > 0 ? (
                 <>
-                  <div>
-                    {`${selectedItemIds.length} item(s) selected`}
-                  </div>
-                  <div>
+                  <span>{`${selectedItemIds.length} item(s) selected`}</span>
+                  <p>
                     {items
-                      .filter(item => selectedItemIds.includes(item.id))
-                      .map(item => item.name)
+                      .filter((item) => selectedItemIds.includes(item.id))
+                      .map((item) => item.name)
                       .join(", ")}
-                  </div>
+                  </p>
                 </>
               ) : (
                 "No items selected"
               )}
-            </div>
-            <Button type="button" onClick={() => setShowModal(true)}>
-              {`Select ${label}`}
-            </Button>
+            </SelectedOptions>
           </>
         )}
       </div>
 
       {showModal && (
-        <SelectionModal
+        <ModalSelection
           title={modalTitle}
           items={items}
           selectedItemIds={selectedItemIds}
@@ -67,6 +62,6 @@ export function SelectionField({
           onCancel={() => setShowModal(false)}
         />
       )}
-    </Form>
+    </>
   );
 }

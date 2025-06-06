@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@/components/button/Button";
-import { InputField } from "@/components/forms/Fields/InputField";
-import { Form, InvalidMessage } from "@/components/forms/styles";
+import { Form, StyledInput, Label, InvalidMessage } from "@/components/forms/LoginForm/styles";
 import API from "@/utils/API";
 
 type LoginFormType = {
@@ -65,50 +64,51 @@ export function LoginForm({ isRegistered, onRegister }: LoginFormType): React.JS
   return (
     <Form onSubmit={isRegistered ? handleLogin : handleRegister}>
       {!isRegistered && (
-        <InputField
-          type="text"
-          name="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Juan Gustavo"
-          required
-        >
-          Full Name
-        </InputField>
+        <>
+          <Label htmlFor="name">Full Name</Label>
+          <StyledInput
+            type="text"
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Juan Gustavo"
+            required
+          />
+        </>
       )}
-      <InputField
+
+      <Label htmlFor="email">Email</Label>
+      <StyledInput
         type="email"
         name="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder={isRegistered ? "Enter your email" : "email@email.com"}
         required
-      >
-        Email
-      </InputField>
-      <InputField
+      />
+
+      <Label htmlFor="password">Password</Label>
+      <StyledInput
         type="password"
         name="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Enter your password"
         required
-      >
-        Password
-      </InputField>
+      />
 
       {!isRegistered && (
         <>
-          <InputField
+          <Label htmlFor="password-confirmation">Confirm Password</Label>
+          <StyledInput
             type="password"
             name="password-confirmation"
             value={passwordConfirmation}
             onChange={(e) => setPasswordConfirmation(e.target.value)}
             placeholder="Enter your password"
             required
-          >
-            Confirm Password
-          </InputField>
+          />
+
           {passwordConfirmation && passwordConfirmation !== password && (
             <InvalidMessage>Passwords do not match!</InvalidMessage>
           )}
