@@ -623,7 +623,7 @@ async function main() {
     prisma.game.create({
       data: {
         userId: user1.id,
-        name: 'Minecraft',
+        name: 'I am Minecraft',
         description: 'Block-building sandbox game with survival elements',
         imageUrl: 'https://image.api.playstation.com/vulcan/img/rnd/202010/2621/H9v5o8vP6RKkQtR77LIGrGDE.png',
         price: 2999,
