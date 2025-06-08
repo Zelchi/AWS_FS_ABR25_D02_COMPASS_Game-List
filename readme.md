@@ -37,7 +37,7 @@ This project is an application for listing and managing games. It allows users t
 2. Navigate to the project directory:
 
 ```bash
-cd AWS_FS_ABR25_D02_COMPASS_Game
+cd AWS_FS_ABR25_D02_COMPASS_Game-List
 ```
 
 3. Install dependencies:
@@ -46,13 +46,19 @@ cd AWS_FS_ABR25_D02_COMPASS_Game
 npm install
 ```
 
-4. Run the application:
+4. Configure environment variables:
+```bash
+DATABASE_URL="file:./database.db"
+JWT_SECRET="secretjwt"
+```
+
+5. Run the application:
 
 ```bash
 npm run dev
 ```
 
-5. Open in the browser:
+6. Open in the browser:
 
 http://localhost:5173/
 
